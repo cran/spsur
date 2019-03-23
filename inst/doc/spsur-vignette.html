@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2019-03-14" />
+<meta name="date" content="2019-03-23" />
 
 <title>spsur: an R package for spatial seemingly unrelated regressions</title>
 
@@ -314,7 +314,7 @@ University of Castilla La Mancha, Area of Statistics<br><h4 class="author"><em>F
 <address class="author_afil">
 Technical University of Cartagena<br><h4 class="author"><em>Jesús Mur</em></h4>
 <address class="author_afil">
-University of Zaragoza<br><h4 class="date"><em>2019-03-14</em></h4>
+University of Zaragoza<br><h4 class="date"><em>2019-03-23</em></h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 In recent decades, several methodological improvements have been suggested to specify, estimate and validate Seemingly Unrelated Regression (SUR) models in a spatial framework. These new procedures allow us testing for the presence of spatial dependence, and estimate spatial models using different algorithms. Furthermore, new misspecification tests, singularly in a maximum likelihood framework, have also been developed. Unfortunately, no standard, friendly software is easily avaliable. This is the deficit that the <strong>spsur</strong> R package pretends to fill. The new package allows for the estimation of the most popular spatial econometric models by maximum likelihood or instrumental variable procedures. Moreover, <strong>spsur</strong> implements a collection of Lagrange Multipliers and Likelihood Ratios to test for misspecifications in the SUR. Additional functions allow for the estimation of the so-called <em>spatial impacts</em> (direct, indirect and total impacts) and also obtains random data sets, of a SUR nature, with the features decided by the user. An important aspect of <strong>spsur</strong> is that it operates both in a pure cross-sectional setting or in panel data sets. We include well-known examples in the applied literature on spatial data to illustrate the main functionalities of the new <em>R</em> package.
@@ -569,9 +569,9 @@ X &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Matrix<span cl
 <span class="co">#&gt; Initial point:   log_lik:  113.197  lambdas:  -0.472 -0.446 </span>
 <span class="co">#&gt; Iteration:  1   log_lik:  114.085  lambdas:  -0.506 -0.482 </span>
 <span class="co">#&gt; Iteration:  2   log_lik:  114.096  lambdas:  -0.506 -0.482 </span>
-<span class="co">#&gt; Time to fit the model:  1.75  seconds</span>
+<span class="co">#&gt; Time to fit the model:  1.64  seconds</span>
 <span class="co">#&gt; Computing marginal test... </span>
-<span class="co">#&gt; Time to compute covariances:  0.25  seconds</span></code></pre>
+<span class="co">#&gt; Time to compute covariances:  0.23  seconds</span></code></pre>
 <p>The output of <code>spsurml()</code> includes details about the iteration process and time of computation. Let us also note that the user can configure the optimization process using the <code>control</code> list, as an additional argument to the function. In this way, the tolerance of the convergence process can be set to <code>tol</code>; the same as the number of maximum iterations, <code>maxit</code>, whereas <code>trace</code> allows the user hide intermediate results.</p>
 <p>Consistent with the conventions in the <em>R</em> environment, the <code>summary()</code> method prints the output equation by equation.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(spcsur.slm)
@@ -639,7 +639,7 @@ NCOVRSUR.slm.matrix &lt;-<span class="st"> </span><span class="kw">spsurml</span
 <p>The main differences between the two are: (i) the argument <code>type</code> now only supports two spatial SUR models: <strong>slm</strong> and <strong>sdm</strong> and (ii) a new argument is needed, <code>maxlagW</code>, to set the maximum order of spatial lags of the regressors to obtain the IVs. The default value is <code>maxlagW=2</code> for SUR-SLM models and <code>maxlagW=3</code> for the SDM variant.</p>
 <p>The 3SLS algorithm is especially adequate in cases of large datasets or when <code>spsur3sls()</code> has to deal with very dense Jacobians. Our <em>Example 2</em> includes 3,085 US counties and it is a good candidate for <code>spsur3sls()</code>. The code to estimate a SUR-SLM model for the SUR of <a href="#eq:NCOVR">(3.2)</a> is,</p>
 <pre class="sourceCode r"><code class="sourceCode r">NCOVRSUR.slm<span class="fl">.3</span>sls &lt;-<span class="kw">spsur3sls</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">W =</span> W)
-<span class="co">#&gt; Time to fit the model:  0.19  seconds</span>
+<span class="co">#&gt; Time to fit the model:  0.17  seconds</span>
 <span class="kw">summary</span>(NCOVRSUR.slm<span class="fl">.3</span>sls)
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; spsur3sls(Form = NCOVRformula, data = NCOVR, W = W, type = &quot;slm&quot;)</span>
@@ -721,7 +721,7 @@ pNCOVR &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 form_pHR &lt;-<span class="st"> </span>HR <span class="op">~</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE
 pHR_slm &lt;-<span class="st"> </span><span class="kw">spsurtime</span>(<span class="dt">Form =</span> form_pHR, <span class="dt">data =</span> pNCOVR, <span class="dt">W =</span> W,
                      <span class="dt">time =</span> pNCOVR<span class="op">$</span>time, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;3sls&quot;</span>)
-<span class="co">#&gt; Time to fit the model:  0.3  seconds</span>
+<span class="co">#&gt; Time to fit the model:  0.29  seconds</span>
 <span class="kw">summary</span>(pHR_slm)
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; spsur3sls(W = W, X = X, Y = Y, G = G, N = N, Tm = Tm, p = p, </span>

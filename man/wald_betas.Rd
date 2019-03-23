@@ -68,7 +68,23 @@ R2 <- matrix(c(1,0,0,0,-1,0,0,0,0,0,0,1,0,0,0,-1),
              nrow = 2, ncol = 8, byrow = TRUE)
 b2 <- matrix(c(0,0),ncol=1)
 wald_betas(results = spcsur.slm, R = R2, b = b2)
+####################################
+########  G=1; Tm>1         ########
+####################################
 
+#### Example 2: Homicides + Socio-Economics (1960-90)
+\donttest{
+## Usually takes 1-2 minutes maximum
+data(NCOVR)
+Tformula <- HR80  | HR90 ~ PS80 + UE80 | PS90 + UE90
+#################################
+## A SUR-SLM model
+NCOVRSUR.slm <-spsurml(Form = Tformula, data = NCOVR, type = "slm", W = W)
+summary(NCOVRSUR.slm)
+R1 <- matrix(c(0,1,0,0,-1,0), nrow=1)
+b1 <- matrix(0, ncol=1)
+wald_betas(results = NCOVRSUR.slm, R = R1, b = b1)
+}
 }
 \references{
 \itemize{
