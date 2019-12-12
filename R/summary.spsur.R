@@ -83,6 +83,6 @@ summary.spsur <- function(object, ...) {
     colnames(z$coef_table[[i]]) <- c("Estimate", "Std. Error",
                                      "t value", "Pr(>|t|)")
   }
-  class(z) <- c("summary.spsur",class(z))
+  class(z) <- c("summary.spsur", class(z))
   z
 }

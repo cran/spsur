@@ -155,7 +155,7 @@ lmtestspsur <- function(Form = NULL, data = NULL, W = NULL,
   if (is.null(W)) stop("W matrix is needed")
   #check for row-standardization of W
   if (!is.null(W)){
-    if (class(W) != "matrix") W <- as.matrix(W)
+    if (!(is.matrix(W))) W <- as.matrix(W)
     rsumW <- rowSums(W)
     rsumW[rsumW == 0] <- 1
     nW <- dim(W)[1]
@@ -167,8 +167,8 @@ lmtestspsur <- function(Form = NULL, data = NULL, W = NULL,
   if (is.null(time)) {  # G > 1 (no temporal correlations are modelled)
     if(!is.null(Form) && !is.null(data)){
       # Lectura datos
-      if (!any(class(Form) == "Formula")) Form <- Formula::Formula(Form)
-      get_XY <- get_data_spsur(formula=Form,data=data,W=W)
+      if (!inherits(Form, "Formula")) Form <- Formula::Formula(Form)
+      get_XY <- get_data_spsur(formula = Form, data = data, W = W)
       Y <- get_XY$Y
       X <- get_XY$X
       G <- get_XY$G
@@ -183,7 +183,7 @@ lmtestspsur <- function(Form = NULL, data = NULL, W = NULL,
       }
     }
   } else { #G = 1 and Tm > 1 (temporal correlations are modelled)
-    if (class(time) != "factor") time <- as.factor(time)
+    if (!(is.factor(time))) time <- as.factor(time)
     time <- droplevels(time)
     if (length(time) != nrow(data)) stop("time must have same length than the
                                          number of rows in data")

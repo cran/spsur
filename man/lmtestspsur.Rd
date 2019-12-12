@@ -4,9 +4,18 @@
 \alias{lmtestspsur}
 \title{Testing for the presence of spatial effects in Seemingly Unrelated Regressions}
 \usage{
-lmtestspsur(Form = NULL, data = NULL, W = NULL, X = NULL,
-  Y = NULL, time = NULL, G = NULL, N = NULL, Tm = NULL,
-  print_table = TRUE)
+lmtestspsur(
+  Form = NULL,
+  data = NULL,
+  W = NULL,
+  X = NULL,
+  Y = NULL,
+  time = NULL,
+  G = NULL,
+  N = NULL,
+  Tm = NULL,
+  print_table = TRUE
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}

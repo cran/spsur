@@ -4,10 +4,23 @@
 \alias{spsurml}
 \title{Maximum likelihood estimation of spatial SUR model.}
 \usage{
-spsurml(Form = NULL, data = NULL, R = NULL, b = NULL, W = NULL,
-  X = NULL, Y = NULL, G = NULL, N = NULL, Tm = NULL, p = NULL,
-  demean = FALSE, type = "sim", cov = TRUE, control = list(tol =
-  0.05, maxit = 200, trace = TRUE))
+spsurml(
+  Form = NULL,
+  data = NULL,
+  R = NULL,
+  b = NULL,
+  W = NULL,
+  X = NULL,
+  Y = NULL,
+  G = NULL,
+  N = NULL,
+  Tm = NULL,
+  p = NULL,
+  demean = FALSE,
+  type = "sim",
+  cov = TRUE,
+  control = list(tol = 0.05, maxit = 200, trace = TRUE)
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}
@@ -191,7 +204,7 @@ rm(spcsur.sarar) # remove
 # Homicides and selected socio-economic characteristics for continental
 # U.S. counties.
 # Data for four decennial census years: 1960, 1970, 1980 and 1990.
-# \\url{https://geodacenter.github.io/data-and-lab/ncovr/}
+# \url{https://geodacenter.github.io/data-and-lab/ncovr/}
 \donttest{
 ## It usually requires 1-2 minutes maximum...
 rm(list = ls()) # Clean memory

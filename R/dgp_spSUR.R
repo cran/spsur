@@ -234,7 +234,7 @@ dgp_spsur <- function(Sigma, Tm = 1, G, N, Betas,
 {
   #check for row-standardization of W
   if (!is.null(W)){
-    if (class(W) != "matrix") W <- as.matrix(W)
+    if (!is.matrix(W)) W <- as.matrix(W)
     rsumW <- rowSums(W)
     rsumW[rsumW == 0] <- 1
     nW <- dim(W)[1]

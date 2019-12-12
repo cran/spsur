@@ -4,9 +4,21 @@
 \alias{dgp_spsur}
 \title{Generation of a random dataset with a spatial SUR structure.}
 \usage{
-dgp_spsur(Sigma, Tm = 1, G, N, Betas, Thetas = NULL, rho = NULL,
-  lambda = NULL, p = NULL, W = NULL, X = NULL, pdfU = "nvrnorm",
-  pdfX = "nvrnorm")
+dgp_spsur(
+  Sigma,
+  Tm = 1,
+  G,
+  N,
+  Betas,
+  Thetas = NULL,
+  rho = NULL,
+  lambda = NULL,
+  p = NULL,
+  W = NULL,
+  X = NULL,
+  pdfU = "nvrnorm",
+  pdfX = "nvrnorm"
+)
 }
 \arguments{
 \item{Sigma}{Covariance matrix between the \emph{G} equations of the SUR model.

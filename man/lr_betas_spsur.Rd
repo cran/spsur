@@ -4,10 +4,24 @@
 \alias{lr_betas_spsur}
 \title{Likelihood ratio for testing homogeneity constraints on beta coefficients of the SUR equations.}
 \usage{
-lr_betas_spsur(Form = NULL, data = NULL, R = NULL, b = NULL,
-  W = NULL, time = NULL, X = NULL, Y = NULL, G = NULL,
-  N = NULL, Tm = NULL, p = NULL, type = "sim",
-  printmodels = FALSE, cov = FALSE, trace = FALSE)
+lr_betas_spsur(
+  Form = NULL,
+  data = NULL,
+  R = NULL,
+  b = NULL,
+  W = NULL,
+  time = NULL,
+  X = NULL,
+  Y = NULL,
+  G = NULL,
+  N = NULL,
+  Tm = NULL,
+  p = NULL,
+  type = "sim",
+  printmodels = FALSE,
+  cov = FALSE,
+  trace = FALSE
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}
@@ -114,7 +128,7 @@ LR_SMSA <-  lr_betas_spsur(Form = Tformula, data = spc, W = Wspc,
 # Homicides and selected socio-economic characteristics for continental
 # U.S. counties.
 # Data for four decennial census years: 1960, 1970, 1980 and 1990.
-# \\url{https://geodacenter.github.io/data-and-lab/ncovr/}
+# \url{https://geodacenter.github.io/data-and-lab/ncovr/}
 \donttest{
 ## It usually requires 1-2 minutes maximum
 rm(list = ls()) # Clean memory

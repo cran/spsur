@@ -7,8 +7,8 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
 
   E <- get_array_E(G)
   Sigmainv <- try(chol2inv(chol(Sigma)))
-  if(class(Sigmainv)=="try-error")
-    Sigmainv <- MASS::ginv(as.matrix(Sigma), tol=1e-40)
+  if (inherits(Sigmainv, "try-error"))
+    Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
   #delta <- Matrix::Matrix(diag(as.vector(deltas)))
   #A <- kronecker(IT,(IGR - kronecker(delta,W)))
   #OME <- kronecker(IT,kronecker(Sigma,IR))
@@ -49,8 +49,8 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     Sigma <- Matrix::Matrix(Sigma)
     Sigmainv <- try(Matrix::solve(Sigma))
     #Sigmainv <- try(chol2inv(chol(Sigma)))
-    if(class(Sigmainv)=="try-error")
-      Sigmainv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
+    if (inherits(Sigmainv, "try-error"))
+      Sigmainv <- MASS::ginv(as.matrix(Sigma),tol = 1e-40)
     delta <- Matrix::Matrix(diag(as.vector(deltas)))
     # Auxiliar Matrices
     Aux <- IGR-kronecker(delta,W)
@@ -177,8 +177,8 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
                    cbind(Matrix::t(I12A),I22A,I23A),
                    cbind(Matrix::t(I13A),Matrix::t(I23A),I33A))
     mislm_inv <- try(Matrix::solve(mislm,tol=1e-50))
-    if(class(mislm_inv)=="try-error")
-      mislm_inv <- MASS::ginv(as.matrix(mislm),tol=1e-70)
+    if (inherits(mislm_inv, "try-error"))
+      mislm_inv <- MASS::ginv(as.matrix(mislm), tol = 1e-70)
     tmp <- sqrt(Matrix::diag(mislm_inv))
 
     ################################################
@@ -265,7 +265,7 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     ff_cf <- get_ff_cf(G=G)
     ff <- ff_cf$ff; cf <- ff_cf$cf; rm(ff_cf)
     Sigmainv <- try(chol2inv(chol(Sigma)))
-    if(class(Sigmainv)=="try-error")
+    if (inherits(Sigmainv, "try-error"))
       Sigmainv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
     delta <- Matrix::Matrix(diag(as.vector(deltas)))
     # Auxiliar matrices
@@ -336,9 +336,9 @@ rm(k0,k1,k2,Auxiliar)
     misem <- rbind(cbind(J11A, J12A, J13A),
                            cbind(Matrix::t(J12A), J22A, J23A),
                            cbind(Matrix::t(J13A), Matrix::t(J23A), J33A))
-    misem_inv <- try(Matrix::solve(misem,tol=1e-40))
-    if(class(misem_inv)=="try-error")
-      misem_inv <- MASS::ginv(as.matrix(misem),tol=1e-40)
+    misem_inv <- try(Matrix::solve(misem, tol = 1e-40))
+    if (inherits(misem_inv, "try-error"))
+      misem_inv <- MASS::ginv(as.matrix(misem), tol = 1e-40)
     tmp <- sqrt(Matrix::diag(misem_inv))
     ################################################
     #### MARGINAL TEST: Test for SLM in SEM
@@ -452,8 +452,8 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
   ff_cf <- get_ff_cf(G=G)
   ff <- ff_cf$ff; cf <- ff_cf$cf; rm(ff_cf)
   Sigmainv <- try(chol2inv(chol(Sigma)))
-  if(class(Sigmainv)=="try-error")
-    Sigmainv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
+  if (inherits(Sigmainv, "try-error"))
+    Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
   delta_slm <- deltas[1:G]
   delta_sem <- deltas[(G+1):(2*G)]
   DELTA <- Matrix::Matrix(diag(deltas))
@@ -603,7 +603,7 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
                                          Matrix::t(J34A), J44A))
   misarar_inv <- try(Matrix::solve(misarar,tol=1e-40))
 
-  if(class(misarar_inv)=="try-error")
+  if (inherits(misarar_inv, "try-error"))
     misarar_inv <- MASS::ginv(as.matrix(misarar),tol=1e-40)
   tmp <- sqrt(Matrix::diag(misarar_inv))
   Sigmas <- get_Sigma(resids=Res,N=N,G=G,Tm=Tm)

@@ -15,10 +15,10 @@ fit_spsursim <- function(Tm, G, N, Y, X, W,
   Sigma <- Sigmas$Sigma;
   rm(Sigmas)
   Sigma_inv <- try(chol2inv(chol(Sigma)))
-  if(class(Sigma_inv)=="try-error")
-    Sigma_inv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
-    llsur_sim0 <- f_sur_sim(Tm=Tm,G=G,N=N,Y=Y,X=X,
-                            Sigma=Sigma)
+  if (inherits(Sigma_inv, "try-error"))
+    Sigma_inv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
+    llsur_sim0 <- f_sur_sim(Tm = Tm, G = G, N = N, Y = Y,
+                            X = X, Sigma = Sigma)
    if(trace){
     cat("Initial point: ","\n")
     #cat("Sigma: ",round(Sigma,3),"\n")
@@ -38,9 +38,10 @@ fit_spsursim <- function(Tm, G, N, Y, X, W,
     Sigmas <- get_Sigma(resids=Res,N=N,G=G,Tm=Tm)
     Sigma <- Sigmas$Sigma; rm(Sigmas)
     Sigma_inv <- try(chol2inv(chol(Sigma)))
-    if(class(Sigma_inv)=="try-error")
-      Sigma_inv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
-    llsur_sim <- f_sur_sim(Tm=Tm,G=G,N=N,Y=Y,X=X,Sigma=Sigma)
+    if (inherits(Sigma_inv, "try-error"))
+      Sigma_inv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
+    llsur_sim <- f_sur_sim(Tm = Tm, G = G, N = N,
+                           Y = Y, X = X, Sigma = Sigma)
     if(trace){
       cat("Iteration: ",i," ")
       cat("log_lik: ",round(-llsur_sim,3),"\n")

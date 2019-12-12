@@ -177,7 +177,7 @@ spsur3sls <- function(Form = NULL, data = NULL, R = NULL, b = NULL,
 
   #check for row-standardization of W
   if (!is.null(W)){
-    if (class(W) != "matrix") W <- as.matrix(W)
+    if (!(is.matrix(W))) W <- as.matrix(W)
     rsumW <- rowSums(W)
     rsumW[rsumW == 0] <- 1
     nW <- dim(W)[1]
@@ -199,7 +199,7 @@ spsur3sls <- function(Form = NULL, data = NULL, R = NULL, b = NULL,
   if(!is.null(W)) W <- Matrix::Matrix(W)
   cl <- match.call()
   if(!is.null(Form) && !is.null(data)){
-    if (!any(class(Form) == "Formula")) Form <- Formula::Formula(Form)
+    if (!inherits(Form, "Formula")) Form <- Formula::Formula(Form)
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("Formula", "data", "subset",
                  "weights", "na.action",
@@ -209,7 +209,7 @@ spsur3sls <- function(Form = NULL, data = NULL, R = NULL, b = NULL,
     mf[[1L]] <- quote(stats::model.frame)
     mf <- eval(mf, parent.frame())
     # Obtener Datos
-    if(!is.null(Form) & !any(class(Form)=="Formula")) {
+    if (!is.null(Form) && !inherits(Form, "Formula")) {
       Form <- Formula::Formula(Form)
     }
     get_XY <- get_data_spsur(formula=Form,data=data,W=W)

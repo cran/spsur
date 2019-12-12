@@ -4,9 +4,20 @@
 \alias{spsurtime}
 \title{Estimation of SUR models for simple spatial panels (G=1).}
 \usage{
-spsurtime(Form, data, time, type = "sim", method = "ml", maxlagW = 2,
-  W = NULL, cov = TRUE, demean = FALSE, trace = TRUE, R = NULL,
-  b = NULL)
+spsurtime(
+  Form,
+  data,
+  time,
+  type = "sim",
+  method = "ml",
+  maxlagW = 2,
+  W = NULL,
+  cov = TRUE,
+  demean = FALSE,
+  trace = TRUE,
+  R = NULL,
+  b = NULL
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}
@@ -144,12 +155,6 @@ pNCOVR <- data.frame(indiv = index_indiv, time = index_time,
 rm(NCOVR)
 form_pHR <- HR ~ PS + UE
 
-# SIM by ML
-
-## pHR_sim <- spsurtime(Form = form_pHR, data = pNCOVR, W = W,
-##                    time = pNCOVR$time, type = "sim", method = "ml")
-## summary(pHR_sim)
-
 # SLM by 3SLS
 
 pHR_slm <- spsurtime(Form = form_pHR, data = pNCOVR, W = W,
@@ -170,7 +175,6 @@ lr_partrate <-  lr_betas_spsur(Form = form_pHR, data = pNCOVR,
                                printmodels = TRUE)
 
 ############################ Wald tests about betas in spatio-temporal models
-wald_betas(pHR_sim , R = R , b = b) # SIM model
 wald_betas(pHR_slm , R = R , b = b) # SLM model
 ############################ Wald tests about spatial-parameters in
 ############################ spatio-temporal models

@@ -4,8 +4,7 @@
 \alias{print.summary.spsur}
 \title{Print method for objects of class summary.spsur.}
 \usage{
-\method{print}{summary.spsur}(x, digits = max(3L, getOption("digits") -
-  3L), ...)
+\method{print}{summary.spsur}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
 \item{x}{object of class \emph{summary.spsur}.}
@@ -19,8 +18,8 @@ Default: max(3L, getOption("digits") - 3L).}
 Print method for objects of class summary.spsur.
 }
 \examples{
- # See examples for \\code{\\link{spsurml}} or
- # \\code{\\link{spsur3sls}} functions.
+ # See examples for \code{\link{spsurml}} or
+ # \code{\link{spsur3sls}} functions.
 }
 \seealso{
 \code{\link{summary.spsur}}.

@@ -5,9 +5,10 @@ fit_spsurslm_3sls <- function(Tm,G,N,Y,X,W,p,
   IT <- Matrix::Diagonal(Tm)
   IG <- Matrix::Diagonal(G)
   IR <- Matrix::Diagonal(N)
-  if(class(X)=="matrix") X <- Matrix::Matrix(X)
-  if(class(Y)=="matrix") Y <- Matrix::Matrix(Y)
-  if(class(W)=="matrix") W <- Matrix::Matrix(W)
+
+  if (is.matrix(X)) X <- Matrix::Matrix(X)
+  if (is.matrix(Y)) Y <- Matrix::Matrix(Y)
+  if (is.matrix(W)) W <- Matrix::Matrix(W)
 
   ########## FULL REGRESSOR MATRIX #######################
 

@@ -4,8 +4,17 @@
 \alias{lrtestspsur}
 \title{Likelihood Ratio tests for the specification of spatial SUR models.}
 \usage{
-lrtestspsur(Form = NULL, data = NULL, W = NULL, X = NULL,
-  Y = NULL, time = NULL, G = NULL, N = NULL, Tm = NULL)
+lrtestspsur(
+  Form = NULL,
+  data = NULL,
+  W = NULL,
+  X = NULL,
+  Y = NULL,
+  time = NULL,
+  G = NULL,
+  N = NULL,
+  Tm = NULL
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}

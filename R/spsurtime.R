@@ -143,12 +143,7 @@
 #' rm(NCOVR)
 #' form_pHR <- HR ~ PS + UE
 #'
-#' # SIM by ML
-#'
-#' ## pHR_sim <- spsurtime(Form = form_pHR, data = pNCOVR, W = W,
-#' ##                    time = pNCOVR$time, type = "sim", method = "ml")
-#' ## summary(pHR_sim)
-#'
+
 #' # SLM by 3SLS
 #'
 #' pHR_slm <- spsurtime(Form = form_pHR, data = pNCOVR, W = W,
@@ -169,7 +164,6 @@
 #'                                printmodels = TRUE)
 #'
 #' ############################ Wald tests about betas in spatio-temporal models
-#' wald_betas(pHR_sim , R = R , b = b) # SIM model
 #' wald_betas(pHR_slm , R = R , b = b) # SLM model
 
 #' ############################ Wald tests about spatial-parameters in
@@ -189,7 +183,7 @@ spsurtime <- function(Form, data, time, type = "sim",  method = "ml",
 
   #check for row-standardization of W
   if (!is.null(W)){
-    if (class(W) != "matrix") W <- as.matrix(W)
+    if (!(is.matrix(W))) W <- as.matrix(W)
     rsumW <- rowSums(W)
     rsumW[rsumW == 0] <- 1
     nW <- dim(W)[1]
@@ -198,7 +192,7 @@ spsurtime <- function(Form, data, time, type = "sim",  method = "ml",
     W <- Matrix::Matrix(W)
   }
 
-  if (class(time) != "factor") time <- as.factor(time)
+  if (!(is.factor(time))) time <- as.factor(time)
   time <- droplevels(time)
   if (length(time) != nrow(data)) stop("time must have same length than the
                                        number of rows in data")

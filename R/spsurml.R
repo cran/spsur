@@ -323,7 +323,7 @@ spsurml <- function(Form = NULL, data = NULL, R = NULL,
   # Spatial Models: sim, slx, slm, sdm, sem, sdem, sarar
   #check for row-standardization of W
   if (!is.null(W)){
-    if (class(W) != "matrix") W <- as.matrix(W)
+    if (!(is.matrix(W))) W <- as.matrix(W)
     rsumW <- rowSums(W)
     rsumW[rsumW == 0] <- 1
     nW <- dim(W)[1]
@@ -340,7 +340,7 @@ spsurml <- function(Form = NULL, data = NULL, R = NULL,
   if(is.null(W) && !type=="sim") stop("W matrix is needed")
   cl <- match.call()
   if(!is.null(Form) && !is.null(data)){
-    if (!any(class(Form) == "Formula")) Form <- Formula::Formula(Form)
+    if (!inherits(Form, "Formula")) Form <- Formula::Formula(Form)
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("Formula", "data", "subset",
                  "weights", "na.action",
@@ -350,10 +350,10 @@ spsurml <- function(Form = NULL, data = NULL, R = NULL,
     mf[[1L]] <- quote(stats::model.frame)
     mf <- eval(mf, parent.frame())
     # Obtener Datos
-    if(!is.null(Form) & !any(class(Form)=="Formula")) {
+    if (!is.null(Form) && !inherits(Form, "Formula")) {
       Form <- Formula::Formula(Form)
     }
-    get_XY <- get_data_spsur(formula=Form,data=data,W=W)
+    get_XY <- get_data_spsur(formula = Form, data = data, W = W)
     Y <- get_XY$Y
     X <- get_XY$X
     G <- get_XY$G

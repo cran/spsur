@@ -23,8 +23,8 @@ This function summarizes estimated \emph{spsur} objects. The tables in the outpu
  Lagrange Multiplier, LMM, tests of spatial dependence.
 }
 \examples{
- # See examples for \\code{\\link{spsurml}} or
- # \\code{\\link{spsur3sls}} functions.
+ # See examples for \code{\link{spsurml}} or
+ # \code{\link{spsur3sls}} functions.
 
 }
 \seealso{

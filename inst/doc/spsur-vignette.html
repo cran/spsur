@@ -7,11 +7,12 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2019-03-23" />
+<meta name="date" content="2019-12-12" />
 
 <title>spsur: an R package for spatial seemingly unrelated regressions</title>
 
@@ -95,7 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -300,6 +301,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -308,16 +312,16 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">spsur: an R package for spatial seemingly unrelated regressions</h1>
-<h4 class="author"><em>Román Mínguez</em></h4>
+<h4 class="author">Román Mínguez</h4>
 <address class="author_afil">
-University of Castilla La Mancha, Area of Statistics<br><h4 class="author"><em>Fernando A. López</em></h4>
+University of Castilla La Mancha, Area of Statistics<br><h4 class="author">Fernando A. López</h4>
 <address class="author_afil">
-Technical University of Cartagena<br><h4 class="author"><em>Jesús Mur</em></h4>
+Technical University of Cartagena<br><h4 class="author">Jesús Mur</h4>
 <address class="author_afil">
-University of Zaragoza<br><h4 class="date"><em>2019-03-23</em></h4>
+University of Zaragoza<br><h4 class="date">2019-12-12</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
-In recent decades, several methodological improvements have been suggested to specify, estimate and validate Seemingly Unrelated Regression (SUR) models in a spatial framework. These new procedures allow us testing for the presence of spatial dependence, and estimate spatial models using different algorithms. Furthermore, new misspecification tests, singularly in a maximum likelihood framework, have also been developed. Unfortunately, no standard, friendly software is easily avaliable. This is the deficit that the <strong>spsur</strong> R package pretends to fill. The new package allows for the estimation of the most popular spatial econometric models by maximum likelihood or instrumental variable procedures. Moreover, <strong>spsur</strong> implements a collection of Lagrange Multipliers and Likelihood Ratios to test for misspecifications in the SUR. Additional functions allow for the estimation of the so-called <em>spatial impacts</em> (direct, indirect and total impacts) and also obtains random data sets, of a SUR nature, with the features decided by the user. An important aspect of <strong>spsur</strong> is that it operates both in a pure cross-sectional setting or in panel data sets. We include well-known examples in the applied literature on spatial data to illustrate the main functionalities of the new <em>R</em> package.
+<p>In recent decades, several methodological improvements have been suggested to specify, estimate and validate Seemingly Unrelated Regression (SUR) models in a spatial framework. These new procedures allow us testing for the presence of spatial dependence, and estimate spatial models using different algorithms. Furthermore, new misspecification tests, singularly in a maximum likelihood framework, have also been developed. Unfortunately, no standard, friendly software is easily avaliable. This is the deficit that the <strong>spsur</strong> R package pretends to fill. The new package allows for the estimation of the most popular spatial econometric models by maximum likelihood or instrumental variable procedures. Moreover, <strong>spsur</strong> implements a collection of Lagrange Multipliers and Likelihood Ratios to test for misspecifications in the SUR. Additional functions allow for the estimation of the so-called <em>spatial impacts</em> (direct, indirect and total impacts) and also obtains random data sets, of a SUR nature, with the features decided by the user. An important aspect of <strong>spsur</strong> is that it operates both in a pure cross-sectional setting or in panel data sets. We include well-known examples in the applied literature on spatial data to illustrate the main functionalities of the new <em>R</em> package.</p>
 </div>
 
 
@@ -359,10 +363,10 @@ In recent decades, several methodological improvements have been suggested to sp
 
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>Seemingly unrelated regression models (SUR from now on) are a type of multivariate econometric formulation very popular since the seminal papers of <span class="citation">Zellner (<a href="#ref-Zellner1962">1962</a>)</span>, <span class="citation">Malinvaud (<a href="#ref-Malinvaud1970">1970</a>)</span> or <span class="citation">Theil (<a href="#ref-Theil1971">1971</a>)</span>. SUR have been used in many research areas in economics and others fields <span class="citation">(for instance, see Fiebig <a href="#ref-Fiebig2007">2007</a>)</span>, especially in the topics of consumption, production and environmental economics, but also on economic growth, health economics, real estate or competition between local agents. Distinct mechanisms may result in the type of dependence that lies behind SUR models such as omitted variables, unobserved effects or common factors, with a dfferent impact for each equation but uniform among the individuals. It is clear that if the errors are connected, a SUR framework assures efficiency gains by estimating the system jointly rather than processing each equation separately. These gains explain the relevant position that SUR models occupy in the applied research agenda. Spatial econometrics is, surprisingly, an exception: the applied literature is very short in spite of a quite extensive methodological research.</p>
-<p><span class="citation">Anselin (<a href="#ref-Anselin1988a">1988</a>)</span> introduced the term <em>spatial SUR</em> in reference to a model made of <em>‘an equation for each time period, which is estimated for a cross section of spatial units’</em> (p. 141). The approach of Anselin focuses on the problem of serial dependence in the errors of an equation, which is perfectly natural if the same agents intervene in every period. According to usual practice at the end of the eighties, the proposal of Anselin allows for a very limited heterogeneity. In fact, the regression coefficients are assumed to be the same across individuals, and unobserved effects are excluded. These constraints have been overcomed in the more recent works of <span class="citation">Mur, López, and Herrera (<a href="#ref-Mur2010">2010</a>)</span> and <span class="citation">Anselin (<a href="#ref-Anselin2016">2016</a>)</span>, where spatial and nonspatial parameters can take on different values in different cross-section.</p>
-<p>Our case assumes that the model may contain <em>G</em> equations, with spatial structure. Additionally, it is assumed that the cross-sectional dimension (<em>N</em>, number of individuals) is large, and that the time dimension (<em>Tm</em>, number of periods) may increase. <span class="citation">Rey and Montouri (<a href="#ref-Rey1999">1999</a>)</span>, <span class="citation">Egger and Pfaffermayr (<a href="#ref-Egger2004">2004</a>)</span>, <span class="citation">Le Gallo and DallErba (<a href="#ref-LeGallo2006">2006</a>)</span>, <span class="citation">Fingleton (<a href="#ref-Fingleton2007">2007</a>)</span>, <span class="citation">Moscone, Tosetti, and Knapp (<a href="#ref-Moscone2007">2007</a>)</span>, <span class="citation">Le Gallo and Chasco (<a href="#ref-LeGallo2008">2008</a>)</span>, <span class="citation">Lauridsen et al. (<a href="#ref-Lauridsen2010">2010</a>)</span>, <span class="citation">Kakamu, Polasek, and Wago (<a href="#ref-Kakamu2012">2012</a>)</span> or <span class="citation">Bech et al. (<a href="#ref-Bech2012">2012</a>)</span> are well-known examples in this line. If the number of individuals is small and they are observed for a long time period (finite <em>N</em> and large <em>Tm</em>), the inference should be based on the time dimension, for example, specifying an equation for each spatial unit. <span class="citation">Arora and Brown (<a href="#ref-Arora1977">1977</a>)</span>, <span class="citation">Hordijk and Nijkamp (<a href="#ref-Hordijk1977">1977</a>)</span> and <span class="citation">White and Hewings (<a href="#ref-White1982">1982</a>)</span> follow the last approach.</p>
-<p>A significant contribution is <span class="citation">Wang and Kockelman (<a href="#ref-Wang2007">2007</a>)</span>, who allow for greater heterogeneity among the individuals by introducing unobserved random effects. They extend the equation of the errors by including a mechanism of error components ‘a la KKP’, from <span class="citation">Kapoor, Kelejian, and Prucha (<a href="#ref-Kapoor2007">2007</a>)</span>, where the unobserved effects are intermingled with the random term of the spatial errors. This scheme is different from the proposal of <span class="citation">Baltagi, Song, and Koh (<a href="#ref-Baltagi2003">2003</a>)</span>, BSK, where the error is the sum of a spatial error mechanism plus an unobserved individual effect. Another point of interest in the work of Wang and Kockelman is that they built a standard SUR model, with <em>G</em> equations, <em>Tm</em> cross-sections and <em>N</em> individuals. <span class="citation">Baltagi and Bresson (<a href="#ref-Baltagibresson">2011</a>)</span> extend the results of Wang and Kockelman by developing a collection of misspecification tests, under a maximum-likelihood, ML, framework, whereas <span class="citation">Baltagi and Pirotte (<a href="#ref-Baltagipirotte">2011</a>)</span> introduce generalized method of moments, GMM, in a spatial SUR with spatial errors, SEM, also ‘a la KKP’. Finally <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014">2014</a>)</span> address the problem of selecting the best specification for spatial SUR models, using a battery of Lagrange Multipliers obtained in a ML framework. <span class="citation">Lundberg (<a href="#ref-Lundberg2006">2006</a>)</span>, <span class="citation">Zhou and Kockelman (<a href="#ref-Zhou2009">2009</a>)</span>, <span class="citation">Cotteleer and Kooten (<a href="#ref-Cotteleer2012">2012</a>)</span>, <span class="citation">Izón et al. (<a href="#ref-Izon2016">2016</a>)</span> and <span class="citation">López, Martínez-Ortiz, and Cegarra-Navarro (<a href="#ref-Lopez2017">2017</a>)</span> present nice examples in this direction.</p>
+<p>Seemingly unrelated regression models (SUR from now on) are a type of multivariate econometric formulation very popular since the seminal papers of <span class="citation">Zellner (<a href="#ref-Zellner1962" role="doc-biblioref">1962</a>)</span>, <span class="citation">Malinvaud (<a href="#ref-Malinvaud1970" role="doc-biblioref">1970</a>)</span> or <span class="citation">Theil (<a href="#ref-Theil1971" role="doc-biblioref">1971</a>)</span>. SUR have been used in many research areas in economics and others fields <span class="citation">(for instance, see Fiebig <a href="#ref-Fiebig2007" role="doc-biblioref">2007</a>)</span>, especially in the topics of consumption, production and environmental economics, but also on economic growth, health economics, real estate or competition between local agents. Distinct mechanisms may result in the type of dependence that lies behind SUR models such as omitted variables, unobserved effects or common factors, with a dfferent impact for each equation but uniform among the individuals. It is clear that if the errors are connected, a SUR framework assures efficiency gains by estimating the system jointly rather than processing each equation separately. These gains explain the relevant position that SUR models occupy in the applied research agenda. Spatial econometrics is, surprisingly, an exception: the applied literature is very short in spite of a quite extensive methodological research.</p>
+<p><span class="citation">Anselin (<a href="#ref-Anselin1988a" role="doc-biblioref">1988</a>)</span> introduced the term <em>spatial SUR</em> in reference to a model made of <em>‘an equation for each time period, which is estimated for a cross section of spatial units’</em> (p. 141). The approach of Anselin focuses on the problem of serial dependence in the errors of an equation, which is perfectly natural if the same agents intervene in every period. According to usual practice at the end of the eighties, the proposal of Anselin allows for a very limited heterogeneity. In fact, the regression coefficients are assumed to be the same across individuals, and unobserved effects are excluded. These constraints have been overcomed in the more recent works of <span class="citation">Mur, López, and Herrera (<a href="#ref-Mur2010" role="doc-biblioref">2010</a>)</span> and <span class="citation">Anselin (<a href="#ref-Anselin2016" role="doc-biblioref">2016</a>)</span>, where spatial and nonspatial parameters can take on different values in different cross-section.</p>
+<p>Our case assumes that the model may contain <em>G</em> equations, with spatial structure. Additionally, it is assumed that the cross-sectional dimension (<em>N</em>, number of individuals) is large, and that the time dimension (<em>Tm</em>, number of periods) may increase. <span class="citation">Rey and Montouri (<a href="#ref-Rey1999" role="doc-biblioref">1999</a>)</span>, <span class="citation">Egger and Pfaffermayr (<a href="#ref-Egger2004" role="doc-biblioref">2004</a>)</span>, <span class="citation">Le Gallo and DallErba (<a href="#ref-LeGallo2006" role="doc-biblioref">2006</a>)</span>, <span class="citation">Fingleton (<a href="#ref-Fingleton2007" role="doc-biblioref">2007</a>)</span>, <span class="citation">Moscone, Tosetti, and Knapp (<a href="#ref-Moscone2007" role="doc-biblioref">2007</a>)</span>, <span class="citation">Le Gallo and Chasco (<a href="#ref-LeGallo2008" role="doc-biblioref">2008</a>)</span>, <span class="citation">Lauridsen et al. (<a href="#ref-Lauridsen2010" role="doc-biblioref">2010</a>)</span>, <span class="citation">Kakamu, Polasek, and Wago (<a href="#ref-Kakamu2012" role="doc-biblioref">2012</a>)</span> or <span class="citation">Bech et al. (<a href="#ref-Bech2012" role="doc-biblioref">2012</a>)</span> are well-known examples in this line. If the number of individuals is small and they are observed for a long time period (finite <em>N</em> and large <em>Tm</em>), the inference should be based on the time dimension, for example, specifying an equation for each spatial unit. <span class="citation">Arora and Brown (<a href="#ref-Arora1977" role="doc-biblioref">1977</a>)</span>, <span class="citation">Hordijk and Nijkamp (<a href="#ref-Hordijk1977" role="doc-biblioref">1977</a>)</span> and <span class="citation">White and Hewings (<a href="#ref-White1982" role="doc-biblioref">1982</a>)</span> follow the last approach.</p>
+<p>A significant contribution is <span class="citation">Wang and Kockelman (<a href="#ref-Wang2007" role="doc-biblioref">2007</a>)</span>, who allow for greater heterogeneity among the individuals by introducing unobserved random effects. They extend the equation of the errors by including a mechanism of error components ‘a la KKP’, from <span class="citation">Kapoor, Kelejian, and Prucha (<a href="#ref-Kapoor2007" role="doc-biblioref">2007</a>)</span>, where the unobserved effects are intermingled with the random term of the spatial errors. This scheme is different from the proposal of <span class="citation">Baltagi, Song, and Koh (<a href="#ref-Baltagi2003" role="doc-biblioref">2003</a>)</span>, BSK, where the error is the sum of a spatial error mechanism plus an unobserved individual effect. Another point of interest in the work of Wang and Kockelman is that they built a standard SUR model, with <em>G</em> equations, <em>Tm</em> cross-sections and <em>N</em> individuals. <span class="citation">Baltagi and Bresson (<a href="#ref-Baltagibresson" role="doc-biblioref">2011</a>)</span> extend the results of Wang and Kockelman by developing a collection of misspecification tests, under a maximum-likelihood, ML, framework, whereas <span class="citation">Baltagi and Pirotte (<a href="#ref-Baltagipirotte" role="doc-biblioref">2011</a>)</span> introduce generalized method of moments, GMM, in a spatial SUR with spatial errors, SEM, also ‘a la KKP’. Finally <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014" role="doc-biblioref">2014</a>)</span> address the problem of selecting the best specification for spatial SUR models, using a battery of Lagrange Multipliers obtained in a ML framework. <span class="citation">Lundberg (<a href="#ref-Lundberg2006" role="doc-biblioref">2006</a>)</span>, <span class="citation">Zhou and Kockelman (<a href="#ref-Zhou2009" role="doc-biblioref">2009</a>)</span>, <span class="citation">Cotteleer and Kooten (<a href="#ref-Cotteleer2012" role="doc-biblioref">2012</a>)</span>, <span class="citation">Izón et al. (<a href="#ref-Izon2016" role="doc-biblioref">2016</a>)</span> and <span class="citation">López, Martínez-Ortiz, and Cegarra-Navarro (<a href="#ref-Lopez2017" role="doc-biblioref">2017</a>)</span> present nice examples in this direction.</p>
 <p>From the discussion above, it is clear that there is a growing interest in the case of seemingly unrelated regressions in a spatial context, although the lack of specific software has slowed its adoption in applied research. Our purpose is to introduce a new <em>R</em> package, called <strong>spsur</strong>, to fill this gap. The preferred framework is a large <em>N</em> and an increasing <em>Tm</em>. The core of the package lies in ML estimation because, at this time, we value exactitude and reliability over quickness. There is no need to recall that the hypothesis of normality plays a key role in this approach, which may be difficult to admit in some cases. For that reason, and also to allow for speed of calculus in large samples, the ML approach is completed with a module devoted to IV procedures.</p>
 <p>Among the limitations, let us note that we rely explicitly on the assumptions of linearity and dynamic relations are not allowed. This version of the package can remove unobserved individual effects from the equations, which are not estimated. Finally, we require the user to specify the weighting matrix, which is assumed exogenous, known, time invariant and constant across equations.</p>
 <p>Second Section introduces notation and reviews some basic results in the literature on spatial SUR models, using the approach of Anselin. Section 3 presents the structure and some of the main functions included in <strong>spsur</strong>. Section 4 focusses on misspecification tests included in <strong>spsur</strong>. Section 5 is devoted to the issue of spatial multipliers whereas Section 6 presents the general case of a SUR model with <em>G</em> equations, <em>Tm</em> time periods and <em>N</em> individuals. Section 7 introduces an additional functionality that allows for simulation experiments. Finally, Section 8 concludes with a brief summary and prospects for the future.</p>
@@ -375,9 +379,9 @@ In recent decades, several methodological improvements have been suggested to sp
 E[{\boldsymbol \varepsilon}_t]=0\ ;\ \ \ \ \ E[{\boldsymbol \varepsilon}_t {\boldsymbol \varepsilon^{T}}_s]= \sigma_{ts} {\bf I}_N  \ \ \ \ \ \ t,s=1,...,Tm
  \tag{2.1}
 \end{equation}\]</span>
-where <span class="math inline">\({\bf y_t}\)</span>, <span class="math inline">\({\bf u}_t\)</span> and <span class="math inline">\({\boldsymbol \varepsilon}_t\)</span> are <em>N</em><span class="math inline">\(\times\)</span><em>1</em> vectors, <span class="math inline">\({\bf X}_t\)</span> is a <em>N</em><span class="math inline">\(\times p_t\)</span> matrix, with <span class="math inline">\(p_t\)</span> the number of regressors that appear in the t-th equation and <span class="math inline">\(\boldsymbol{\beta}_t\)</span> the <span class="math inline">\((p_t \times 1)\)</span> vector of coefficients. We call this model as SUR-SIM, from spatially independent model following the terminology in <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014">2014</a>)</span>.</p>
+where <span class="math inline">\({\bf y_t}\)</span>, <span class="math inline">\({\bf u}_t\)</span> and <span class="math inline">\({\boldsymbol \varepsilon}_t\)</span> are <em>N</em><span class="math inline">\(\times\)</span><em>1</em> vectors, <span class="math inline">\({\bf X}_t\)</span> is a <em>N</em><span class="math inline">\(\times p_t\)</span> matrix, with <span class="math inline">\(p_t\)</span> the number of regressors that appear in the t-th equation and <span class="math inline">\(\boldsymbol{\beta}_t\)</span> the <span class="math inline">\((p_t \times 1)\)</span> vector of coefficients. We call this model as SUR-SIM, from spatially independent model following the terminology in <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014" role="doc-biblioref">2014</a>)</span>.</p>
 <p>The singular aspect of <a href="#eq:baseline">(2.1)</a> is that the SUR structure appears because there is intra-individual serial dependence; inter-individual serial dependence is excluded. The serial dependence in the errors is not parameterized, but estimated in the (<em>Tm</em><span class="math inline">\(\times\)</span><em>Tm</em>) sampling covariance matrix, <span class="math inline">\(\boldsymbol \Sigma\)</span>=<span class="math inline">\((\sigma_{ts})\)</span>.</p>
-<p>The equation of <a href="#eq:baseline">(2.1)</a> may be enough in some circumstances but not in a spatial setting where a potential problem, often present in applied research, is the existence of spatial dependence. The spatial mechanisms may have different forms <span class="citation">(Elhorst <a href="#ref-Elhorst2014">2014</a>)</span>. A general SUR model that include most of the possible spatial effects of interest is:</p>
+<p>The equation of <a href="#eq:baseline">(2.1)</a> may be enough in some circumstances but not in a spatial setting where a potential problem, often present in applied research, is the existence of spatial dependence. The spatial mechanisms may have different forms <span class="citation">(Elhorst <a href="#ref-Elhorst2014" role="doc-biblioref">2014</a>)</span>. A general SUR model that include most of the possible spatial effects of interest is:</p>
 <p><span class="math display" id="eq:GNM">\[\begin{equation}
 {\bf y}_t=\lambda_t {\bf W}_t^y {\bf y}_t+ {\bf X}_t {\boldsymbol \beta}_t+ {\bf W}_t^x {\bf X}_t^* {\boldsymbol \gamma}_t + {\bf u}_t;\ {\bf u}_t=\rho_t {\bf W}_t^u {\bf u}_t +{\boldsymbol \varepsilon}_t\ ; \ \  E[{\boldsymbol \varepsilon}_t]=0\ ;\ \ E[{{\boldsymbol \varepsilon}_t} {{\boldsymbol \varepsilon^{T}}_s}]=\sigma_{ts}{\bf I}_N
  \tag{2.2}
@@ -392,7 +396,7 @@ where <span class="math inline">\({\bf y_t}\)</span>, <span class="math inline">
 <li>The SUR-SDEM, spatial Durbin error model, where <span class="math inline">\(\lambda_t= 0, (\forall t)\)</span>.</li>
 <li>The SUR-SARAR, spatial lag model with autoregresive errors, where <span class="math inline">\(\gamma_t = 0, (\forall t)\)</span>.</li>
 </ol>
-<p>In the applied literature, it is usual to assume that the weighting matrices are the same <span class="math inline">\({\bf W}_t^x\)</span> = <span class="math inline">\({\bf W}_t^u\)</span> = <span class="math inline">\({\bf W}_t^{\varepsilon}\)</span> = <span class="math inline">\({\bf W}\)</span>. The user should supply this matrix, based on apriori knowledge, which, in any case, must conform to he requisites described in <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian2004">2004</a>)</span>: the terms on the main diagonal are zero and the row and column sums of <span class="math inline">\(\textbf W\)</span> are uniformly bounded in absolute value, the same as <span class="math inline">\(\textbf A_{t}^{-1} =\mathop{\left({\bf I}_N -\lambda _{t} {\bf W}\right)}\nolimits^{-1}\)</span> and <span class="math inline">\(\textbf B_{t}^{-1} =\mathop{\left({\bf I}_N -\rho _{t} {\bf W}\right)}\nolimits^{-1}\)</span> which must exist.</p>
+<p>In the applied literature, it is usual to assume that the weighting matrices are the same <span class="math inline">\({\bf W}_t^x\)</span> = <span class="math inline">\({\bf W}_t^u\)</span> = <span class="math inline">\({\bf W}_t^{\varepsilon}\)</span> = <span class="math inline">\({\bf W}\)</span>. The user should supply this matrix, based on apriori knowledge, which, in any case, must conform to he requisites described in <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian2004" role="doc-biblioref">2004</a>)</span>: the terms on the main diagonal are zero and the row and column sums of <span class="math inline">\(\textbf W\)</span> are uniformly bounded in absolute value, the same as <span class="math inline">\(\textbf A_{t}^{-1} =\mathop{\left({\bf I}_N -\lambda _{t} {\bf W}\right)}\nolimits^{-1}\)</span> and <span class="math inline">\(\textbf B_{t}^{-1} =\mathop{\left({\bf I}_N -\rho _{t} {\bf W}\right)}\nolimits^{-1}\)</span> which must exist.</p>
 <p>The model of <a href="#eq:GNM">(2.2)</a>, for the case of <em>G</em>=1, can be expressed using obvious matrix notation:</p>
 <p><span class="math display" id="eq:pool">\[\begin{equation}
 \begin{array}{ll}
@@ -411,7 +415,7 @@ l({\bf y};{\boldsymbol \eta})=-\frac{NTm}{2} \ln (2\pi)-\frac{N}{2} \ln |{\bf \S
  \tag{2.4}
 \end{multline}\]</span></p>
 <p>where <span class="math inline">\(\bar{\textbf X}=[\textbf X,\bf W {\bf X}^*]\)</span> is a <em>NTm</em> <span class="math inline">\(\times\)</span> (<em>2p-Tm</em>).</p>
-<p>The vector of parameters is <span class="math inline">\({\boldsymbol \eta}^{T}=\left[{\boldsymbol \beta}^{T};{\boldsymbol \gamma}^{T};\lambda_{1}; \dots ;\lambda_{Tm};\rho_{1};\dots ;\rho_{Tm} ;\mathop{\sigma }\nolimits_{ij} \right]\)</span>, where there are <em>P= (2p-Tm)+Tm+Tm(Tm+1)/2</em> unknown coefficients <span class="citation">Wang and Kockelman (<a href="#ref-Wang2007">2007</a>)</span> and <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014">2014</a>)</span> use numerical optimization techniques to solve the maximum likelihood estimates. Note that the presence of the log of the Jacobian terms, <span class="math inline">\(\ln|{\bf B}_t|\)</span> and <span class="math inline">\(\ln|{\bf A}_t|\)</span>, forces the spatial parameters, <span class="math inline">\(\lambda_t\)</span> and <span class="math inline">\(\rho_t\)</span>, to lie inside the so-called <em>stability interval</em> (if the weighting matrix is row-standardized, a rough approximation is -1,+1). Under the assumption that the spatial SUR model is correctly specified (including normality), the ML estimators are consistent, efficient and asymptotically normally distributed <span class="citation">(Davidson and MacKinnon <a href="#ref-Davidson1993">1993</a>)</span>.</p>
+<p>The vector of parameters is <span class="math inline">\({\boldsymbol \eta}^{T}=\left[{\boldsymbol \beta}^{T};{\boldsymbol \gamma}^{T};\lambda_{1}; \dots ;\lambda_{Tm};\rho_{1};\dots ;\rho_{Tm} ;\mathop{\sigma }\nolimits_{ij} \right]\)</span>, where there are <em>P= (2p-Tm)+Tm+Tm(Tm+1)/2</em> unknown coefficients <span class="citation">Wang and Kockelman (<a href="#ref-Wang2007" role="doc-biblioref">2007</a>)</span> and <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014" role="doc-biblioref">2014</a>)</span> use numerical optimization techniques to solve the maximum likelihood estimates. Note that the presence of the log of the Jacobian terms, <span class="math inline">\(\ln|{\bf B}_t|\)</span> and <span class="math inline">\(\ln|{\bf A}_t|\)</span>, forces the spatial parameters, <span class="math inline">\(\lambda_t\)</span> and <span class="math inline">\(\rho_t\)</span>, to lie inside the so-called <em>stability interval</em> (if the weighting matrix is row-standardized, a rough approximation is -1,+1). Under the assumption that the spatial SUR model is correctly specified (including normality), the ML estimators are consistent, efficient and asymptotically normally distributed <span class="citation">(Davidson and MacKinnon <a href="#ref-Davidson1993" role="doc-biblioref">1993</a>)</span>.</p>
 <div id="testing" class="section level2">
 <h2><span class="header-section-number">2.1</span> Testing for spatial effects</h2>
 <p>The estimation of spatial SUR models can be complex for strong spatial dependence mechanisms, so it is advisable to avoid needless efforts. This is the purpose of the Lagrange Multipliers presented below. As usual in the spatial econometrics literature, our starting point is the SUR-SARAR model.</p>
@@ -429,7 +433,7 @@ H_0 :\lambda_t =\rho_t =0 \ \ (\forall t)  \ \ \ \ vs  \ \  \ \ H_A: No  \ \ H_0
 \mathop{\sim }\limits_{as} \mathop{\chi }\nolimits^{2} (2Tm)
 \tag{2.6}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathop{{\bf g}}\nolimits_{({\boldsymbol\eta})_{\left|\mathop{H}\nolimits_{0} \right. }}\)</span> is the score vector of order (<em>P</em>x<em>1</em>), evaluated under the null hypothesis. <span class="math inline">\(\mathop{\bf I}\nolimits_{({\boldsymbol \eta} )_{\left|\mathop{H}\nolimits_{0} \right. }}\)</span> is the (<em>P</em>x<em>P</em>) information matrix of the SUR-SARAR model also under the null of <a href="#eq:HpLMSARAR">(2.5)</a>; more details in <span class="citation">Mur, López, and Herrera (<a href="#ref-Mur2010">2010</a>)</span>.</p>
+<p>where <span class="math inline">\(\mathop{{\bf g}}\nolimits_{({\boldsymbol\eta})_{\left|\mathop{H}\nolimits_{0} \right. }}\)</span> is the score vector of order (<em>P</em>x<em>1</em>), evaluated under the null hypothesis. <span class="math inline">\(\mathop{\bf I}\nolimits_{({\boldsymbol \eta} )_{\left|\mathop{H}\nolimits_{0} \right. }}\)</span> is the (<em>P</em>x<em>P</em>) information matrix of the SUR-SARAR model also under the null of <a href="#eq:HpLMSARAR">(2.5)</a>; more details in <span class="citation">Mur, López, and Herrera (<a href="#ref-Mur2010" role="doc-biblioref">2010</a>)</span>.</p>
 <p>If we change the model of the alternative, from the SUR-SARAR to the SUR-SLM, we can test for the significance of the spatial lags:</p>
 <p><span class="math display" id="eq:HpLMSLM">\[\begin{equation}
 H_0 :\lambda_t =0 \ \ (\forall t)  \ \ \ \ vs  \ \  \ \ H_A: No  \ \ H_0
@@ -442,12 +446,12 @@ H_0 :\rho_t =0 \ \ (\forall t)  \ \ \ \ vs  \ \  \ \ H_A: No  \ \ H_0
 \tag{2.8}
 \end{equation}\]</span></p>
 <p>The Lagrange Multiplier associated to the hypothesis of <a href="#eq:HpLMSEM">(2.8)</a> is called <span class="math inline">\({\rm LM}_{\rm SEM}^{\rm SUR}\)</span>.</p>
-<p><span class="citation">Bera and Yoon (<a href="#ref-Bera1993">1993</a>)</span> show that the last two <em>raw</em> Multipliers, <span class="math inline">\({\rm LM}_{\rm SLM}^{\rm SUR}\)</span> and <span class="math inline">\({\rm LM}_{\rm SEM}^{\rm SUR}\)</span>, are oversized in case of misspecification of the alternative hypothesis. This lack of robustness complicates the identification of the correct specification. Let us note that this problem is not specific of a spatial setting but extends to other cases where there are groups of parameters whose scores are not orthogonal. The solution, as suggested in <span class="citation">Anselin et al. (<a href="#ref-Anselin1996">1996</a>)</span>, is to <em>robustify</em> the <em>raw</em> Multipliers to obtain the so-called robust Lagrange Multipliers, denoted as <span class="math inline">\({\rm LM}_{\rm SLM}^{\rm *SUR}\)</span> and <span class="math inline">\({\rm LM}_{\rm SEM}^{\rm *SUR}\)</span> respectively. The size of the robust Multipliers is more balanced at the cost of a small decrease in power; in any case, they are very popular among practitioners in spatial data analysis.</p>
+<p><span class="citation">Bera and Yoon (<a href="#ref-Bera1993" role="doc-biblioref">1993</a>)</span> show that the last two <em>raw</em> Multipliers, <span class="math inline">\({\rm LM}_{\rm SLM}^{\rm SUR}\)</span> and <span class="math inline">\({\rm LM}_{\rm SEM}^{\rm SUR}\)</span>, are oversized in case of misspecification of the alternative hypothesis. This lack of robustness complicates the identification of the correct specification. Let us note that this problem is not specific of a spatial setting but extends to other cases where there are groups of parameters whose scores are not orthogonal. The solution, as suggested in <span class="citation">Anselin et al. (<a href="#ref-Anselin1996" role="doc-biblioref">1996</a>)</span>, is to <em>robustify</em> the <em>raw</em> Multipliers to obtain the so-called robust Lagrange Multipliers, denoted as <span class="math inline">\({\rm LM}_{\rm SLM}^{\rm *SUR}\)</span> and <span class="math inline">\({\rm LM}_{\rm SEM}^{\rm *SUR}\)</span> respectively. The size of the robust Multipliers is more balanced at the cost of a small decrease in power; in any case, they are very popular among practitioners in spatial data analysis.</p>
 </div>
 <div id="the-iv-estimation-method-for-spatial-sur" class="section level2">
 <h2><span class="header-section-number">2.2</span> The IV estimation for spatial SUR models</h2>
 <p>The ML approach offers an adequate framework for solving the inference of spatial SUR models. However, as the size of the cross-section, <em>N</em>, increases they become highly demanding in terms of computational effort due to the presence of the Jacobian matrices in the likelihoods. Under some circumstances, it may be reasonable to use other algorithms, such as Instrumental Variables, IV.</p>
-<p><span class="citation">Durbin (<a href="#ref-Durbin1954">1954</a>)</span> and <span class="citation">Sargan (<a href="#ref-Sargan1958">1958</a>)</span> introduced the IV approach as a method to deal with problems of endogeneity. This is the typical situation in a spatial model that includes lags of the explained variable among the regressors. For example, in the SUR-SLM case is inmediate to conclude that <span class="math inline">\(E\left[\bar{{\bf y}}^{T} {\bf u}\right]=tr\left[({\boldsymbol \Delta}^{-1})^{T} \left({\bf I}_{TmN} \otimes \textbf{W}^{T} \right) {\boldsymbol \Omega} \right] \neq 0\)</span>, being <span class="math inline">\({\boldsymbol \Delta}={\bf I}_{Tm} \otimes {\boldsymbol \Lambda} \otimes {\bf W}\)</span> and <span class="math inline">\(\bar{{\bf y}}\)</span> the spatial lag of the explained variable, <span class="math inline">\(\bar{{\bf y}} = \left[{\bf I}_{Tm} \otimes {\bf W} \right] {\bf y}\)</span>. <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian1998">1998</a>)</span> and <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian1999">1999</a>)</span> adapt the IV procedure to a spatial setting, advocating for the use of the so-called <em>spatial instrumental variables</em>, which is the approach implemented in <strong>spsur</strong>.</p>
+<p><span class="citation">Durbin (<a href="#ref-Durbin1954" role="doc-biblioref">1954</a>)</span> and <span class="citation">Sargan (<a href="#ref-Sargan1958" role="doc-biblioref">1958</a>)</span> introduced the IV approach as a method to deal with problems of endogeneity. This is the typical situation in a spatial model that includes lags of the explained variable among the regressors. For example, in the SUR-SLM case is inmediate to conclude that <span class="math inline">\(E\left[\bar{{\bf y}}^{T} {\bf u}\right]=tr\left[({\boldsymbol \Delta}^{-1})^{T} \left({\bf I}_{TmN} \otimes \textbf{W}^{T} \right) {\boldsymbol \Omega} \right] \neq 0\)</span>, being <span class="math inline">\({\boldsymbol \Delta}={\bf I}_{Tm} \otimes {\boldsymbol \Lambda} \otimes {\bf W}\)</span> and <span class="math inline">\(\bar{{\bf y}}\)</span> the spatial lag of the explained variable, <span class="math inline">\(\bar{{\bf y}} = \left[{\bf I}_{Tm} \otimes {\bf W} \right] {\bf y}\)</span>. <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian1998" role="doc-biblioref">1998</a>)</span> and <span class="citation">Kelejian and Prucha (<a href="#ref-Kelejian1999" role="doc-biblioref">1999</a>)</span> adapt the IV procedure to a spatial setting, advocating for the use of the so-called <em>spatial instrumental variables</em>, which is the approach implemented in <strong>spsur</strong>.</p>
 <p>As known, a good instrument, say <span class="math inline">\({\bf Z}\)</span>, should combine two properties:</p>
 <ul>
 <li>the instrument must be orthogonal with the error term,
@@ -474,14 +478,14 @@ H_0 :\rho_t =0 \ \ (\forall t)  \ \ \ \ vs  \ \  \ \ H_A: No  \ \ H_0
 <div id="software-review" class="section level2">
 <h2><span class="header-section-number">2.3</span> Software review</h2>
 <p>The aim of <strong>spsur</strong> is to stimulate the use of spatial SUR models in applied research, by offering a friendly software easily accessible. As said, at present the user has very limited options, which has slowed the spreading of spatial SUR models.</p>
-<p>In the field of quantitative analysis for spatial data, we can cite several <em>R</em> specialized packages. Probably, the most popular are <strong>spdep</strong> <span class="citation">(Bivand, Pebesma, and Gomez-Rubio <a href="#ref-spdep">2013</a>)</span> and <strong>spml</strong> <span class="citation">(Millo, Piras, and others <a href="#ref-spml">2012</a>)</span>. The <strong>spdep</strong> is an <em>R</em> package with high functionalities for econometric analysis of cross-sectional data whereas <strong>spml</strong> is more focused in the case of spatial panels. On the other hand, the <em>R</em> package <strong>systemfit</strong> <span class="citation">(Henningsen, Hamann, and others <a href="#ref-systemfit">2007</a>)</span> is devoted to SUR models, but do not incorporate spatial effects. That is, none of the three packages have specific utilities to solve inference of spatial SUR models.</p>
-<p>Indeed, to our knowledge, the closest antecedent of <strong>spsur</strong> is the beta version of <strong>Spacestat</strong> <span class="citation">(Anselin <a href="#ref-AnselinSpaceStat">1999</a>)</span>, called <strong>SpaceStat v.May91</strong>, which had limited functionalities and required <em>Windows 98</em> (see <a href="https://www.youtube.com/watch?v=6pM0tDWqt3o&amp;t=53s">video YouTube</a>). Of course, nowadays it would be very difficult doing applied research using <strong>SpaceStat v.May91</strong>.</p>
-<p>There is a second alternative in <em>Python</em>; it is the library <strong>pysal</strong> <span class="citation">(Rey and Anselin <a href="#ref-Rey2007">2007</a>)</span>. The module <code>spreg.sur</code> provides SUR estimation of models with no spatial effects; the output includes several diagnostic measures among which appear the <em>raw</em> Lagrange Multpliers. Moreover, the codes <code>spreg.sur_error</code> and <code>spreg.sur_lag</code> provides the estimation of spatial SUR models with spatial errors and with spatial lags of the explained variable, respectively. The SUR-SEM model is estimated by ML whereas the SUR-SLM is estimated using spatial instrumental variables throug 3SLS. Finally, there is some code in MATLAB, related to the work of <span class="citation">(López, Mur, and Angulo <a href="#ref-Lopez2014">2014</a>)</span>, but the source is not free software and the codes are not fully integrated.</p>
+<p>In the field of quantitative analysis for spatial data, we can cite several <em>R</em> specialized packages. Probably, the most popular are <strong>spdep</strong> <span class="citation">(Bivand, Pebesma, and Gomez-Rubio <a href="#ref-spdep" role="doc-biblioref">2013</a>)</span> and <strong>spml</strong> <span class="citation">(Millo, Piras, and others <a href="#ref-spml" role="doc-biblioref">2012</a>)</span>. The <strong>spdep</strong> is an <em>R</em> package with high functionalities for econometric analysis of cross-sectional data whereas <strong>spml</strong> is more focused in the case of spatial panels. On the other hand, the <em>R</em> package <strong>systemfit</strong> <span class="citation">(Henningsen, Hamann, and others <a href="#ref-systemfit" role="doc-biblioref">2007</a>)</span> is devoted to SUR models, but do not incorporate spatial effects. That is, none of the three packages have specific utilities to solve inference of spatial SUR models.</p>
+<p>Indeed, to our knowledge, the closest antecedent of <strong>spsur</strong> is the beta version of <strong>Spacestat</strong> <span class="citation">(Anselin <a href="#ref-AnselinSpaceStat" role="doc-biblioref">1999</a>)</span>, called <strong>SpaceStat v.May91</strong>, which had limited functionalities and required <em>Windows 98</em> (see <a href="https://www.youtube.com/watch?v=6pM0tDWqt3o&amp;t=53s">video YouTube</a>). Of course, nowadays it would be very difficult doing applied research using <strong>SpaceStat v.May91</strong>.</p>
+<p>There is a second alternative in <em>Python</em>; it is the library <strong>pysal</strong> <span class="citation">(Rey and Anselin <a href="#ref-Rey2007" role="doc-biblioref">2007</a>)</span>. The module <code>spreg.sur</code> provides SUR estimation of models with no spatial effects; the output includes several diagnostic measures among which appear the <em>raw</em> Lagrange Multpliers. Moreover, the codes <code>spreg.sur_error</code> and <code>spreg.sur_lag</code> provides the estimation of spatial SUR models with spatial errors and with spatial lags of the explained variable, respectively. The SUR-SEM model is estimated by ML whereas the SUR-SLM is estimated using spatial instrumental variables throug 3SLS. Finally, there is some code in MATLAB, related to the work of <span class="citation">(López, Mur, and Angulo <a href="#ref-Lopez2014" role="doc-biblioref">2014</a>)</span>, but the source is not free software and the codes are not fully integrated.</p>
 </div>
 </div>
 <div id="intro-spsur" class="section level1">
 <h1><span class="header-section-number">3</span> Introducing the spsur package</h1>
-<p><strong>spsur</strong> is an open-source software for the <em>R</em> computing platform <span class="citation">(R Core Team <a href="#ref-R2018">2018</a>)</span>. <strong>spsur</strong> depends on the packages <strong>Formula</strong>, <strong>MASS</strong>, <strong>Matrix</strong>, <strong>methods</strong>, <strong>numDeriv</strong>, <strong>minqa</strong>, <strong>sparseMVN</strong>, <strong>spdep</strong> and <strong>stats</strong>. The package can be freely dowloaded from CRAN and a development version is available in the link <a href="https://www.github.com/rominsal/spSUR">Github-spsur</a>.
+<p><strong>spsur</strong> is an open-source software for the <em>R</em> computing platform <span class="citation">(R Core Team <a href="#ref-R2018" role="doc-biblioref">2018</a>)</span>. <strong>spsur</strong> depends on the packages <strong>Formula</strong>, <strong>MASS</strong>, <strong>Matrix</strong>, <strong>methods</strong>, <strong>numDeriv</strong>, <strong>minqa</strong>, <strong>sparseMVN</strong>, <strong>spdep</strong> and <strong>stats</strong>. The package can be freely dowloaded from CRAN and a development version is available in the link <a href="https://www.github.com/rominsal/spSUR">Github-spsur</a>.
 The users will find a complete helping documentation and a vignette to guide them through the functionalities of the package.</p>
 <p><strong>spsur</strong> is made of 10 different functions which allow for a thoroughful analysis of a spatial SUR specification. Figure 1 shows the main functionalities of the package. <strong>spsur</strong> includes one function to evaluate the Lagrange Multipliers for the presence of spatial correlation in a SUR-SIM model (<code>lmtestspsur()</code>); two functions to estimate spatial SUR models, by maximum likelihood (<code>spsurml()</code>) or using instrumental variables (<code>spsur3sls()</code>) for the general case of <em>G</em>&gt;1 (including both <em>Tm</em>=1 and <em>Tm</em>&gt;1), and a third one designed to deal with pure spatial panels (<code>spsurtime()</code>) for <em>G</em>=1 and <em>Tm</em>&gt;1; four additional functions allow to improve the specification (<code>lrtestspsur()</code>; <code>wald_betas()</code>, <code>wald_deltas()</code> and <code>lr_betas_spsur()</code>); another function obtains the spatial impacts of the regressors (<code>impacts()</code>). Finally <code>dgp_spsur()</code> allows the user to solve Monte Carlo experiments using spatial SUR models.</p>
 <!-- ![Main functionatities of spsur package](Figure1_JSS2.png) -->
@@ -495,7 +499,7 @@ Figure 3.1:  Main functionatities of spsur package
 <h2><span class="header-section-number">3.1</span> Datasets and baseline models</h2>
 <p>Two main data sets have been included in the package with the aim of showing the functionalities of <strong>spsur</strong>,
 namely, <code>spc</code> and <code>NCOVR</code>. Each data set consists of the corresponding data frame plus a weighting matrix that must be row-standardized; if the matrix is not row-standardized, then <strong>spsur</strong> does it.</p>
-<p><em>Example 1:</em> The first dataset, <code>spc</code>, constitutes a classical example taken from <span class="citation">Anselin (<a href="#ref-Anselin1988a">1988</a>)</span> p. 203-211, for 25 counties in South-West Ohio and two time periods, 1981 and 1983; the associated weighting matrix is <code>Wspc</code>. This is a Phillips-Curve problem where the explained variable measures the changes in wage rates (WAGE), whereas the regressors are unemployment rate (UN), net-migration rate (NMR) and a dummy variable (SMSA) with a value of 1 for metropolitan counties.</p>
+<p><em>Example 1:</em> The first dataset, <code>spc</code>, constitutes a classical example taken from <span class="citation">Anselin (<a href="#ref-Anselin1988a" role="doc-biblioref">1988</a>)</span> p. 203-211, for 25 counties in South-West Ohio and two time periods, 1981 and 1983; the associated weighting matrix is <code>Wspc</code>. This is a Phillips-Curve problem where the explained variable measures the changes in wage rates (WAGE), whereas the regressors are unemployment rate (UN), net-migration rate (NMR) and a dummy variable (SMSA) with a value of 1 for metropolitan counties.</p>
 <p>The SUR model estimated by Anselin is:
 <span class="math display" id="eq:Anselin0">\[\begin{equation}
 \begin{array}{ll}
@@ -505,13 +509,13 @@ WAGE_{81} = \beta_{20} + \beta_{21} \ UN_{80} + \beta_{22} \ NMR_{80} + \beta_{2
 \tag{3.1}
 \end{equation}\]</span></p>
 <p>The package is installed from the CRAN repository and the data set loaded as usual,</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;spsur&quot;)</span></code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(spsur)
-<span class="kw">data</span>(<span class="st">&quot;spc&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)</code></pre>
-<p>We use the <strong>Formula</strong> package [<span class="citation">Zeileis and Croissant (<a href="#ref-Formula">2010</a>)</span> to especify the multiequational SUR model of <a href="#eq:Anselin0">(3.1)</a>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">spcformula &lt;-<span class="st"> </span>WAGE83 <span class="op">|</span><span class="st"> </span>WAGE81 <span class="op">~</span><span class="st"> </span>UN83 <span class="op">+</span><span class="st"> </span>NMR83 <span class="op">+</span><span class="st"> </span>SMSA <span class="op">|</span><span class="st"> </span>UN80 <span class="op">+</span><span class="st"> </span>NMR80 <span class="op">+</span><span class="st"> </span>SMSA</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages(&quot;spsur&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(spsur)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">data</span>(<span class="st">&quot;spc&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)</a></code></pre></div>
+<p>We use the <strong>Formula</strong> package [<span class="citation">Zeileis and Croissant (<a href="#ref-Formula" role="doc-biblioref">2010</a>)</span> to especify the multiequational SUR model of <a href="#eq:Anselin0">(3.1)</a>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">spcformula &lt;-<span class="st"> </span>WAGE83 <span class="op">|</span><span class="st"> </span>WAGE81 <span class="op">~</span><span class="st"> </span>UN83 <span class="op">+</span><span class="st"> </span>NMR83 <span class="op">+</span><span class="st"> </span>SMSA <span class="op">|</span><span class="st"> </span>UN80 <span class="op">+</span><span class="st"> </span>NMR80 <span class="op">+</span><span class="st"> </span>SMSA</a></code></pre></div>
 <p>Note that in the left side of the formula, two dependent variables have been included separated by the symbol |. In the right side appear the independent variables for each equation, separated again by a vertical bar |, and keeping the same order that in the left side.</p>
-<p><em>Example 2:</em> The second data set (<code>NCOVR</code>) comes from GeoDa Data and Lab collection and refers to homicide rates for 3,085 continental U.S. counties for four time periods (1960, 1970, 1980 and 1990), whose full description can be found in <a href="https://geodacenter.github.io/data-and-lab/ncovr/">GeoDa</a>. This data set includes a high number of socio-economic characteristics of the counties. The matrix <span class="math inline">\(\textbf W\)</span> is included in <strong>spsur</strong>. This data set has been used by <span class="citation">Baller et al. (<a href="#ref-Baller2001">2001</a>)</span> and collected via a non-gridded sampling design.</p>
+<p><em>Example 2:</em> The second data set (<code>NCOVR</code>) comes from GeoDa Data and Lab collection and refers to homicide rates for 3,085 continental U.S. counties for four time periods (1960, 1970, 1980 and 1990), whose full description can be found in <a href="https://geodacenter.github.io/data-and-lab/ncovr/">GeoDa</a>. This data set includes a high number of socio-economic characteristics of the counties. The matrix <span class="math inline">\(\textbf W\)</span> is included in <strong>spsur</strong>. This data set has been used by <span class="citation">Baller et al. (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span> and collected via a non-gridded sampling design.</p>
 <p>To illustrate the functionalities of <strong>spsur</strong>, we build a SUR model with three equations and different number of regressors in each equation:
 <span class="math display" id="eq:NCOVR">\[\begin{equation}
 \begin{array}{lll}
@@ -522,41 +526,41 @@ FP_{79} = \beta_{30} + \beta_{31} \ PS_{80}+ \varepsilon_{FP}
 \tag{3.2}
 \end{equation}\]</span>
 <span class="math inline">\(HR_{80}\)</span> is homicide rates per 100,000 in 1980, <span class="math inline">\(PS_{80}\)</span> measures the population structure in 1980, <span class="math inline">\(UE_{80}\)</span> the unemployment rate, <span class="math inline">\(DV_{80}\)</span> is the divorce rate, <span class="math inline">\(FP_{79}\)</span> is the percentage of families below poverty in 1980 whereas SOUTH is a dummy variable for Southern counties. Note that the model of <a href="#eq:NCOVR">(3.2)</a> has three equations but only one cross-section. To input this model into <em>R</em> we should write:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(NCOVR, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)
-NCOVRformula &lt;-<span class="st"> </span>HR80 <span class="op">|</span><span class="st"> </span>DV80 <span class="op">|</span><span class="st"> </span>FP79 <span class="op">~</span><span class="st"> </span>PS80 <span class="op">+</span><span class="st"> </span>UE80 <span class="op">|</span><span class="st"> </span>PS80 <span class="op">+</span><span class="st"> </span>UE80 <span class="op">+</span><span class="st"> </span>SOUTH <span class="op">|</span><span class="st"> </span>PS80</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span>(NCOVR, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">NCOVRformula &lt;-<span class="st"> </span>HR80 <span class="op">|</span><span class="st"> </span>DV80 <span class="op">|</span><span class="st"> </span>FP79 <span class="op">~</span><span class="st"> </span>PS80 <span class="op">+</span><span class="st"> </span>UE80 <span class="op">|</span><span class="st"> </span>PS80 <span class="op">+</span><span class="st"> </span>UE80 <span class="op">+</span><span class="st"> </span>SOUTH <span class="op">|</span><span class="st"> </span>PS80</a></code></pre></div>
 <div id="lmtests" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> The LM tests in spsur package</h3>
 <p>The function <code>lmtestspur()</code> computes 5 Lagrange Multipliers, LM, for omitted spatial dependence in a SUR-SIM model. The syntax of this function is:</p>
 <p><code>lmtestspsur(Form = NULL, data = NULL, W = NULL, X = NULL,Y = NULL, time = NULL, G = NULL, N = NULL, Tm = NULL, print_table = TRUE)</code></p>
 <p>Note that, as the examples below show, most of the argument with <code>NULL</code> default can be omitted from the syntaxis, if they are not needed, so that the final expressions simplify to a great deal. The simplest way to obtain the LMs is through a formula, <code>Form</code>, previously defined by the user, a data frame, <code>data</code>, and a weighting matrix, <code>W</code>, such as:</p>
-<pre class="sourceCode r"><code class="sourceCode r">LMs.spc &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc)
-<span class="co">#&gt;              LM-Stat. DF p-value  </span>
-<span class="co">#&gt; LM-SUR-SLM     5.2472  2  0.0725 .</span>
-<span class="co">#&gt; LM-SUR-SEM     3.3050  2  0.1916  </span>
-<span class="co">#&gt; LM*-SUR-SLM    2.1050  2  0.3491  </span>
-<span class="co">#&gt; LM*-SUR-SEM    0.1628  2  0.9218  </span>
-<span class="co">#&gt; LM-SUR-SARAR   5.7703  4  0.2170  </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">LMs.spc &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt;              LM-Stat. DF p-value  </span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; LM-SUR-SLM     5.2472  2  0.0725 .</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; LM-SUR-SEM     3.3050  2  0.1916  </span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; LM*-SUR-SLM    2.1050  2  0.3491  </span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; LM*-SUR-SEM    0.1628  2  0.9218  </span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; LM-SUR-SARAR   5.7703  4  0.2170  </span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a></code></pre></div>
 <p><code>spc</code> contains information for only 25 spatial units and, therefore, the power of the LM tests is very low. Similarly, for the homicide rates case of <a href="#eq:NCOVR">(3.2)</a>, we obtain:</p>
-<pre class="sourceCode r"><code class="sourceCode r">LMs.NCOVR &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR, <span class="dt">W =</span> W)
-<span class="co">#&gt;              LM-Stat. DF  p-value    </span>
-<span class="co">#&gt; LM-SUR-SLM    5494.02  3  &lt; 2e-16 ***</span>
-<span class="co">#&gt; LM-SUR-SEM    5620.26  3  &lt; 2e-16 ***</span>
-<span class="co">#&gt; LM*-SUR-SLM     53.16  3 1.69e-11 ***</span>
-<span class="co">#&gt; LM*-SUR-SEM    179.41  3  &lt; 2e-16 ***</span>
-<span class="co">#&gt; LM-SUR-SARAR  5741.17  6  &lt; 2e-16 ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">LMs.NCOVR &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR, <span class="dt">W =</span> W)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt;              LM-Stat. DF  p-value    </span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; LM-SUR-SLM    5494.02  3  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; LM-SUR-SEM    5620.26  3  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt; LM*-SUR-SLM     53.16  3 1.69e-11 ***</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; LM*-SUR-SEM    179.41  3  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; LM-SUR-SARAR  5741.17  6  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a></code></pre></div>
 <p>There is a second way to compute the LMs, based on matrices instead of formulas. In first place, it is necessary to create the requiered matrices; for example, according to model <a href="#eq:NCOVR">(3.2)</a> we should write:</p>
-<pre class="sourceCode r"><code class="sourceCode r">Y &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">c</span>(NCOVR<span class="op">$</span>HR80,NCOVR<span class="op">$</span>DV80,NCOVR<span class="op">$</span>FP79))
-Intercep &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>,<span class="dt">ncol =</span> <span class="dv">1</span>,<span class="dt">nrow =</span> <span class="dv">3085</span>)
-X1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80,NCOVR<span class="op">$</span>UE80)
-X2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80,NCOVR<span class="op">$</span>UE80,NCOVR<span class="op">$</span>SOUTH)
-X3 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80)
-X &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Matrix<span class="op">::</span><span class="kw">bdiag</span>(X1,X2,X3))</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">Y &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">c</span>(NCOVR<span class="op">$</span>HR80,NCOVR<span class="op">$</span>DV80,NCOVR<span class="op">$</span>FP79))</a>
+<a class="sourceLine" id="cb7-2" title="2">Intercep &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>,<span class="dt">ncol =</span> <span class="dv">1</span>,<span class="dt">nrow =</span> <span class="dv">3085</span>)</a>
+<a class="sourceLine" id="cb7-3" title="3">X1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80,NCOVR<span class="op">$</span>UE80)</a>
+<a class="sourceLine" id="cb7-4" title="4">X2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80,NCOVR<span class="op">$</span>UE80,NCOVR<span class="op">$</span>SOUTH)</a>
+<a class="sourceLine" id="cb7-5" title="5">X3 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Intercep,NCOVR<span class="op">$</span>PS80)</a>
+<a class="sourceLine" id="cb7-6" title="6">X &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Matrix<span class="op">::</span><span class="kw">bdiag</span>(X1,X2,X3))</a></code></pre></div>
 <p>The last matrix, <span class="math inline">\(\bf X\)</span> it is block-diagonal. Then, the user introduces these matrices as arguments in <code>lmtestspsur()</code>. The number of individuals (<em>N</em>), equations (<em>G</em>) and time periods (<em>Tm</em>) must also be specified,</p>
-<pre class="sourceCode r"><code class="sourceCode r">LMs.NCOVR.matrix &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Y =</span> Y, <span class="dt">X =</span> X, <span class="dt">G =</span> <span class="dv">3</span>, <span class="dt">Tm =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">3085</span>, <span class="dt">W =</span> W)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">LMs.NCOVR.matrix &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">Y =</span> Y, <span class="dt">X =</span> X, <span class="dt">G =</span> <span class="dv">3</span>, <span class="dt">Tm =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">3085</span>, <span class="dt">W =</span> W)</a></code></pre></div>
 <p>In the example above, all the LMs reject their respective null hypotheses, which clearly discards the SUR-SIM model.</p>
 </div>
 <div id="ml" class="section level3">
@@ -565,71 +569,71 @@ X &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Matrix<span cl
 <p><code>spsurml(Form = NULL, data = NULL, R = NULL, r = NULL, W = NULL, X = NULL, Y = NULL, G = NULL, N = NULL, Tm = NULL, p = NULL, demean = FALSE, type = &quot;sim&quot;, cov = TRUE, control = list(tol = 0.001, maxit = 200, trace = TRUE))</code></p>
 <p>Similarly, most of the argument with <code>NULL</code> default can be omitted from the syntaxis, if they are not needed. Once again, the simplest way to estimate a spatial SUR is by using a formula, a data frame and a weighting matrix, which are the arguments that appear in <code>Form</code>, <code>data</code> and <code>W</code>. The second way implies the use of matrices, similar as before.</p>
 <p>To estimate a SUR-SLM model with the data set of Example 1, the syntax is:</p>
-<pre class="sourceCode r"><code class="sourceCode r">spcsur.slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">W =</span> Wspc)
-<span class="co">#&gt; Initial point:   log_lik:  113.197  lambdas:  -0.472 -0.446 </span>
-<span class="co">#&gt; Iteration:  1   log_lik:  114.085  lambdas:  -0.506 -0.482 </span>
-<span class="co">#&gt; Iteration:  2   log_lik:  114.096  lambdas:  -0.506 -0.482 </span>
-<span class="co">#&gt; Time to fit the model:  1.64  seconds</span>
-<span class="co">#&gt; Computing marginal test... </span>
-<span class="co">#&gt; Time to compute covariances:  0.23  seconds</span></code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">spcsur.slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">#&gt; Initial point:   log_lik:  113.197  lambdas:  -0.472 -0.446 </span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; Iteration:  1   log_lik:  114.085  lambdas:  -0.506 -0.482 </span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; Iteration:  2   log_lik:  114.096  lambdas:  -0.506 -0.482 </span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; Time to fit the model:  1.67  seconds</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">#&gt; Computing marginal test... </span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co">#&gt; Time to compute covariances:  0.66  seconds</span></a></code></pre></div>
 <p>The output of <code>spsurml()</code> includes details about the iteration process and time of computation. Let us also note that the user can configure the optimization process using the <code>control</code> list, as an additional argument to the function. In this way, the tolerance of the convergence process can be set to <code>tol</code>; the same as the number of maximum iterations, <code>maxit</code>, whereas <code>trace</code> allows the user hide intermediate results.</p>
 <p>Consistent with the conventions in the <em>R</em> environment, the <code>summary()</code> method prints the output equation by equation.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(spcsur.slm)
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; spsurml(Form = spcformula, data = spc, W = Wspc, type = &quot;slm&quot;)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; Spatial SUR model type:  slm </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Equation  1 </span>
-<span class="co">#&gt;                 Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_1  1.4955217  0.2467240  6.0615 5.183e-07 ***</span>
-<span class="co">#&gt; UN83_1         0.8070029  0.2557439  3.1555  0.003179 ** </span>
-<span class="co">#&gt; NMR83_1       -0.5194114  0.2590550 -2.0050  0.052318 .  </span>
-<span class="co">#&gt; SMSA_1        -0.0073247  0.0118519 -0.6180  0.540347    </span>
-<span class="co">#&gt; lambda_1      -0.5057334  0.2405734 -2.1022  0.042401 *  </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.6224 </span>
-<span class="co">#&gt;   Equation  2 </span>
-<span class="co">#&gt;                 Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_2  1.7094414  0.2925620  5.8430 1.024e-06 ***</span>
-<span class="co">#&gt; UN80_2        -0.6745562  0.3870737 -1.7427   0.08969 .  </span>
-<span class="co">#&gt; NMR80_2        0.7502934  0.3842670  1.9525   0.05847 .  </span>
-<span class="co">#&gt; SMSA_2         0.0014181  0.0241859  0.0586   0.95356    </span>
-<span class="co">#&gt; lambda_2      -0.4821428  0.2557758 -1.8850   0.06730 .  </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.4743 </span>
-<span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                            </span>
-<span class="co">#&gt;   0.0003085954 -0.0003561928</span>
-<span class="co">#&gt;  -0.0003561928  0.0015864976</span>
-<span class="co">#&gt; Correlation Matrix of inter-equation residuals:                    </span>
-<span class="co">#&gt;   1.000000 -0.509062</span>
-<span class="co">#&gt;  -0.509062  1.000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  R-sq. pooled: 0.6603 </span>
-<span class="co">#&gt;  Log-Likelihood:  114.096</span>
-<span class="co">#&gt;  Breusch-Pagan: 6.516  p-value: (0.0107) </span>
-<span class="co">#&gt;  LMM: 0.50489  p-value: (0.477)</span></code></pre>
-<p>The summary includes basic information for each equation such as estimated coefficients, standard deviations, etc. Moreover, in a SUR context, the matrices of covariances and of correlations of the residuals among the <em>Tm</em> equations are of special interest for the user. The summary also reports the value of maximum log likelihood of the model, some measures of goodness of fit, the Breusch-Pagan test of diagonality, <span class="citation">(Breusch and Pagan <a href="#ref-BP1980">1980</a>)</span> and the corresponding marginal LM tests, for omitted spatial errors in SLM or SDM models or omitted lags of the explained variable in SEM or SDEM models (more details in Section <a href="#marginal">4.2</a> below). The marginal multipliers are printed in the output simply as <span class="math inline">\(LMM\)</span>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">summary</span>(spcsur.slm)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co">#&gt; spsurml(Form = spcformula, data = spc, W = Wspc, type = &quot;slm&quot;)</span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="co">#&gt;  </span></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">#&gt; Spatial SUR model type:  slm </span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">#&gt; Equation  1 </span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">#&gt;                 Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co">#&gt; (Intercept)_1  1.4955217  0.2467240  6.0615 5.183e-07 ***</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="co">#&gt; UN83_1         0.8070029  0.2557439  3.1555  0.003179 ** </span></a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co">#&gt; NMR83_1       -0.5194114  0.2590550 -2.0050  0.052318 .  </span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co">#&gt; SMSA_1        -0.0073247  0.0118519 -0.6180  0.540347    </span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co">#&gt; lambda_1      -0.5057334  0.2405734 -2.1022  0.042401 *  </span></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co">#&gt; R-squared: 0.6224 </span></a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="co">#&gt;   Equation  2 </span></a>
+<a class="sourceLine" id="cb10-19" title="19"><span class="co">#&gt;                 Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb10-20" title="20"><span class="co">#&gt; (Intercept)_2  1.7094414  0.2925620  5.8430 1.024e-06 ***</span></a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="co">#&gt; UN80_2        -0.6745562  0.3870737 -1.7427   0.08969 .  </span></a>
+<a class="sourceLine" id="cb10-22" title="22"><span class="co">#&gt; NMR80_2        0.7502934  0.3842670  1.9525   0.05847 .  </span></a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="co">#&gt; SMSA_2         0.0014181  0.0241859  0.0586   0.95356    </span></a>
+<a class="sourceLine" id="cb10-24" title="24"><span class="co">#&gt; lambda_2      -0.4821428  0.2557758 -1.8850   0.06730 .  </span></a>
+<a class="sourceLine" id="cb10-25" title="25"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb10-27" title="27"><span class="co">#&gt; R-squared: 0.4743 </span></a>
+<a class="sourceLine" id="cb10-28" title="28"><span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                            </span></a>
+<a class="sourceLine" id="cb10-29" title="29"><span class="co">#&gt;   0.0003085954 -0.0003561928</span></a>
+<a class="sourceLine" id="cb10-30" title="30"><span class="co">#&gt;  -0.0003561928  0.0015864976</span></a>
+<a class="sourceLine" id="cb10-31" title="31"><span class="co">#&gt; Correlation Matrix of inter-equation residuals:                    </span></a>
+<a class="sourceLine" id="cb10-32" title="32"><span class="co">#&gt;   1.000000 -0.509062</span></a>
+<a class="sourceLine" id="cb10-33" title="33"><span class="co">#&gt;  -0.509062  1.000000</span></a>
+<a class="sourceLine" id="cb10-34" title="34"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-35" title="35"><span class="co">#&gt;  R-sq. pooled: 0.6603 </span></a>
+<a class="sourceLine" id="cb10-36" title="36"><span class="co">#&gt;  Log-Likelihood:  114.096</span></a>
+<a class="sourceLine" id="cb10-37" title="37"><span class="co">#&gt;  Breusch-Pagan: 6.516  p-value: (0.0107) </span></a>
+<a class="sourceLine" id="cb10-38" title="38"><span class="co">#&gt;  LMM: 0.50489  p-value: (0.477)</span></a></code></pre></div>
+<p>The summary includes basic information for each equation such as estimated coefficients, standard deviations, etc. Moreover, in a SUR context, the matrices of covariances and of correlations of the residuals among the <em>Tm</em> equations are of special interest for the user. The summary also reports the value of maximum log likelihood of the model, some measures of goodness of fit, the Breusch-Pagan test of diagonality, <span class="citation">(Breusch and Pagan <a href="#ref-BP1980" role="doc-biblioref">1980</a>)</span> and the corresponding marginal LM tests, for omitted spatial errors in SLM or SDM models or omitted lags of the explained variable in SEM or SDEM models (more details in Section <a href="#marginal">4.2</a> below). The marginal multipliers are printed in the output simply as <span class="math inline">\(LMM\)</span>.</p>
 <p>The syntax for other spatial specifications is very similar, just changing the argument <code>type</code>. For example:</p>
-<pre class="sourceCode r"><code class="sourceCode r">spcSUR.sim &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sim&#39;</span>, <span class="dt">W =</span> Wspc)
-spcSUR.slx &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;slx&#39;</span>, <span class="dt">W =</span> Wspc)
-spcSUR.sem &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sem&#39;</span>, <span class="dt">W =</span> Wspc)
-spcSUR.sarar &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sarar&#39;</span>, <span class="dt">W =</span> Wspc)
-spcSUR.sdm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sdm&#39;</span>, <span class="dt">W =</span> Wspc)
-spcSUR.sdem &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sdem&#39;</span>, <span class="dt">W =</span> Wspc)</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">spcSUR.sim &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sim&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb11-2" title="2">spcSUR.slx &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;slx&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb11-3" title="3">spcSUR.sem &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sem&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb11-4" title="4">spcSUR.sarar &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sarar&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb11-5" title="5">spcSUR.sdm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sdm&#39;</span>, <span class="dt">W =</span> Wspc)</a>
+<a class="sourceLine" id="cb11-6" title="6">spcSUR.sdem &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">type =</span> <span class="st">&#39;sdem&#39;</span>, <span class="dt">W =</span> Wspc)</a></code></pre></div>
 <p>For reasons of space, we skip the output for these other models, and continue using the SUR-SLM case.</p>
 <p>As said before, the control options can be used to customize the iteration process. In the case below, the convergence process will stop if the difference in the estimated likelihood between two consecutive iterations is smaller than <code>tol=0.1</code> or the number of iterations reaches the value <code>maxit=20</code>. The controls also advises to hidden the intermediate results, with the argument <code>trace</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">mlcontrol &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">20</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>)
-NCOVRSUR.slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR,
-                      <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">W =</span> W, <span class="dt">control =</span> mlcontrol, <span class="dt">cov =</span> <span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">mlcontrol &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">20</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb12-2" title="2">NCOVRSUR.slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR,</a>
+<a class="sourceLine" id="cb12-3" title="3">                      <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">W =</span> W, <span class="dt">control =</span> mlcontrol, <span class="dt">cov =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>The second way to estimate a SUR-SLM model uses arguments based on matrices such as, for example:</p>
-<pre class="sourceCode r"><code class="sourceCode r">mlcontrol &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">20</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>)
-NCOVRSUR.slm.matrix &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Y =</span> Y, <span class="dt">X =</span> X, <span class="dt">G =</span> <span class="dv">3</span>, <span class="dt">Tm =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">3085</span>,
-                             <span class="dt">W =</span> W, <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">control =</span> mlcontrol, 
-                             <span class="dt">cov =</span> <span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mlcontrol &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">20</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb13-2" title="2">NCOVRSUR.slm.matrix &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Y =</span> Y, <span class="dt">X =</span> X, <span class="dt">G =</span> <span class="dv">3</span>, <span class="dt">Tm =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">3085</span>,</a>
+<a class="sourceLine" id="cb13-3" title="3">                             <span class="dt">W =</span> W, <span class="dt">type =</span> <span class="st">&#39;slm&#39;</span>, <span class="dt">control =</span> mlcontrol, </a>
+<a class="sourceLine" id="cb13-4" title="4">                             <span class="dt">cov =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>The output of the funtion <code>spsurml()</code> is an object of an <code>spsur</code> class.</p>
 </div>
 <div id="threesls" class="section level3">
@@ -638,59 +642,59 @@ NCOVRSUR.slm.matrix &lt;-<span class="st"> </span><span class="kw">spsurml</span
 <p><code>spsur3sls(Form = NULL, data = NULL, R = NULL, b = NULL, W = NULL,X = NULL, Y = NULL, G = NULL, N = NULL, Tm = NULL, p = NULL, demean = FALSE, type = &quot;slm&quot;, maxlagW = 2)</code></p>
 <p>The main differences between the two are: (i) the argument <code>type</code> now only supports two spatial SUR models: <strong>slm</strong> and <strong>sdm</strong> and (ii) a new argument is needed, <code>maxlagW</code>, to set the maximum order of spatial lags of the regressors to obtain the IVs. The default value is <code>maxlagW=2</code> for SUR-SLM models and <code>maxlagW=3</code> for the SDM variant.</p>
 <p>The 3SLS algorithm is especially adequate in cases of large datasets or when <code>spsur3sls()</code> has to deal with very dense Jacobians. Our <em>Example 2</em> includes 3,085 US counties and it is a good candidate for <code>spsur3sls()</code>. The code to estimate a SUR-SLM model for the SUR of <a href="#eq:NCOVR">(3.2)</a> is,</p>
-<pre class="sourceCode r"><code class="sourceCode r">NCOVRSUR.slm<span class="fl">.3</span>sls &lt;-<span class="kw">spsur3sls</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">W =</span> W)
-<span class="co">#&gt; Time to fit the model:  0.17  seconds</span>
-<span class="kw">summary</span>(NCOVRSUR.slm<span class="fl">.3</span>sls)
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; spsur3sls(Form = NCOVRformula, data = NCOVR, W = W, type = &quot;slm&quot;)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; Spatial SUR model type:  slm </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Equation  1 </span>
-<span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_1  8.877617   1.307821  6.7881 1.206e-11 ***</span>
-<span class="co">#&gt; PS80_1         0.892351   0.138898  6.4245 1.388e-10 ***</span>
-<span class="co">#&gt; UE80_1        -0.060245   0.033200 -1.8146   0.06962 .  </span>
-<span class="co">#&gt; lambda_1      -0.221472   0.191153 -1.1586   0.24664    </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.1405 </span>
-<span class="co">#&gt;   Equation  2 </span>
-<span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_2 2.9935206  0.3798303  7.8812  3.61e-15 ***</span>
-<span class="co">#&gt; PS80_2        0.2533626  0.0262643  9.6467 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; UE80_2        0.0914432  0.0095959  9.5294 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; SOUTH_2       0.0346575  0.0471028  0.7358    0.4619    </span>
-<span class="co">#&gt; lambda_2      0.2124110  0.0900048  2.3600    0.0183 *  </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.291 </span>
-<span class="co">#&gt;   Equation  3 </span>
-<span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_3  7.670117   1.095699  7.0002 2.734e-12 ***</span>
-<span class="co">#&gt; PS80_3        -1.585681   0.160403 -9.8856 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; lambda_3       0.386346   0.087474  4.4167 1.014e-05 ***</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.5611 </span>
-<span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                              </span>
-<span class="co">#&gt;  45.377766  1.867308 18.961586</span>
-<span class="co">#&gt;   1.867308  1.938112 -1.427426</span>
-<span class="co">#&gt;  18.961586 -1.427426 34.820491</span>
-<span class="co">#&gt; Correlation Matrix of inter-equation residuals:                                </span>
-<span class="co">#&gt;  1.0000000  0.1991154  0.4770190</span>
-<span class="co">#&gt;  0.1991154  1.0000000 -0.1737588</span>
-<span class="co">#&gt;  0.4770190 -0.1737588  1.0000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  R-sq. pooled: 0.3595</span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">NCOVRSUR.slm<span class="fl">.3</span>sls &lt;-<span class="kw">spsur3sls</span>(<span class="dt">Form =</span> NCOVRformula, <span class="dt">data =</span> NCOVR, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">W =</span> W)</a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="co">#&gt; Time to fit the model:  0.17  seconds</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="kw">summary</span>(NCOVRSUR.slm<span class="fl">.3</span>sls)</a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#&gt; spsur3sls(Form = NCOVRformula, data = NCOVR, W = W, type = &quot;slm&quot;)</span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#&gt;  </span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#&gt; Spatial SUR model type:  slm </span></a>
+<a class="sourceLine" id="cb14-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb14-10" title="10"><span class="co">#&gt; Equation  1 </span></a>
+<a class="sourceLine" id="cb14-11" title="11"><span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb14-12" title="12"><span class="co">#&gt; (Intercept)_1  8.877617   1.307821  6.7881 1.206e-11 ***</span></a>
+<a class="sourceLine" id="cb14-13" title="13"><span class="co">#&gt; PS80_1         0.892351   0.138898  6.4245 1.388e-10 ***</span></a>
+<a class="sourceLine" id="cb14-14" title="14"><span class="co">#&gt; UE80_1        -0.060245   0.033200 -1.8146   0.06962 .  </span></a>
+<a class="sourceLine" id="cb14-15" title="15"><span class="co">#&gt; lambda_1      -0.221472   0.191153 -1.1586   0.24664    </span></a>
+<a class="sourceLine" id="cb14-16" title="16"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb14-17" title="17"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb14-18" title="18"><span class="co">#&gt; R-squared: 0.1405 </span></a>
+<a class="sourceLine" id="cb14-19" title="19"><span class="co">#&gt;   Equation  2 </span></a>
+<a class="sourceLine" id="cb14-20" title="20"><span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb14-21" title="21"><span class="co">#&gt; (Intercept)_2 2.9935206  0.3798303  7.8812  3.61e-15 ***</span></a>
+<a class="sourceLine" id="cb14-22" title="22"><span class="co">#&gt; PS80_2        0.2533626  0.0262643  9.6467 &lt; 2.2e-16 ***</span></a>
+<a class="sourceLine" id="cb14-23" title="23"><span class="co">#&gt; UE80_2        0.0914432  0.0095959  9.5294 &lt; 2.2e-16 ***</span></a>
+<a class="sourceLine" id="cb14-24" title="24"><span class="co">#&gt; SOUTH_2       0.0346575  0.0471028  0.7358    0.4619    </span></a>
+<a class="sourceLine" id="cb14-25" title="25"><span class="co">#&gt; lambda_2      0.2124110  0.0900048  2.3600    0.0183 *  </span></a>
+<a class="sourceLine" id="cb14-26" title="26"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb14-27" title="27"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb14-28" title="28"><span class="co">#&gt; R-squared: 0.291 </span></a>
+<a class="sourceLine" id="cb14-29" title="29"><span class="co">#&gt;   Equation  3 </span></a>
+<a class="sourceLine" id="cb14-30" title="30"><span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb14-31" title="31"><span class="co">#&gt; (Intercept)_3  7.670117   1.095699  7.0002 2.734e-12 ***</span></a>
+<a class="sourceLine" id="cb14-32" title="32"><span class="co">#&gt; PS80_3        -1.585681   0.160403 -9.8856 &lt; 2.2e-16 ***</span></a>
+<a class="sourceLine" id="cb14-33" title="33"><span class="co">#&gt; lambda_3       0.386346   0.087474  4.4167 1.014e-05 ***</span></a>
+<a class="sourceLine" id="cb14-34" title="34"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb14-35" title="35"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb14-36" title="36"><span class="co">#&gt; R-squared: 0.5611 </span></a>
+<a class="sourceLine" id="cb14-37" title="37"><span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                              </span></a>
+<a class="sourceLine" id="cb14-38" title="38"><span class="co">#&gt;  45.377766  1.867308 18.961586</span></a>
+<a class="sourceLine" id="cb14-39" title="39"><span class="co">#&gt;   1.867308  1.938112 -1.427426</span></a>
+<a class="sourceLine" id="cb14-40" title="40"><span class="co">#&gt;  18.961586 -1.427426 34.820491</span></a>
+<a class="sourceLine" id="cb14-41" title="41"><span class="co">#&gt; Correlation Matrix of inter-equation residuals:                                </span></a>
+<a class="sourceLine" id="cb14-42" title="42"><span class="co">#&gt;  1.0000000  0.1991154  0.4770190</span></a>
+<a class="sourceLine" id="cb14-43" title="43"><span class="co">#&gt;  0.1991154  1.0000000 -0.1737588</span></a>
+<a class="sourceLine" id="cb14-44" title="44"><span class="co">#&gt;  0.4770190 -0.1737588  1.0000000</span></a>
+<a class="sourceLine" id="cb14-45" title="45"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb14-46" title="46"><span class="co">#&gt;  R-sq. pooled: 0.3595</span></a></code></pre></div>
 <p>A great advantage of <code>spsur3sls()</code> is the serious reduction of computing time, compared with ML methods. In the case of <code>NCOVR</code>, with 3,085 observations and 3 equations, the estimation took less than a second. The ML estimation, using the function <code>spsurml()</code> for the same problem, required of almost 10 minutes (using a Intel Core i7 2.93 GHz).</p>
 <p>Like in the case of <code>spsurml()</code>, the output of the funtion <code>spsur3sls()</code> is an object of the <code>spsur</code> class.</p>
 </div>
 </div>
 <div id="panel" class="section level2">
 <h2><span class="header-section-number">3.2</span> Spatial panel SUR models</h2>
-<p>It is not unusual, in applied work, to have data for only one equation, <span class="math inline">\(G\)</span>=1, such as in <span class="citation">Anselin (<a href="#ref-Anselin1988a">1988</a>)</span>. We refer to this case as an <em>Spatial panel SUR</em> with, for example, a SLM structure:
+<p>It is not unusual, in applied work, to have data for only one equation, <span class="math inline">\(G\)</span>=1, such as in <span class="citation">Anselin (<a href="#ref-Anselin1988a" role="doc-biblioref">1988</a>)</span>. We refer to this case as an <em>Spatial panel SUR</em> with, for example, a SLM structure:
 <span class="math display" id="eq:Anselin1">\[\begin{equation}
   {\begin{array}{ll}  {\mathop{{\bf y}}}_{t} = \mathop{\lambda}_{t} {\bf W} \mathop{{\bf y}}_{t} +\mathop{{\bf x}}_{t} {\boldsymbol \beta}_{t} +\mathop{{\boldsymbol \varepsilon}}_{t}; {t=1,2,\ldots ,Tm}
  \\ {} \\
@@ -703,79 +707,79 @@ NCOVRSUR.slm.matrix &lt;-<span class="st"> </span><span class="kw">spsurml</span
 <p><code>spsurtime(Form, data, time, type = &quot;sim&quot;, method = &quot;ml&quot;, maxlagW = 2,  W = NULL, cov = TRUE, demean = FALSE, trace = TRUE, R = NULL, b = NULL)</code></p>
 <p>The spatial models supported by <code>spsurtime()</code> are the seven specifications listed in Section <a href="#SecSUR">2</a>, SUR-SIM, SUR-SLX, SUR-SLM, SUR-SEM, SUR-SDM, SUR-SDEM and SUR-SARAR. Moreover, the user can decide if the estimation algorithm is ML, which is the default, or 3SLS following the same treatment described in Section <a href="#intro-spsur">3</a>.</p>
 <p>Finally, this function also allows to demean the data with the purpose of removing potential unobserved effects in the sample. We use the most popular transformation, which simply subtracts the time sampling average of each individual from the corresponding observation, using the <em>demeaning</em> <span class="math inline">\(\bf Q\)</span> matrix: <span class="math inline">\({\bf Q}= {\bf Q}^{+} \otimes {\bf I}_{N}\)</span>, where <span class="math inline">\({\bf Q}^{+}=\left({\bf I}_{Tm}-\dfrac{1}{Tm}{\bf J}_{Tm}\right)\)</span>, with <span class="math inline">\({\bf J}_{Tm}={\boldsymbol \tau}_{Tm}{\boldsymbol \tau}_{Tm}^{T}\)</span> and <span class="math inline">\({\boldsymbol \tau}_{Tm}\)</span> a (<em>Tm</em><span class="math inline">\(\times\)</span><em>1</em>)) vector of <em>1s</em>. Note that the <span class="math inline">\(\bf Q\)</span> matrix needs the data to be ordered, first, by time and second by individuals. If this is not the case, the data are routinely sorted by <code>spsurtime()</code>, according to the argument <code>time</code>.</p>
-<p><em>Demeaning</em> the data can produce strange results, in spatial SUR panels, if the time dimension, <em>Tm</em>, is very large and <em>N</em>, number of spatial units, is finite in which case we have a problem of high-dimensionality: we need to estimate <span class="math inline">\(\dfrac{Tm \times (Tm-1)}{2}\)</span> covariance terms with <em>N</em><span class="math inline">\(\times\)</span><em>Tm</em> observations. Moreover, in the general case where <em>G</em>&gt;1, if <em>Tm</em> is very small and <em>N</em> is finite <em>demeaning</em> can produce problems of singularity in the covariance matrix because it inflates the correlations among the error terms by a proportionality factor of order <span class="math inline">\(O(\dfrac{1}{Tm})\)</span>, <span class="citation">(Hsiao <a href="#ref-Hsiao2003">2003</a>)</span>. Thus, our advice is using <em>demeaning</em> for large <em>N</em> and moderate values of <em>Tm</em> in the spatial panel case and avoid <em>demeaning</em> if <em>Tm</em> is very small and <em>N</em> is moderate, in both cases.</p>
+<p><em>Demeaning</em> the data can produce strange results, in spatial SUR panels, if the time dimension, <em>Tm</em>, is very large and <em>N</em>, number of spatial units, is finite in which case we have a problem of high-dimensionality: we need to estimate <span class="math inline">\(\dfrac{Tm \times (Tm-1)}{2}\)</span> covariance terms with <em>N</em><span class="math inline">\(\times\)</span><em>Tm</em> observations. Moreover, in the general case where <em>G</em>&gt;1, if <em>Tm</em> is very small and <em>N</em> is finite <em>demeaning</em> can produce problems of singularity in the covariance matrix because it inflates the correlations among the error terms by a proportionality factor of order <span class="math inline">\(O(\dfrac{1}{Tm})\)</span>, <span class="citation">(Hsiao <a href="#ref-Hsiao2003" role="doc-biblioref">2003</a>)</span>. Thus, our advice is using <em>demeaning</em> for large <em>N</em> and moderate values of <em>Tm</em> in the spatial panel case and avoid <em>demeaning</em> if <em>Tm</em> is very small and <em>N</em> is moderate, in both cases.</p>
 <div id="a-case-of-example" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> A case of example</h3>
 <p>In this example we employ, once more, the data set <code>NCOVR</code>. We should remind that this data frame has not a panel data structure. So, the first question is to reshape <code>NCOVR</code>. This is the purpose of the indices <em>index_time</em> and <em>index_indiv</em>. The panel equation explains the homicides rates, HR, in each county in function of the population structure, PS, and the unemployment rate, UE; the equation has a SLM structure, which is estimated by 3sls.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(NCOVR,<span class="dt">package=</span><span class="st">&quot;spsur&quot;</span>)
-N &lt;-<span class="st"> </span><span class="kw">nrow</span>(NCOVR)
-Tm &lt;-<span class="st"> </span><span class="dv">4</span>
-index_time &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>Tm, <span class="dt">each =</span> N)
-index_indiv &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>N, Tm)
-pHR &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>HR60, NCOVR<span class="op">$</span>HR70, NCOVR<span class="op">$</span>HR80, NCOVR<span class="op">$</span>HR90)
-pPS &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>PS60, NCOVR<span class="op">$</span>PS70, NCOVR<span class="op">$</span>PS80, NCOVR<span class="op">$</span>PS90)
-pUE &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>UE60, NCOVR<span class="op">$</span>UE70, NCOVR<span class="op">$</span>UE80, NCOVR<span class="op">$</span>UE90)
-pNCOVR &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">indiv =</span> index_indiv, <span class="dt">time =</span> index_time,
-                      <span class="dt">HR =</span> pHR, <span class="dt">PS =</span> pPS, <span class="dt">UE =</span> pUE)
-<span class="kw">rm</span>(NCOVR,pHR,pPS,pUE,index_time,index_indiv)
-form_pHR &lt;-<span class="st"> </span>HR <span class="op">~</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE
-pHR_slm &lt;-<span class="st"> </span><span class="kw">spsurtime</span>(<span class="dt">Form =</span> form_pHR, <span class="dt">data =</span> pNCOVR, <span class="dt">W =</span> W,
-                     <span class="dt">time =</span> pNCOVR<span class="op">$</span>time, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;3sls&quot;</span>)
-<span class="co">#&gt; Time to fit the model:  0.29  seconds</span>
-<span class="kw">summary</span>(pHR_slm)
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; spsur3sls(W = W, X = X, Y = Y, G = G, N = N, Tm = Tm, p = p, </span>
-<span class="co">#&gt;     type = type, maxlagW = maxlagW)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; Spatial SUR model type:  slm </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Equation  1 </span>
-<span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)</span>
-<span class="co">#&gt; (Intercept)_1  2.501017   1.645140  1.5202   0.1285</span>
-<span class="co">#&gt; PS_1          -0.029887   0.105860 -0.2823   0.7777</span>
-<span class="co">#&gt; UE_1           0.029898   0.046422  0.6441   0.5196</span>
-<span class="co">#&gt; lambda_1       0.405674   0.392876  1.0326   0.3018</span>
-<span class="co">#&gt; R-squared: 0.2843 </span>
-<span class="co">#&gt;   Equation  2 </span>
-<span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)  </span>
-<span class="co">#&gt; (Intercept)_2 1.8871930  1.9497433  0.9679  0.33310  </span>
-<span class="co">#&gt; PS_2          0.1705918  0.1651996  1.0326  0.30179  </span>
-<span class="co">#&gt; UE_2          0.0099723  0.0497241  0.2006  0.84105  </span>
-<span class="co">#&gt; lambda_2      0.6971788  0.2942217  2.3696  0.01782 *</span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.3604 </span>
-<span class="co">#&gt;   Equation  3 </span>
-<span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_3  6.881003   1.220794  5.6365 1.774e-08 ***</span>
-<span class="co">#&gt; PS_3           0.658929   0.135891  4.8489 1.256e-06 ***</span>
-<span class="co">#&gt; UE_3           0.183858   0.032266  5.6982 1.239e-08 ***</span>
-<span class="co">#&gt; lambda_3      -0.172457   0.178288 -0.9673    0.3334    </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.06152 </span>
-<span class="co">#&gt;   Equation  4 </span>
-<span class="co">#&gt;               Estimate Std. Error t value  Pr(&gt;|t|)    </span>
-<span class="co">#&gt; (Intercept)_4 3.917895   0.369609 10.6001 &lt; 2.2e-16 ***</span>
-<span class="co">#&gt; PS_4          0.909703   0.119384  7.6200 2.723e-14 ***</span>
-<span class="co">#&gt; UE_4          0.319217   0.042374  7.5332 5.295e-14 ***</span>
-<span class="co">#&gt; lambda_4      0.023133   0.073747  0.3137    0.7538    </span>
-<span class="co">#&gt; ---</span>
-<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#&gt; R-squared: 0.134 </span>
-<span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                                    </span>
-<span class="co">#&gt;  31.72416 20.95984 16.31181 13.23690</span>
-<span class="co">#&gt;  20.95984 53.75722 26.29607 19.95032</span>
-<span class="co">#&gt;  16.31181 26.29607 45.37777 19.69094</span>
-<span class="co">#&gt;  13.23690 19.95032 19.69094 38.89755</span>
-<span class="co">#&gt; Correlation Matrix of inter-equation residuals:                                        </span>
-<span class="co">#&gt;  1.0000000 0.5075448 0.4299180 0.3768166</span>
-<span class="co">#&gt;  0.5075448 1.0000000 0.5324158 0.4362851</span>
-<span class="co">#&gt;  0.4299180 0.5324158 1.0000000 0.4686880</span>
-<span class="co">#&gt;  0.3768166 0.4362851 0.4686880 1.0000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  R-sq. pooled: 0.1608</span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">data</span>(NCOVR,<span class="dt">package=</span><span class="st">&quot;spsur&quot;</span>)</a>
+<a class="sourceLine" id="cb15-2" title="2">N &lt;-<span class="st"> </span><span class="kw">nrow</span>(NCOVR)</a>
+<a class="sourceLine" id="cb15-3" title="3">Tm &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb15-4" title="4">index_time &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>Tm, <span class="dt">each =</span> N)</a>
+<a class="sourceLine" id="cb15-5" title="5">index_indiv &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>N, Tm)</a>
+<a class="sourceLine" id="cb15-6" title="6">pHR &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>HR60, NCOVR<span class="op">$</span>HR70, NCOVR<span class="op">$</span>HR80, NCOVR<span class="op">$</span>HR90)</a>
+<a class="sourceLine" id="cb15-7" title="7">pPS &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>PS60, NCOVR<span class="op">$</span>PS70, NCOVR<span class="op">$</span>PS80, NCOVR<span class="op">$</span>PS90)</a>
+<a class="sourceLine" id="cb15-8" title="8">pUE &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>UE60, NCOVR<span class="op">$</span>UE70, NCOVR<span class="op">$</span>UE80, NCOVR<span class="op">$</span>UE90)</a>
+<a class="sourceLine" id="cb15-9" title="9">pNCOVR &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">indiv =</span> index_indiv, <span class="dt">time =</span> index_time,</a>
+<a class="sourceLine" id="cb15-10" title="10">                      <span class="dt">HR =</span> pHR, <span class="dt">PS =</span> pPS, <span class="dt">UE =</span> pUE)</a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="kw">rm</span>(NCOVR,pHR,pPS,pUE,index_time,index_indiv)</a>
+<a class="sourceLine" id="cb15-12" title="12">form_pHR &lt;-<span class="st"> </span>HR <span class="op">~</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE</a>
+<a class="sourceLine" id="cb15-13" title="13">pHR_slm &lt;-<span class="st"> </span><span class="kw">spsurtime</span>(<span class="dt">Form =</span> form_pHR, <span class="dt">data =</span> pNCOVR, <span class="dt">W =</span> W,</a>
+<a class="sourceLine" id="cb15-14" title="14">                     <span class="dt">time =</span> pNCOVR<span class="op">$</span>time, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;3sls&quot;</span>)</a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="co">#&gt; Time to fit the model:  0.33  seconds</span></a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="kw">summary</span>(pHR_slm)</a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co">#&gt; spsur3sls(W = W, X = X, Y = Y, G = G, N = N, Tm = Tm, p = p, </span></a>
+<a class="sourceLine" id="cb15-19" title="19"><span class="co">#&gt;     type = type, maxlagW = maxlagW)</span></a>
+<a class="sourceLine" id="cb15-20" title="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="co">#&gt;  </span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="co">#&gt; Spatial SUR model type:  slm </span></a>
+<a class="sourceLine" id="cb15-23" title="23"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-24" title="24"><span class="co">#&gt; Equation  1 </span></a>
+<a class="sourceLine" id="cb15-25" title="25"><span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)</span></a>
+<a class="sourceLine" id="cb15-26" title="26"><span class="co">#&gt; (Intercept)_1  2.501017   1.645140  1.5202   0.1285</span></a>
+<a class="sourceLine" id="cb15-27" title="27"><span class="co">#&gt; PS_1          -0.029887   0.105860 -0.2823   0.7777</span></a>
+<a class="sourceLine" id="cb15-28" title="28"><span class="co">#&gt; UE_1           0.029898   0.046422  0.6441   0.5196</span></a>
+<a class="sourceLine" id="cb15-29" title="29"><span class="co">#&gt; lambda_1       0.405674   0.392876  1.0326   0.3018</span></a>
+<a class="sourceLine" id="cb15-30" title="30"><span class="co">#&gt; R-squared: 0.2843 </span></a>
+<a class="sourceLine" id="cb15-31" title="31"><span class="co">#&gt;   Equation  2 </span></a>
+<a class="sourceLine" id="cb15-32" title="32"><span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)  </span></a>
+<a class="sourceLine" id="cb15-33" title="33"><span class="co">#&gt; (Intercept)_2 1.8871930  1.9497433  0.9679  0.33310  </span></a>
+<a class="sourceLine" id="cb15-34" title="34"><span class="co">#&gt; PS_2          0.1705918  0.1651996  1.0326  0.30179  </span></a>
+<a class="sourceLine" id="cb15-35" title="35"><span class="co">#&gt; UE_2          0.0099723  0.0497241  0.2006  0.84105  </span></a>
+<a class="sourceLine" id="cb15-36" title="36"><span class="co">#&gt; lambda_2      0.6971788  0.2942217  2.3696  0.01782 *</span></a>
+<a class="sourceLine" id="cb15-37" title="37"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb15-38" title="38"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb15-39" title="39"><span class="co">#&gt; R-squared: 0.3604 </span></a>
+<a class="sourceLine" id="cb15-40" title="40"><span class="co">#&gt;   Equation  3 </span></a>
+<a class="sourceLine" id="cb15-41" title="41"><span class="co">#&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb15-42" title="42"><span class="co">#&gt; (Intercept)_3  6.881003   1.220794  5.6365 1.774e-08 ***</span></a>
+<a class="sourceLine" id="cb15-43" title="43"><span class="co">#&gt; PS_3           0.658929   0.135891  4.8489 1.256e-06 ***</span></a>
+<a class="sourceLine" id="cb15-44" title="44"><span class="co">#&gt; UE_3           0.183858   0.032266  5.6982 1.239e-08 ***</span></a>
+<a class="sourceLine" id="cb15-45" title="45"><span class="co">#&gt; lambda_3      -0.172457   0.178288 -0.9673    0.3334    </span></a>
+<a class="sourceLine" id="cb15-46" title="46"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb15-47" title="47"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb15-48" title="48"><span class="co">#&gt; R-squared: 0.06152 </span></a>
+<a class="sourceLine" id="cb15-49" title="49"><span class="co">#&gt;   Equation  4 </span></a>
+<a class="sourceLine" id="cb15-50" title="50"><span class="co">#&gt;               Estimate Std. Error t value  Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb15-51" title="51"><span class="co">#&gt; (Intercept)_4 3.917895   0.369609 10.6001 &lt; 2.2e-16 ***</span></a>
+<a class="sourceLine" id="cb15-52" title="52"><span class="co">#&gt; PS_4          0.909703   0.119384  7.6200 2.723e-14 ***</span></a>
+<a class="sourceLine" id="cb15-53" title="53"><span class="co">#&gt; UE_4          0.319217   0.042374  7.5332 5.295e-14 ***</span></a>
+<a class="sourceLine" id="cb15-54" title="54"><span class="co">#&gt; lambda_4      0.023133   0.073747  0.3137    0.7538    </span></a>
+<a class="sourceLine" id="cb15-55" title="55"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb15-56" title="56"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb15-57" title="57"><span class="co">#&gt; R-squared: 0.134 </span></a>
+<a class="sourceLine" id="cb15-58" title="58"><span class="co">#&gt;   Variance-Covariance Matrix of inter-equation residuals:                                    </span></a>
+<a class="sourceLine" id="cb15-59" title="59"><span class="co">#&gt;  31.72416 20.95984 16.31181 13.23690</span></a>
+<a class="sourceLine" id="cb15-60" title="60"><span class="co">#&gt;  20.95984 53.75722 26.29607 19.95032</span></a>
+<a class="sourceLine" id="cb15-61" title="61"><span class="co">#&gt;  16.31181 26.29607 45.37777 19.69094</span></a>
+<a class="sourceLine" id="cb15-62" title="62"><span class="co">#&gt;  13.23690 19.95032 19.69094 38.89755</span></a>
+<a class="sourceLine" id="cb15-63" title="63"><span class="co">#&gt; Correlation Matrix of inter-equation residuals:                                        </span></a>
+<a class="sourceLine" id="cb15-64" title="64"><span class="co">#&gt;  1.0000000 0.5075448 0.4299180 0.3768166</span></a>
+<a class="sourceLine" id="cb15-65" title="65"><span class="co">#&gt;  0.5075448 1.0000000 0.5324158 0.4362851</span></a>
+<a class="sourceLine" id="cb15-66" title="66"><span class="co">#&gt;  0.4299180 0.5324158 1.0000000 0.4686880</span></a>
+<a class="sourceLine" id="cb15-67" title="67"><span class="co">#&gt;  0.3768166 0.4362851 0.4686880 1.0000000</span></a>
+<a class="sourceLine" id="cb15-68" title="68"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-69" title="69"><span class="co">#&gt;  R-sq. pooled: 0.1608</span></a></code></pre></div>
 <p>The output reported by <code>spsurtime()</code> is quite detailed. Note that the ML estimation of the SUR-SLM panel equation takes almost 4 minutes while the 3sls requires of only 0.28 seconds.</p>
 </div>
 </div>
@@ -793,31 +797,31 @@ H_A: no \ \ H_0
 \end{array}
 \tag{4.1}
 \end{equation}\]</span></p>
-<p><span class="citation">Breusch and Pagan (<a href="#ref-BP1980">1980</a>)</span> obtained a simple Lagrange Multiplier test, that is become very popular: <span class="math inline">\(\mathop{LM}\nolimits_{\boldsymbol \Sigma }^{} =N\sum _{t=1}^{Tm}\sum _{j=1}^{t-1}\mathop{r}\nolimits_{ij}^{2} = \chi^2_{Tm(Tm-1)/2}\)</span>. The correlation coefficients, <span class="math inline">\(\mathop{r}\nolimits_{ij}\)</span>, are obtained from the ML residuals corresponding to the <em>Tm</em> time periods, as said, estimated separately. Note that in the general case of <em>G</em>&gt;1, <em>Tm</em>&gt;1 and <em>N</em>&gt;1, the covariance matrix is of order (<em>G</em><span class="math inline">\(\times\)</span><em>G</em>). The LM test of diagonality is implement in the function <code>spsurml()</code> and printed routinely.</p>
+<p><span class="citation">Breusch and Pagan (<a href="#ref-BP1980" role="doc-biblioref">1980</a>)</span> obtained a simple Lagrange Multiplier test, that is become very popular: <span class="math inline">\(\mathop{LM}\nolimits_{\boldsymbol \Sigma }^{} =N\sum _{t=1}^{Tm}\sum _{j=1}^{t-1}\mathop{r}\nolimits_{ij}^{2} = \chi^2_{Tm(Tm-1)/2}\)</span>. The correlation coefficients, <span class="math inline">\(\mathop{r}\nolimits_{ij}\)</span>, are obtained from the ML residuals corresponding to the <em>Tm</em> time periods, as said, estimated separately. Note that in the general case of <em>G</em>&gt;1, <em>Tm</em>&gt;1 and <em>N</em>&gt;1, the covariance matrix is of order (<em>G</em><span class="math inline">\(\times\)</span><em>G</em>). The LM test of diagonality is implement in the function <code>spsurml()</code> and printed routinely.</p>
 </div>
 <div id="marginal" class="section level2">
 <h2><span class="header-section-number">4.2</span> Marginal Lagrange Multipliers</h2>
-<p>The purpose of the Marginal Lagrange Multipliers is to check if there remains correlation in the error terms, <em>once we have estimated</em> a SUR-SLM model or if a spatial lag of the explained variable has been omitted, <em>once we have estimated</em> a SUR-SEM model <span class="citation">(Anselin and Bera <a href="#ref-anselinbera1998">1998</a>)</span>. The null hypothesis for the first case is the same as that in <a href="#eq:HpLMSLM">(2.7)</a>, but now the hypothesis is tested in a SUR-SLM, not in a SUR-SIM model. The model of the alternative is a SUR-SARAR equation. Similarly, the null and alternative hypotheses of the second case are the same as those that appear in <a href="#eq:HpLMSEM">(2.8)</a>, which are tested in a SUR-SEM ML estimation. The model of the alternative is, once again, a SUR-SARAR.</p>
+<p>The purpose of the Marginal Lagrange Multipliers is to check if there remains correlation in the error terms, <em>once we have estimated</em> a SUR-SLM model or if a spatial lag of the explained variable has been omitted, <em>once we have estimated</em> a SUR-SEM model <span class="citation">(Anselin and Bera <a href="#ref-anselinbera1998" role="doc-biblioref">1998</a>)</span>. The null hypothesis for the first case is the same as that in <a href="#eq:HpLMSLM">(2.7)</a>, but now the hypothesis is tested in a SUR-SLM, not in a SUR-SIM model. The model of the alternative is a SUR-SARAR equation. Similarly, the null and alternative hypotheses of the second case are the same as those that appear in <a href="#eq:HpLMSEM">(2.8)</a>, which are tested in a SUR-SEM ML estimation. The model of the alternative is, once again, a SUR-SARAR.</p>
 <p>Both tests are printed routinely in the output of the <code>spsurml()</code> function, denoted as <span class="math inline">\(LMM\)</span>. There is no risk of confusion: if we have estimated a SUR-SLM model (or a SUR-SDM) with <code>spsurml()</code>, <span class="math inline">\(LMM\)</span> tests for omitted spatial errors and for omitted spatial lags in case of having estimated a SUR-SEM model (or a SUR-SDEM).</p>
 </div>
 <div id="LRtests" class="section level2">
 <h2><span class="header-section-number">4.3</span> Likelihood Ratio tests</h2>
 <p>The models listed in Section <a href="#SecSUR">2</a> are related in a nesting sequence of restrictions. Given that <code>spsurml()</code> operates in a ML framework, we can easily obtain the corresponding Likelihood Ratios, LR, to compare all the competing models. This is the purpose of the function <code>lrtestspsur()</code>, whose use is very simple. In case of Example 1, the syntax to obtain the LR test is:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-LRtests &lt;-<span class="st"> </span><span class="kw">lrtestspsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc)</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb16-2" title="2">LRtests &lt;-<span class="st"> </span><span class="kw">lrtestspsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc)</a></code></pre></div>
 <p>The output of the function only shows the value of the corresponding LRs and their associated pvalues, obtained from a <span class="math inline">\(\chi^2\)</span> distribution with degrees of freedom equal to the number of restrictions in the respective null hypothesis. <code>lrtestspsur()</code> does not show the estimated models, although they are computed by the function.</p>
-<p>The last LR in the example above, COMFAC, is known as the <em>Common Factor</em> test and occupies a relevant position into a <em>Gets</em>, General to specific, selection strategy of spatial models because the two most popular specifications, SLM and SEM, are not nested and cannot be directly related. The COMFAC offers the possibility of, indirectly, compare the two specifications through a spatial Durbin equation <span class="citation">(Mur and Angulo <a href="#ref-Mur2006">2006</a>)</span>.</p>
+<p>The last LR in the example above, COMFAC, is known as the <em>Common Factor</em> test and occupies a relevant position into a <em>Gets</em>, General to specific, selection strategy of spatial models because the two most popular specifications, SLM and SEM, are not nested and cannot be directly related. The COMFAC offers the possibility of, indirectly, compare the two specifications through a spatial Durbin equation <span class="citation">(Mur and Angulo <a href="#ref-Mur2006" role="doc-biblioref">2006</a>)</span>.</p>
 </div>
 <div id="linear" class="section level2">
 <h2><span class="header-section-number">4.4</span> Testing for linear restrictions on the parameters</h2>
 <p>As described before, the functions <code>spsurml()</code> and <code>spsur3sls()</code> solve ML and 3SLS estimation of the spatial SUR models. Now we are interested in a strategy to test linear restrictions on the parameters of the model, which shoul rely on the asymptotic properties of both algorithms.</p>
-<p><span class="citation">Lee (<a href="#ref-Lee2004">2004</a>)</span> showed that, in a pure cross-sectional setting, the ML estimates of the SLM model are <span class="math inline">\(\sqrt{N}\)</span>-<em>consistent</em>. Under mild regularity conditions, they are also asymptotically normally distributed. These conclusions can be extended to other spatial specifications, such as those computed in <strong>spsur</strong>. As indicated in <span class="citation">Elhorst (<a href="#ref-Elhorst2014">2014</a>)</span>, the ML estimates maintain their good properties in a panel data framework, which now can be consistent with <em>N</em>, <em>Tm</em> or with both simultaneously (the exception is the recovery of the unobserved effects, that requires of a fixed <em>N</em>). In a SUR context, <span class="citation">Oberhofer and Kmenta (<a href="#ref-Kmenta1974">1974</a>)</span> showed that the ML algorithm is also consistent, efficient and asymptotically normally distributed, with <em>Tm</em>. Similarly, <span class="citation">Schmidt (<a href="#ref-Schmidt1990">1990</a>)</span> demonstrates the asymptotic good properties of the 3SLS estimates in multivariate models with endogenous regressors, assuming that all instruments are orthogonal with all error terms.</p>
-<p>That is, in both cases it is possible to sustain the asymptotic normality, with <em>Tm</em> and/or <em>N</em>, of the corresponding estimates. In the case of ML, under the standard conditions described in <span class="citation">Lee (<a href="#ref-Lee2004">2004</a>)</span> and <span class="citation">Elhorst (<a href="#ref-Elhorst2014">2014</a>)</span>, we can write that:</p>
+<p><span class="citation">Lee (<a href="#ref-Lee2004" role="doc-biblioref">2004</a>)</span> showed that, in a pure cross-sectional setting, the ML estimates of the SLM model are <span class="math inline">\(\sqrt{N}\)</span>-<em>consistent</em>. Under mild regularity conditions, they are also asymptotically normally distributed. These conclusions can be extended to other spatial specifications, such as those computed in <strong>spsur</strong>. As indicated in <span class="citation">Elhorst (<a href="#ref-Elhorst2014" role="doc-biblioref">2014</a>)</span>, the ML estimates maintain their good properties in a panel data framework, which now can be consistent with <em>N</em>, <em>Tm</em> or with both simultaneously (the exception is the recovery of the unobserved effects, that requires of a fixed <em>N</em>). In a SUR context, <span class="citation">Oberhofer and Kmenta (<a href="#ref-Kmenta1974" role="doc-biblioref">1974</a>)</span> showed that the ML algorithm is also consistent, efficient and asymptotically normally distributed, with <em>Tm</em>. Similarly, <span class="citation">Schmidt (<a href="#ref-Schmidt1990" role="doc-biblioref">1990</a>)</span> demonstrates the asymptotic good properties of the 3SLS estimates in multivariate models with endogenous regressors, assuming that all instruments are orthogonal with all error terms.</p>
+<p>That is, in both cases it is possible to sustain the asymptotic normality, with <em>Tm</em> and/or <em>N</em>, of the corresponding estimates. In the case of ML, under the standard conditions described in <span class="citation">Lee (<a href="#ref-Lee2004" role="doc-biblioref">2004</a>)</span> and <span class="citation">Elhorst (<a href="#ref-Elhorst2014" role="doc-biblioref">2014</a>)</span>, we can write that:</p>
 <p><span class="math display" id="eq:Normal">\[\begin{equation}
 \hat{{\boldsymbol \eta}} \underset{as}{\sim}  N \left({\boldsymbol \eta}; {\bf V}({\boldsymbol \eta}) \right)
 \tag{4.2}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\({\boldsymbol \eta}\)</span> is the vector of parameters included in the spatial SUR model, as defined in <a href="#eq:Lik">(2.4)</a> and <span class="math inline">\({\bf V}({\boldsymbol \eta})\)</span> the corresponding covariance matrix of the ML estimates, obtained from the <em>Information Matrix</em> as described in <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014">2014</a>)</span>. A similar result can be stated for the case of the 3SLS estimates, under the conditions of orthogonality stated previouly (the details on the covariance matrix can be found in Chapter 7 of <span class="citation">Wooldridge (<a href="#ref-Wooldridge2010">2010</a>)</span>). Let us note that the <span class="math inline">\(\rho\)</span> and <span class="math inline">\(\sigma\)</span> parameters are excluded from the inference in the 3SLS approach.</p>
+<p>where <span class="math inline">\({\boldsymbol \eta}\)</span> is the vector of parameters included in the spatial SUR model, as defined in <a href="#eq:Lik">(2.4)</a> and <span class="math inline">\({\bf V}({\boldsymbol \eta})\)</span> the corresponding covariance matrix of the ML estimates, obtained from the <em>Information Matrix</em> as described in <span class="citation">López, Mur, and Angulo (<a href="#ref-Lopez2014" role="doc-biblioref">2014</a>)</span>. A similar result can be stated for the case of the 3SLS estimates, under the conditions of orthogonality stated previouly (the details on the covariance matrix can be found in Chapter 7 of <span class="citation">Wooldridge (<a href="#ref-Wooldridge2010" role="doc-biblioref">2010</a>)</span>). Let us note that the <span class="math inline">\(\rho\)</span> and <span class="math inline">\(\sigma\)</span> parameters are excluded from the inference in the 3SLS approach.</p>
 <p>Using the asymptotic distribution of <a href="#eq:Normal">(4.2)</a>, it is immediate to test for any kind of linear restriction on the vector of parameters of the model, such as exclusion restrictions or across-equation linear restrictions. The procedure is as usual. First we need to write down the (<span class="math inline">\(r \times p\)</span>) matrix <span class="math inline">\(\bf R\)</span>, with rank <em>r</em>, that captures the linear restrictions:</p>
 <p><span class="math display" id="eq:Linrest">\[\begin{equation}
  H_0:\, \mathop{\ \ \ \textbf{R} {\boldsymbol \eta}} = \textbf{b} \ \ \ \textit{vs} \ \ \ H_{A} :\, \mathop{\ \ \ \textbf{R} {\boldsymbol \eta}} \neq  \textbf{b}
@@ -839,10 +843,10 @@ H_0: \beta_{10}=\beta_{20} \ \ \ \ vs \ \ \ \ H_A: \beta_{10} \neq \beta_{20}
 \tag{4.5}
 \end{equation}\]</span></p>
 <p>The code for this problem is:</p>
-<pre class="sourceCode r"><code class="sourceCode r">R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)
-b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)
-Wald_beta &lt;-<span class="st"> </span><span class="kw">wald_betas</span>(<span class="dt">results =</span> spcsur.slm, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1)
-<span class="co">#&gt; Wald stat.: 0.396 p-value: (0.529)</span></code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb17-2" title="2">b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb17-3" title="3">Wald_beta &lt;-<span class="st"> </span><span class="kw">wald_betas</span>(<span class="dt">results =</span> spcsur.slm, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1)</a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="co">#&gt; Wald stat.: 0.396 p-value: (0.529)</span></a></code></pre></div>
 <p>If, as in the example above, the <code>wald_betas()</code> leads to accept the restrictions, the user, probably, would want to estimate the constrained version of the corresponding model, such as:</p>
 <p><span class="math display" id="eq:AnselinR">\[\begin{equation}
 \begin{array}{ll}
@@ -852,42 +856,42 @@ WAGE_{81} = \beta_{0} + \beta_{21} \ UN_{80} + \beta_{22} \ NMR_{80} + \beta_{32
 \tag{4.6}
 \end{equation}\]</span></p>
 <p><code>spsurml()</code> and <code>spsur3sls()</code> provide restricted ML and 3SLS estimation for the spatial SUR models through the optional arguments <code>R=R1</code> and <code>b=b1</code> in the description of the functions. The code, for the example that we are considering is,</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">nrow=</span><span class="dv">1</span>)
-b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)
-spcSUR.slm.restricted &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, 
-               <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">W =</span> Wspc, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">tol=</span><span class="fl">0.01</span>,<span class="dt">maxit=</span><span class="dv">200</span>,<span class="dt">trace=</span><span class="ot">FALSE</span>))</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb18-2" title="2">R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>),<span class="dt">nrow=</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb18-3" title="3">b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb18-4" title="4">spcSUR.slm.restricted &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, </a>
+<a class="sourceLine" id="cb18-5" title="5">               <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">W =</span> Wspc, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">tol=</span><span class="fl">0.01</span>,<span class="dt">maxit=</span><span class="dv">200</span>,<span class="dt">trace=</span><span class="ot">FALSE</span>))</a></code></pre></div>
 <p>Note that in the output only the intercept is in the first equation but is the same for all the equations.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(spcSUR.slm.restricted)</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">summary</span>(spcSUR.slm.restricted)</a></code></pre></div>
 <p>The purpose of the function, <code>wald_deltas()</code>, is to obtain a Wald test to evaluate linear restrictions on the spatial parameters of the model, <span class="math inline">\(\lambda\)</span> or <span class="math inline">\(\rho\)</span> parameters. The use of the function is totally analogous to <code>wald_betas()</code>, and extends to ML and 3SLS algorithms. For example, in the SUR-SLM of <a href="#eq:AnselinR">(4.6)</a> the user may be interested in testing if the <span class="math inline">\(\lambda\)</span> parameters of the two equations are equal, that is:</p>
 <p><span class="math display" id="eq:examlindelta">\[\begin{equation}
 H_0: \lambda_1=\lambda_2 \ \ \ \ vs \ \ \ \ H_A: \lambda_1 \neq \lambda_2
 \tag{4.7}
 \end{equation}\]</span></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-R2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)
-b2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)
-Wald_lambda &lt;-<span class="st"> </span><span class="kw">wald_deltas</span>(<span class="dt">results=</span>spcSUR.slm.restricted, <span class="dt">R =</span> R2, <span class="dt">b =</span> b2)</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb20-2" title="2">R2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb20-3" title="3">b2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb20-4" title="4">Wald_lambda &lt;-<span class="st"> </span><span class="kw">wald_deltas</span>(<span class="dt">results=</span>spcSUR.slm.restricted, <span class="dt">R =</span> R2, <span class="dt">b =</span> b2)</a></code></pre></div>
 <p><code>lr_betas_spsur()</code> operates only with objects produced by <code>spsurml()</code>, which correspond to ML estimates of spatial SUR models. For the previous example, the code is simply:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)
-b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)
-LR_SMSA &lt;-<span class="st"> </span><span class="kw">lr_betas_spsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc,
-                           <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1, <span class="dt">trace =</span> <span class="ot">FALSE</span>,
-                           <span class="dt">printmodels =</span> <span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb21-2" title="2">R1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-3" title="3">b1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-4" title="4">LR_SMSA &lt;-<span class="st"> </span><span class="kw">lr_betas_spsur</span>(<span class="dt">Form =</span> spcformula, <span class="dt">data =</span> spc, <span class="dt">W =</span> Wspc,</a>
+<a class="sourceLine" id="cb21-5" title="5">                           <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">R =</span> R1, <span class="dt">b =</span> b1, <span class="dt">trace =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb21-6" title="6">                           <span class="dt">printmodels =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 </div>
 </div>
 <div id="impacts" class="section level1">
 <h1><span class="header-section-number">5</span> Direct, Indirect and Total impacts</h1>
-<p>According to <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009">2009</a>)</span>, a major difference between times series models and spatial models consists in the interpretation of the <span class="math inline">\(\beta\)</span> parameters. In a time series model, the <span class="math inline">\(\beta\)</span> parameters have a unequivocal meaning: they measure the expected increase in the explained variable as a consequence of a unitary change in a given regressor. This impact is constant across time, <span class="math inline">\(\dfrac{\partial y_{t}}{\partial x_{t}} = \beta_{k}\)</span>, and its significance can be checked by a simple tratio.</p>
+<p>According to <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009" role="doc-biblioref">2009</a>)</span>, a major difference between times series models and spatial models consists in the interpretation of the <span class="math inline">\(\beta\)</span> parameters. In a time series model, the <span class="math inline">\(\beta\)</span> parameters have a unequivocal meaning: they measure the expected increase in the explained variable as a consequence of a unitary change in a given regressor. This impact is constant across time, <span class="math inline">\(\dfrac{\partial y_{t}}{\partial x_{t}} = \beta_{k}\)</span>, and its significance can be checked by a simple tratio.</p>
 <p>Things are not so clear in a spatial setting because of the feed-back effects. In fact, a change in a regressor, in a given location, will induce a chain of reactions that will spill over into the space, depending on the weights matrix, <span class="math inline">\(\bf W\)</span>. Consider, for example, the reduced form of a SUR-SARAR model:</p>
 <p><span class="math display" id="eq:reducedform">\[\begin{equation}
 {\bf y}={\bf A}^{-1}{\bf X}{\boldsymbol \beta}+{\bf A}^{-1}{\bf B}^{-1}{\boldsymbol \varepsilon}={\bf I}_{Tm}\otimes\left[{\bf I}_{N}+{\boldsymbol \Lambda} \otimes {\bf W}+{\boldsymbol \Lambda}^{2}\otimes {\bf W}^{2}+\ldots \right] {\bf X} {\boldsymbol \beta}+{\bf A}^{-1}{\bf B}^{-1}{\boldsymbol \varepsilon}
 \tag{5.1}
 \end{equation}\]</span></p>
 <p>The expression above shows that a change in the value of a regressor, in certain point in space, will impact the explained variable in the same location and also in other points of space. Note that <span class="math inline">\({\bf A}\)</span> is a block-diagonal matrix whose non-zero matrices are <span class="math inline">\({\bf A}_{t}={\bf I}_{N}-\lambda_{t}\textbf{W}; t=1,2, \ldots Tm\)</span>. The inverse of <span class="math inline">\({\bf A}_{t}\)</span> admits a power expansion on the weights matrix, , and the spatial parameters <span class="math inline">\(\lambda_{t}\)</span>, which lead us to the result in <a href="#eq:reducedform">(5.1)</a>.</p>
-<p>Turning to the general case of <em>G</em>&gt;1 and <em>Tm</em>&gt;1 and using the notation in <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009">2009</a>)</span>, we may write the g-th equation of <a href="#eq:reducedform">(5.1)</a>, in period t, as:</p>
+<p>Turning to the general case of <em>G</em>&gt;1 and <em>Tm</em>&gt;1 and using the notation in <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009" role="doc-biblioref">2009</a>)</span>, we may write the g-th equation of <a href="#eq:reducedform">(5.1)</a>, in period t, as:</p>
 <p><span class="math display" id="eq:Efectos1">\[\begin{equation}
 {\mathop{{\bf y}}\nolimits_{tg} }=\mathop{\left[\begin{array}{c} {\mathop{y}\nolimits_{tg1} } \\ {\mathop{y}\nolimits_{tg2} } \\ {\cdots } \\ {\mathop{y}\nolimits_{tgN} } \end{array}\right]} = \sum_{h=1}^{p_{q}} \mathop{\left[\begin{array}{cccc} {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{11}} &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{12}} &amp; {\cdots } &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{1N}} \\ {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{21}} &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{22}} &amp; {\cdots } &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{2N}} \\ {\cdots } &amp; {\cdots } &amp; {\cdots } &amp; {\cdots } \\ {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{N1}} &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{N2}} &amp; {\cdots } &amp; {\mathop{S}\nolimits^{h}_{tg}({\bf W})_{NN}} \end{array}\right]} \mathop{\left[\begin{array}{c} {\mathop{x}\nolimits_{tg1} } \\ {\mathop{x}\nolimits_{tg2} } \\ {\cdots } \\ {\mathop{x}\nolimits_{tgN} } \end{array}\right]}+ {\mathop{{\bf A}}\nolimits_{g}^{-1}} {\mathop{{\bf B}}\nolimits_{g}^{-1}} \mathop{\left[\begin{array}{c} {\mathop{\varepsilon}\nolimits_{tg1} } \\ {\mathop{\varepsilon}\nolimits_{tg2} } \\ {\cdots } \\ {\mathop{\varepsilon}\nolimits_{tgN} } \end{array}\right]}
  \tag{5.2}
@@ -908,7 +912,7 @@ LR_SMSA &lt;-<span class="st"> </span><span class="kw">lr_betas_spsur</span>(<sp
 \begin{array}{c} {\mathop{{\bf M}}\nolimits_{Total_{\bullet}^{h}}} = \sum_{g=1}^{G} {\mathop{{\bf M}}\nolimits_{Total_{g}^{h}}} \\  {\mathop{{\bf M}}\nolimits_{Direct_{\bullet}^{h}}} = \sum_{g=1}^{G} {\mathop{{\bf M}}\nolimits_{Direct_{g}^{h}}}  \\  {\mathop{{\bf M}}\nolimits_{Indirect_{\bullet}^{h}}} = \sum_{g=1}^{G} {\mathop{{\bf M}}\nolimits_{Indirect_{g}^{h}}} \\ \\ h=1,\ldots p_{g} \end{array}
 \tag{5.4}
 \end{equation}\]</span></p>
-<p>The multipliers of <a href="#eq:Efectos4">(5.4)</a> should be accompanied by measures of statistical significance to be useful for the user. <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009">2009</a>)</span> suggest two possibilities. First is the <em>Bayesian Markov Chain Monte Carlo</em> method, MCMC, which draws samples of parameters from their posterior distribution and computes random sequences of multipliers, to calibrate the estimates. However, to our knowledge, there are no results available for spatial SUR models using MCMC. The second alternative is bootstrapping. In the case of <strong>spsur</strong>, we prefer a parametric bootstrap, which means that:</p>
+<p>The multipliers of <a href="#eq:Efectos4">(5.4)</a> should be accompanied by measures of statistical significance to be useful for the user. <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009" role="doc-biblioref">2009</a>)</span> suggest two possibilities. First is the <em>Bayesian Markov Chain Monte Carlo</em> method, MCMC, which draws samples of parameters from their posterior distribution and computes random sequences of multipliers, to calibrate the estimates. However, to our knowledge, there are no results available for spatial SUR models using MCMC. The second alternative is bootstrapping. In the case of <strong>spsur</strong>, we prefer a parametric bootstrap, which means that:</p>
 <ul>
 <li>We estimate the spatial SUR model by ML.</li>
 <li>We draw <em>B</em> samples of random vectors of the parameters in our spatial SUR, <span class="math inline">\({\boldsymbol \eta}\)</span>, using a multivariate normal distribution, <span class="math inline">\(N \left(\hat{{\boldsymbol \eta}}; \hat{{\bf V}}(\hat{{\boldsymbol \eta}})\right)\)</span>, where <span class="math inline">\(\hat{{\boldsymbol \eta}}\)</span> is the ML estimation of the parameters and <span class="math inline">\(\hat{{\bf V}}(\hat{{\boldsymbol \eta}})\)</span> their corresponding estimated covariance matrix. Let denote by <span class="math inline">\({\boldsymbol \eta}_b\)</span> the b-th draw.</li>
@@ -923,8 +927,8 @@ LR_SMSA &lt;-<span class="st"> </span><span class="kw">lr_betas_spsur</span>(<sp
 <h3><span class="header-section-number">5.0.1</span> A case of example</h3>
 <p>The discussion about the multipliers is solved quite easily in <strong>spsur</strong> through the function <code>impacts()</code>, which has only two arguments: an object of class <code>spsur</code> and the number of simulations to estimate the significance measures, <code>nsim</code>, whose default value is 1000.</p>
 <p>Below we continue with the case of <em>Example 1</em> where a SUR-SLM model was specified for the data frame <code>spc</code>. Let us recall that this is a spatial Phillips curve explaining unemployment, <code>UN</code>, through net migration, <code>NMR</code>, and a dummy variable, <code>SMSA</code>, for metropolitan counties. The code is very simple</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-spcsur.slm.impacts &lt;-<span class="st"> </span><span class="kw">impacts</span>(spcsur.slm)</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb22-2" title="2">spcsur.slm.impacts &lt;-<span class="st"> </span><span class="kw">impacts</span>(spcsur.slm)</a></code></pre></div>
 <p>The output of the function are three tables of impacts for each regressor, with their respective measures of statistical significance. As indicated, the user can specify the number of draws for the measures of significance. See the help of the function for more examples using the database <code>NCOVR</code>.</p>
 </div>
 </div>
@@ -982,28 +986,28 @@ Moreover <span class="math inline">\({\boldsymbol \Omega} ={\bf I}_{Tm} \otimes 
  \end{align}\]</span></p>
 <p>where <span class="math inline">\({\boldsymbol \eta}^{T}=\left[{\boldsymbol \Pi}^{T}; \mathop{\lambda }\nolimits_{1} ;\cdots ;\mathop{\lambda }\nolimits_{G} ;\mathop{\rho }\nolimits_{1} ;\cdots ;\mathop{\rho }\nolimits_{G} ;\mathop{\sigma }\nolimits_{ij} \right]\)</span> is the vector parameters of the model, being <span class="math inline">\({\boldsymbol \Pi}=[{\boldsymbol \beta}; {\boldsymbol \gamma}]^{T}\)</span>. The discussion that continues from this point is totally analogous to the spatial SUR panel analyzed so far, thus we leave it now to avoid repetitions.</p>
 <p>The example below shows the case of a SUR-SLM model, for <code>NCOVR</code>, where <em>G</em>=3, <em>Tm</em>=4 and <em>N</em>=3,085, including the reshaping of a database into a classical panel:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(NCOVR,<span class="dt">package=</span><span class="st">&quot;spsur&quot;</span>)
-N &lt;-<span class="st"> </span><span class="kw">nrow</span>(NCOVR)
-Tm &lt;-<span class="st"> </span><span class="dv">4</span>
-index_time &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>Tm, <span class="dt">each =</span> N)
-index_indiv &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>N, Tm)
-pHR &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>HR60, NCOVR<span class="op">$</span>HR70, NCOVR<span class="op">$</span>HR80, NCOVR<span class="op">$</span>HR90)
-pPS &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>PS60, NCOVR<span class="op">$</span>PS70, NCOVR<span class="op">$</span>PS80, NCOVR<span class="op">$</span>PS90)
-pUE &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>UE60, NCOVR<span class="op">$</span>UE70, NCOVR<span class="op">$</span>UE80, NCOVR<span class="op">$</span>UE90)
-pDV &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR <span class="op">$</span>DV60, NCOVR<span class="op">$</span>DV70, NCOVR<span class="op">$</span>DV80, NCOVR<span class="op">$</span>DV90)
-pFP &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>FP59, NCOVR<span class="op">$</span>FP70, NCOVR<span class="op">$</span>FP80, NCOVR<span class="op">$</span>FP90)
-pSOUTH &lt;-<span class="st"> </span><span class="kw">rep</span>(NCOVR<span class="op">$</span>SOUTH, Tm)
-pNCOVR &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">indiv =</span> index_indiv, <span class="dt">time =</span> index_time,
-                      <span class="dt">HR =</span> pHR, <span class="dt">PS =</span> pPS, <span class="dt">UE =</span> pUE, <span class="dt">DV =</span> pDV,
-                      <span class="dt">FP =</span> pFP, <span class="dt">SOUTH =</span> pSOUTH)
-<span class="kw">rm</span>(NCOVR,pHR,pPS,pUE,pDV,pFP,pSOUTH,index_time,index_indiv)
-pform &lt;-<span class="st"> </span>HR <span class="op">|</span><span class="st"> </span>DV <span class="op">|</span><span class="st"> </span>FP <span class="op">~</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE <span class="op">|</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE <span class="op">+</span><span class="st"> </span>SOUTH <span class="op">|</span><span class="st"> </span>PS</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">data</span>(NCOVR,<span class="dt">package=</span><span class="st">&quot;spsur&quot;</span>)</a>
+<a class="sourceLine" id="cb23-2" title="2">N &lt;-<span class="st"> </span><span class="kw">nrow</span>(NCOVR)</a>
+<a class="sourceLine" id="cb23-3" title="3">Tm &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb23-4" title="4">index_time &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>Tm, <span class="dt">each =</span> N)</a>
+<a class="sourceLine" id="cb23-5" title="5">index_indiv &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>N, Tm)</a>
+<a class="sourceLine" id="cb23-6" title="6">pHR &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>HR60, NCOVR<span class="op">$</span>HR70, NCOVR<span class="op">$</span>HR80, NCOVR<span class="op">$</span>HR90)</a>
+<a class="sourceLine" id="cb23-7" title="7">pPS &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>PS60, NCOVR<span class="op">$</span>PS70, NCOVR<span class="op">$</span>PS80, NCOVR<span class="op">$</span>PS90)</a>
+<a class="sourceLine" id="cb23-8" title="8">pUE &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>UE60, NCOVR<span class="op">$</span>UE70, NCOVR<span class="op">$</span>UE80, NCOVR<span class="op">$</span>UE90)</a>
+<a class="sourceLine" id="cb23-9" title="9">pDV &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR <span class="op">$</span>DV60, NCOVR<span class="op">$</span>DV70, NCOVR<span class="op">$</span>DV80, NCOVR<span class="op">$</span>DV90)</a>
+<a class="sourceLine" id="cb23-10" title="10">pFP &lt;-<span class="st"> </span><span class="kw">c</span>(NCOVR<span class="op">$</span>FP59, NCOVR<span class="op">$</span>FP70, NCOVR<span class="op">$</span>FP80, NCOVR<span class="op">$</span>FP90)</a>
+<a class="sourceLine" id="cb23-11" title="11">pSOUTH &lt;-<span class="st"> </span><span class="kw">rep</span>(NCOVR<span class="op">$</span>SOUTH, Tm)</a>
+<a class="sourceLine" id="cb23-12" title="12">pNCOVR &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">indiv =</span> index_indiv, <span class="dt">time =</span> index_time,</a>
+<a class="sourceLine" id="cb23-13" title="13">                      <span class="dt">HR =</span> pHR, <span class="dt">PS =</span> pPS, <span class="dt">UE =</span> pUE, <span class="dt">DV =</span> pDV,</a>
+<a class="sourceLine" id="cb23-14" title="14">                      <span class="dt">FP =</span> pFP, <span class="dt">SOUTH =</span> pSOUTH)</a>
+<a class="sourceLine" id="cb23-15" title="15"><span class="kw">rm</span>(NCOVR,pHR,pPS,pUE,pDV,pFP,pSOUTH,index_time,index_indiv)</a>
+<a class="sourceLine" id="cb23-16" title="16">pform &lt;-<span class="st"> </span>HR <span class="op">|</span><span class="st"> </span>DV <span class="op">|</span><span class="st"> </span>FP <span class="op">~</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE <span class="op">|</span><span class="st"> </span>PS <span class="op">+</span><span class="st"> </span>UE <span class="op">+</span><span class="st"> </span>SOUTH <span class="op">|</span><span class="st"> </span>PS</a></code></pre></div>
 <p>The estimation of a SLM model with <em>G</em>=3, <em>Tm</em>=4 and <em>N</em>=3,085 can be done as usual using the <code>spsurml()</code> function (to prevent overflows of memory we set <code>cov</code> argument equals to <code>FALSE</code>). The last sentence of the code just print the vector of estimates of the <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\beta\)</span> parameters and the correlation matrix among the residuals of the three equations:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
- psur_slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> pform, <span class="dt">data =</span> pNCOVR, <span class="dt">W =</span> W,
-                     <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">cov =</span> <span class="ot">FALSE</span>, 
-                  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">200</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>))
-psur_slm<span class="op">$</span>deltas; psur_slm<span class="op">$</span>betas; psur_slm<span class="op">$</span>Sigma_corr</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb24-2" title="2"> psur_slm &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Form =</span> pform, <span class="dt">data =</span> pNCOVR, <span class="dt">W =</span> W,</a>
+<a class="sourceLine" id="cb24-3" title="3">                     <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, <span class="dt">cov =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb24-4" title="4">                  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.1</span>, <span class="dt">maxit =</span> <span class="dv">200</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb24-5" title="5">psur_slm<span class="op">$</span>deltas; psur_slm<span class="op">$</span>betas; psur_slm<span class="op">$</span>Sigma_corr</a></code></pre></div>
 </div>
 <div id="how-to-generate-random-sur-datasets" class="section level1">
 <h1><span class="header-section-number">7</span> How to generate random SUR datasets</h1>
@@ -1017,23 +1021,23 @@ psur_slm<span class="op">$</span>deltas; psur_slm<span class="op">$</span>betas;
 <p>Finally, the argument <code>dfU</code> informs which multivariate probability distribution function should be used to draw the values of the error terms. <code>dgp_spsur()</code> offers two possibilities, the multivariate Normal, which is the default, and the log-Normal distribution which means to exponentiate the sample drawn from the multivariate Normal distribution. In both cases, the covariance matrix matches the <span class="math inline">\({\bf \Sigma}\)</span> matrix uploaded previously. The log-Normal should be taken as a clear departure from the assumption of normality.</p>
 <p>The output of <code>dgp_spsur()</code> is a vector, called <span class="math inline">\({\bf Y}\)</span>, of order (<em>TmNG</em><span class="math inline">\(\times\)</span><em>1</em>), with the values generated for the explained variable in the <em>G</em> equations of the spatial SUR model. If the argument <code>X</code> is set to <code>NULL</code> the user will receive another matrix, called <span class="math inline">\({\bf XX}\)</span>, of order (<em>TmNG</em><span class="math inline">\(\times \Sigma_{g=1}^{G}p_g)\)</span>, with the values generated for the regressors of the SUR.</p>
 <p>The example below shows the random generation of 3 variables, with a SUR structure, for 500 individuals and 1 cross-section, using a SUR-SDM model. Each equation contains 3 regressors, as specified in <code>p</code>. The weighting matrix, <code>W</code>, is obtained randomly applying the <em>5 nearest neighbors</em> criteria, after having drawn the lattitude and longitude of each point in space</p>
-<pre class="sourceCode r"><code class="sourceCode r">Tm &lt;-<span class="st"> </span><span class="dv">2</span>; G &lt;-<span class="st"> </span><span class="dv">3</span>; N &lt;-<span class="st"> </span><span class="dv">500</span>
-Sigma &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="fl">0.3</span>, <span class="dt">ncol =</span> G, <span class="dt">nrow =</span> G)
-<span class="kw">diag</span>(Sigma) &lt;-<span class="st"> </span><span class="dv">1</span>
-Betas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>,<span class="dv">2</span>)
-Thetas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="op">-</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)
-lambda &lt;-<span class="st"> </span><span class="fl">0.5</span>
-co &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">runif</span>(N,<span class="dv">0</span>,<span class="dv">1</span>),<span class="kw">runif</span>(N,<span class="dv">0</span>,<span class="dv">1</span>))
-W &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">nb2mat</span>(spdep<span class="op">::</span><span class="kw">knn2nb</span>(spdep<span class="op">::</span><span class="kw">knearneigh</span>(co, <span class="dt">k =</span> <span class="dv">5</span>,<span class="dt">longlat =</span> <span class="ot">FALSE</span>)))
-DGP &lt;-<span class="st"> </span><span class="kw">dgp_spsur</span>(<span class="dt">Sigma =</span> Sigma, <span class="dt">Betas =</span> Betas, <span class="dt">Thetas =</span> Thetas, 
-                 <span class="dt">lambda =</span> lambda, <span class="dt">Tm =</span> Tm, <span class="dt">G =</span> G, <span class="dt">N =</span> N, <span class="dt">p =</span> <span class="dv">3</span>, <span class="dt">W =</span> W)</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">Tm &lt;-<span class="st"> </span><span class="dv">2</span>; G &lt;-<span class="st"> </span><span class="dv">3</span>; N &lt;-<span class="st"> </span><span class="dv">500</span></a>
+<a class="sourceLine" id="cb25-2" title="2">Sigma &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="fl">0.3</span>, <span class="dt">ncol =</span> G, <span class="dt">nrow =</span> G)</a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="kw">diag</span>(Sigma) &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb25-4" title="4">Betas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>,<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb25-5" title="5">Thetas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="op">-</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb25-6" title="6">lambda &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb25-7" title="7">co &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">runif</span>(N,<span class="dv">0</span>,<span class="dv">1</span>),<span class="kw">runif</span>(N,<span class="dv">0</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb25-8" title="8">W &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">nb2mat</span>(spdep<span class="op">::</span><span class="kw">knn2nb</span>(spdep<span class="op">::</span><span class="kw">knearneigh</span>(co, <span class="dt">k =</span> <span class="dv">5</span>,<span class="dt">longlat =</span> <span class="ot">FALSE</span>)))</a>
+<a class="sourceLine" id="cb25-9" title="9">DGP &lt;-<span class="st"> </span><span class="kw">dgp_spsur</span>(<span class="dt">Sigma =</span> Sigma, <span class="dt">Betas =</span> Betas, <span class="dt">Thetas =</span> Thetas, </a>
+<a class="sourceLine" id="cb25-10" title="10">                 <span class="dt">lambda =</span> lambda, <span class="dt">Tm =</span> Tm, <span class="dt">G =</span> G, <span class="dt">N =</span> N, <span class="dt">p =</span> <span class="dv">3</span>, <span class="dt">W =</span> W)</a></code></pre></div>
 <p>As said, the output of this function is a list with the data (explained variable and regressors) in matrix form. Next code estimates a SDM model for the simulated data:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Not included the results of execution in vignette to save time.</span>
-sdm_sim &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Y =</span> DGP<span class="op">$</span>Y, <span class="dt">X =</span> DGP<span class="op">$</span>X, <span class="dt">type =</span> <span class="st">&quot;sdm&quot;</span>, <span class="dt">G =</span> G, 
-                   <span class="dt">Tm =</span> Tm, <span class="dt">N =</span> N, <span class="dt">p =</span> <span class="dv">3</span>, <span class="dt">W =</span> W, 
-                   <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.01</span>, <span class="dt">maxit =</span> <span class="dv">200</span>, 
-                                  <span class="dt">trace =</span> <span class="ot">FALSE</span>))
-<span class="kw">summary</span>(sdm_sim)</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co">## Not included the results of execution in vignette to save time.</span></a>
+<a class="sourceLine" id="cb26-2" title="2">sdm_sim &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">Y =</span> DGP<span class="op">$</span>Y, <span class="dt">X =</span> DGP<span class="op">$</span>X, <span class="dt">type =</span> <span class="st">&quot;sdm&quot;</span>, <span class="dt">G =</span> G, </a>
+<a class="sourceLine" id="cb26-3" title="3">                   <span class="dt">Tm =</span> Tm, <span class="dt">N =</span> N, <span class="dt">p =</span> <span class="dv">3</span>, <span class="dt">W =</span> W, </a>
+<a class="sourceLine" id="cb26-4" title="4">                   <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">tol =</span> <span class="fl">0.01</span>, <span class="dt">maxit =</span> <span class="dv">200</span>, </a>
+<a class="sourceLine" id="cb26-5" title="5">                                  <span class="dt">trace =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="kw">summary</span>(sdm_sim)</a></code></pre></div>
 </div>
 <div id="conclusions-and-directions-for-future-research" class="section level1">
 <h1><span class="header-section-number">8</span> Conclusions and Directions for Future Research</h1>
@@ -1215,6 +1219,9 @@ sdm_sim &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span clas
 </div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

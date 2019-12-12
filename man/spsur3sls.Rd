@@ -4,9 +4,22 @@
 \alias{spsur3sls}
 \title{Three Stages Least Squares estimation,3sls, of spatial SUR models.}
 \usage{
-spsur3sls(Form = NULL, data = NULL, R = NULL, b = NULL, W = NULL,
-  X = NULL, Y = NULL, G = NULL, N = NULL, Tm = NULL, p = NULL,
-  demean = FALSE, type = "slm", maxlagW = 2)
+spsur3sls(
+  Form = NULL,
+  data = NULL,
+  R = NULL,
+  b = NULL,
+  W = NULL,
+  X = NULL,
+  Y = NULL,
+  G = NULL,
+  N = NULL,
+  Tm = NULL,
+  p = NULL,
+  demean = FALSE,
+  type = "slm",
+  maxlagW = 2
+)
 }
 \arguments{
 \item{Form}{An object created with the package \code{\link[Formula]{Formula}}
