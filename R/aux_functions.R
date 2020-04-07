@@ -11,8 +11,8 @@ get_array_E <- function(G){
 }
 
 #######################################################
-get_Sigma <- function(resids,N,G,Tm){
-  RR <- array(resids,dim=c(N,G,Tm))
+get_Sigma <- function(resids, N, G, Tm) {
+  RR <- array(resids, dim = c(N, G, Tm))
   Sigma <- diag(rep(1,G))
   for (i in 1:G){
     for (j in 1:G){
@@ -23,7 +23,8 @@ get_Sigma <- function(resids,N,G,Tm){
   Sigma_inv <- try(chol2inv(chol(Sigma)))
   if (inherits(Sigma_inv, "try-error"))
     Sigma_inv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
-  Sigma_corr <- diag(rep(1,G))
+
+  Sigma_corr <- diag(rep(1, G))
   for (i in 1:G) {
     for (j in 1:G) {
       Sigma_corr[i,j] <- cor(matrix(RR[,i,], ncol = 1),

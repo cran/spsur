@@ -5,9 +5,11 @@
 \alias{Wspc}
 \title{Spatial weight matrix for South-West Ohio Counties to estimate
 Spatial Phillips-Curve}
-\format{A row-standardized squared matrix with 25 rows and columns.
+\format{
+A row-standardized squared matrix with 25 rows and columns.
 The rows and columns follow the same order than provinces included in
-\emph{spc} data frame.}
+\emph{spc} data frame.
+}
 \source{
 Anselin (1988, p. 207)
 }

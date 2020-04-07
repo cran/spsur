@@ -4,117 +4,140 @@
 \alias{spsurtime}
 \title{Estimation of SUR models for simple spatial panels (G=1).}
 \usage{
-spsurtime(
-  Form,
-  data,
-  time,
-  type = "sim",
-  method = "ml",
-  maxlagW = 2,
-  W = NULL,
-  cov = TRUE,
-  demean = FALSE,
-  trace = TRUE,
-  R = NULL,
-  b = NULL
-)
+spsurtime (formula, data, time, na.action,
+                  listw = NULL, type = "sim", Durbin = NULL, 
+                  method = "eigen", fit_method = "ml", maxlagW = NULL,
+                  zero.policy = NULL, interval = NULL, trs = NULL,
+                  R = NULL, b = NULL, demean = FALSE, control = list() )
 }
 \arguments{
-\item{Form}{An object created with the package \code{\link[Formula]{Formula}}
-that describes the model to be estimated. This model may contain several
-responses (explained variables) and a varying number of regressors in each equation.}
+\item{formula}{An object type \code{\link[Formula]{Formula}} 
+similar to objects created with the package \pkg{Formula} 
+describing the equations to be estimated in the model. 
+This model may contain several responses (explained 
+variables) and a varying number of regressors in each equation.}
 
 \item{data}{An object of class data.frame or a matrix.}
 
 \item{time}{Time variable.}
 
-\item{type}{Type of spatial model specification: \strong{"sim"},\strong{"slx"}, \strong{"slm"},
-\strong{"sem"}, \strong{"sdm"}, \strong{"sdem"} or \strong{"sarar"}. Default = \code{"sim"}.}
+\item{na.action}{A function (default \code{options("na.action")}),
+can also be \code{na.omit} or \code{na.exclude} with consequences 
+ for residuals and fitted values. It may be necessary to set 
+ \code{zero.policy} to \code{TRUE} because this subsetting may 
+ create no-neighbour observations.}
 
-\item{method}{Method of estimation for the spatial panel SUR model, either \emph{ml} or \emph{3sls}.
-Default = \emph{ml}.}
+\item{listw}{A \code{listw} object created for example by 
+\code{\link[spdep]{nb2listw}} from \pkg{spatialreg} package; if 
+\code{\link[spdep]{nb2listw}} not given, set to 
+the same spatial weights as the \code{listw} argument. It can
+also be a spatial weighting matrix of order \emph{(NxN)} instead of
+a \code{listw} object. Default = \code{NULL}.}
 
-\item{maxlagW}{Maximum spatial lag order of the regressors employed to produce spatial
-instruments for the spatial lags of the explained variables. Default = 2. Note that in case of
-\emph{type="sdm"}, the default value for maxlagW is set to 3 because the first lag of the
-regressors, \eqn{WX_{tg}}, can not be used as spatial instruments.}
+\item{type}{Type of spatial model specification: "sim",
+"slx", "slm", "sem", "sdm", 
+"sdem" or "sarar". Default = "sim".}
 
-\item{W}{A spatial weighting matrix of order \emph{(NxN)}, assumed to be the
-same for all equations and time periods.}
+\item{Durbin}{If a formula object and model is type "sdm", "sdem" 
+or "slx" the subset of explanatory variables to lag for each equation.}
 
-\item{cov}{Logical value to show the covariance matrix of the \emph{beta} coefficients.
-Default = \code{TRUE}.}
+\item{method}{Similar to the corresponding parameter of 
+\code{\link[spatialreg]{lagsarlm}} function in \pkg{spatialreg} package. 
+"eigen" (default) - the Jacobian is computed as the product of 
+(1 - rho*eigenvalue) using \code{\link[spatialreg]{eigenw}}, and 
+"spam" or "Matrix_J" for strictly symmetric weights lists of 
+styles "B" and "C", or made symmetric by similarity 
+(Ord, 1975, Appendix C) if possible for styles "W" and "S", 
+using code from the spam or Matrix packages to calculate the 
+determinant; "Matrix" and "spam_update" provide updating Cholesky 
+decomposition methods; "LU" provides an alternative sparse matrix 
+decomposition approach. In addition, there are "Chebyshev" and 
+Monte Carlo "MC" approximate log-determinant methods; 
+the Smirnov/Anselin (2009) trace approximation is available 
+as "moments". Three methods: "SE_classic", "SE_whichMin", 
+and "SE_interp" are provided experimentally, the first to 
+attempt to emulate the behaviour of Spatial Econometrics 
+toolbox ML fitting functions. All use grids of log determinant 
+values, and the latter two attempt to ameliorate some features 
+of "SE_classic".}
 
-\item{demean}{Logical value to allow for the demeaning of panel data, sustracting the individual mean to
-each spatial or cross-sectional unit. Default = \code{FALSE}.}
+\item{fit_method}{Method of estimation for the spatial panel SUR model, 
+either \emph{ml} or \emph{3sls}. Default = \emph{ml}.}
 
-\item{trace}{Logical value to show intermediate results.  Default = \code{TRUE}.}
+\item{maxlagW}{Maximum spatial lag order of the regressors employed to 
+produce spatial instruments for the spatial lags of the explained 
+variables. Default = 2. Note that in case of \code{type}="sdm", the 
+default value for \code{maxlagW} is set to 3 because the first lag of 
+the regressors, \eqn{WX_{tg}}, can not be used as spatial instruments.}
 
-\item{R}{A row vector of order \emph{(1xpr)} with  the set of \emph{r} linear constraints
-on the \emph{beta} parameters. The \emph{first} restriction appears in the first \emph{p} terms,
-the second restriction in the next \emph{p} terms and so on. Default = \code{NULL}.}
+\item{zero.policy}{Similar to the corresponding parameter of 
+\code{\link[spatialreg]{lagsarlm}} function in \pkg{spatialreg} package. 
+If \code{TRUE} assign zero to the lagged value of zones without 
+neighbours, if \code{FALSE} assign \code{NA} - causing 
+\code{spsurml()} to terminate with an error. Default = \code{NULL}.}
 
-\item{b}{A column vector of order \emph{(rx1)} with the values of the linear restrictions on the
-\emph{beta} parameters. Default = \code{NULL}.}
+\item{interval}{Search interval for autoregressive parameter.
+Default = \code{NULL}.}
+
+\item{trs}{Either \code{NULL} or vector of powered spatial weights 
+matrix traces output by \code{trW}. Default = \code{NULL}.}
+
+\item{R}{A row vector of order \emph{(1xpr)} with  the set of 
+\emph{r} linear constraints on the \emph{beta} parameters. The 
+\emph{first} restriction appears in the first \emph{p} terms,
+the second restriction in the next \emph{p} terms and so on. 
+Default = \code{NULL}.}
+
+\item{b}{A column vector of order \emph{(rx1)} with the values of 
+the linear restrictions on the \emph{beta} parameters. 
+Default = \code{NULL}.}
+
+\item{demean}{Logical value to allow for the demeaning of panel data. In this case,
+\code{\link{spsurml}} substracts the individual mean to each spatial 
+or cross-sectional unit. Default = \code{FALSE}.}
+
+\item{control}{List of additional control arguments.}
 }
 \value{
-Output of the maximum-likelihood or three-stages least-squares estimation of
- the spatial panel SUR model. The final list depends of the estimation method but, typically, you
- will find information about:
-  \tabular{ll}{
-    \code{call} \tab Matched call. \cr
-    \code{type} \tab  Type of model specified. \cr
-    \code{betas} \tab Estimated coefficients for the regressors. \cr
-    \code{deltas} \tab Estimated spatial coefficients. \cr
-    \code{se_betas} \tab Estimated standard errors for the estimates of \emph{beta}. \cr
-    \code{se_deltas} \tab Estimated standard errors for the estimates of the spatial coefficients. \cr
-    \code{cov} \tab Estimated covariance matrix for the estimates of \emph{beta's} and spatial coefficients.\cr
-    \code{llsur} \tab Value of the likelihood function at maximum-likelihood estimation.Only if \emph{method} = \emph{ml}. \cr
-    \code{R2} \tab Global coefficient of determination for the Tm equations, obtained as the squared of the correlation
-     coefficient between the corresponding explained variable and its estimates. \cr
-    \code{Sigma} \tab Estimated covariance matrix for the residuals of the \emph{G} equations. \cr
-    \code{Sigma_corr} \tab stimated correlation matrix for the residuals of the \emph{G} equations. \cr
-    \code{Sigma_inv} \tab Inverse of \code{Sigma}, the \emph{(GxG)} covariance matrix of
-     the residuals of the SUR model. \cr
-    \code{residuals} \tab Residuals of the model. \cr
-    \code{df.residuals} \tab Degrees of freedom for the residuals. \cr
-    \code{fitted.values} \tab Estimated values for the dependent variables. \cr
-    \code{BP} \tab Value of the Breusch-Pagan statistic to test the null hypothesis
-     of diagonality among the errors of the \emph{G} equations. Only if \emph{method} = \emph{ml}. \cr
-    \code{LMM} \tab Marginal Lagrange Multipliers, LM(\eqn{\rho}|\eqn{\lambda}) and
-      LM(\eqn{\lambda}|\eqn{\rho}), to test for omitted spatial effects in the specification.
-      Only if \emph{method} = \emph{ml}. \cr
-    \code{N} \tab Number of cross-sections or spatial units. \cr
-    \code{Tm} \tab Number of time periods. \cr
-    \code{demean} \tab Logical value used for demeaning. \cr
-    \code{W} \tab Spatial weighting matrix. \cr
- }
+An \code{spsur} object with the output of the maximum-likelihood or 
+three-stages least-squares estimation of the spatial panel SUR model.
 }
 \description{
-This function estimates SUR models for simple spatial panel datasets.
- \code{\link{spsurtime}} is restricted, specifically, to cases where there is only one equation, \emph{G=1},
-  and a varying number of spatial units, \emph{N}, and time periods, \emph{Tm}. The SUR structure appears
-  in form of serial dependence among the error terms corresponding to the same spatial unit.
-  Note that it is assumed that all spatial units share a common pattern of serial dependence.
+This function estimates SUR models for simple spatial 
+  panel datasets.
+  \code{\link{spsurtime}} is restricted, specifically, to cases where 
+  there is only one equation, \emph{G=1}, and a varying number of spatial 
+  units, \emph{N}, and time periods, \emph{Tm}. The SUR structure appears
+  in form of serial dependence among the error terms corresponding to the 
+  same spatial unit.
+  Note that it is assumed that all spatial units share a common pattern 
+  of serial dependence.
 
-  The user can choose between different types of spatial specifications, as described below,
-  and the estimation algorithms allow for the introduction of linear restrictions on the \eqn{\beta} parameters
-  associated to the regressors. The spatial panels with SUR structure can be estimated by maximum-likelihood
-  methods or three-stages least squares procedures, using spatial instrumental variables.
+  The user can choose between different types of spatial specifications, 
+  as described below, and the estimation algorithms allow for the 
+  introduction of linear restrictions on the \eqn{\beta} parameters
+  associated to the regressors. The spatial panels with SUR structure 
+  can be estimated by maximum-likelihood methods or three-stages least 
+  squares procedures, using spatial instrumental variables.
 }
 \details{
-Function \code{\link{spsurtime}} only admits a formula, created with \code{\link[Formula]{Formula}}
- and a dataset of class data.frame or matrix. That is, the data cannot be uploaded using data matrices
- \eqn{Y} and \eqn{X} provided for other functions in this package. \cr
- The argument \emph{time} selects the variable, in the data.frame, associated to the time
- dimension in the panel dataset. Then \code{\link{spsurtime}} operates as in Anselin (1988), that is,
- each cross-section is treated as if it were an equation in a SUR model, which now has \emph{Tm}
- 'equations' and \emph{N} individuals. \cr
- The SUR structure appears because there is serial dependence in the errors of each individual in
- the panel. The serial dependence in the errors is not parameterized, but estimated non-parametrically
- in the \eqn{Sigma} covariance matrix returned by the function. An important constraint to mention
- is that the serial dependence assumed to be the same for all individuals in the sample. Serial dependence
- among individuals is excluded from Anselin approach.
+Function \code{\link{spsurtime}} only admits a formula, created with 
+ \code{\link[Formula]{Formula}} and a dataset of class \code{data.frame} 
+ or \code{matrix}. That is, the data cannot be uploaded using data 
+ matrices \eqn{Y} and \eqn{X} provided for other functions in 
+ this package. \cr
+ The argument \code{time} selects the variable, in the \code{data.frame}, 
+ associated to the time dimension in the panel dataset. Then 
+ \code{\link{spsurtime}} operates as in Anselin (1988), that is,
+ each cross-section is treated as if it were an equation in a SUR model, 
+ which now has \emph{Tm} 'equations' and \emph{N} individuals. \cr
+ The SUR structure appears because there is serial dependence in the errors 
+ of each individual in the panel. The serial dependence in the errors is 
+ not parameterized, but estimated non-parametrically in the \eqn{Sigma} 
+ covariance matrix returned by the function. An important constraint to 
+ mention is that the serial dependence assumed to be the same for all 
+ individuals in the sample. Serial dependence among individuals is 
+ excluded from Anselin approach.
 }
 \examples{
 
@@ -124,6 +147,8 @@ Function \code{\link{spsurtime}} only admits a formula, created with \code{\link
 
 ## Example 1:
 rm(list = ls()) # Clean memory
+data(spc)
+lwspc <- spdep::mat2listw(Wspc, style = "W")
 N <- nrow(spc)
 Tm <- 2
 index_time <- rep(1:Tm, each = N)
@@ -132,59 +157,72 @@ WAGE <- c(spc$WAGE83, spc$WAGE81)
 UN <- c(spc$UN83, spc$UN80)
 NMR <- c(spc$NMR83, spc$NMR80)
 SMSA <- c(spc$SMSA, spc$SMSA)
-pspc <- data.frame(index_indiv,index_time,WAGE,UN,NMR,SMSA)
+pspc <- data.frame(index_indiv, index_time, WAGE, UN,
+                    NMR, SMSA)
 form_pspc <- WAGE ~ UN + NMR + SMSA
 
-# SLM by 3SLS
-pspc_slm <- spsurtime(Form = form_pspc, data = pspc, W = Wspc,
-                      time = pspc$index_time, type = "slm", method = "3sls")
-                      summary(pspc_slm)
-\donttest{
-## Example 2:
-rm(list = ls()) # Clean memory
-data(NCOVR,package="spsur")
-N <- nrow(NCOVR)
-Tm <- 4
-index_time <- rep(1:Tm, each = N)
-index_indiv <- rep(1:N, Tm)
-pHR <- c(NCOVR$HR60, NCOVR$HR70, NCOVR$HR80, NCOVR$HR90)
-pPS <- c(NCOVR$PS60, NCOVR$PS70, NCOVR$PS80, NCOVR$PS90)
-pUE <- c(NCOVR$UE60, NCOVR$UE70, NCOVR$UE80, NCOVR$UE90)
-pNCOVR <- data.frame(indiv = index_indiv, time = index_time,
-                     HR = pHR, PS = pPS, UE = pUE)
-rm(NCOVR)
-form_pHR <- HR ~ PS + UE
+# SLM 
+pspc_slm <- spsurtime(formula = form_pspc, data = pspc, 
+                      listw =lwspc,
+                      time = pspc$index_time, 
+                      type = "slm", fit_method = "ml")
+summary(pspc_slm)
 
-# SLM by 3SLS
+## VIP: If you want to examine a particular example eliminate '#' and 
+## execute the code of the example (they have been commented to 
+## pass the checking time in CRAN)
 
-pHR_slm <- spsurtime(Form = form_pHR, data = pNCOVR, W = W,
-                     time = pNCOVR$time, type = "slm", method = "3sls")
-summary(pHR_slm)
+## VIP: The output of the whole set of the examples can be examined 
+## by executing demo(demo_spsurtime, package="spsur")
 
-############################ LR tests about betas in spatio-temporal models
+### Example 2:
+#rm(list = ls()) # Clean memory
+### Read NCOVR.sf object
+#data(NCOVR, package="spsur")
+#nbncovr <- spdep::poly2nb(NCOVR.sf, queen = TRUE)
+### Some regions with no links...
+#lwncovr <- spdep::nb2listw(nbncovr, style = "W", zero.policy = TRUE)
+#N <- nrow(NCOVR.sf)
+#Tm <- 4
+#index_time <- rep(1:Tm, each = N)
+#index_indiv <- rep(1:N, Tm)
+#pHR <- c(NCOVR.sf$HR60, NCOVR.sf$HR70, NCOVR.sf$HR80, NCOVR.sf$HR90)
+#pPS <- c(NCOVR.sf$PS60, NCOVR.sf$PS70, NCOVR.sf$PS80, NCOVR.sf$PS90)
+#pUE <- c(NCOVR.sf$UE60, NCOVR.sf$UE70, NCOVR.sf$UE80, NCOVR.sf$UE90)
+#pNCOVR <- data.frame(indiv = index_indiv, time = index_time,
+#                     HR = pHR, PS = pPS, UE = pUE)
+#form_pHR <- HR ~ PS + UE
 
-## Usually takes less than 1 minute
-## H0: equal PS and UE beta in equations 3 and 4 al
-R <- matrix(0,nrow=2,ncol=12)
-R[1,8] <- 1; R[1,11] <- -1
-R[2,9] <- 1; R[2,12] <- -1
-b <- matrix(0, nrow = 2, ncol = 1)
-lr_partrate <-  lr_betas_spsur(Form = form_pHR, data = pNCOVR,
-                               time = pNCOVR$time, W = W,
-                               type = "sim", R = R, b = b, trace = TRUE,
-                               printmodels = TRUE)
+## SIM
 
-############################ Wald tests about betas in spatio-temporal models
-wald_betas(pHR_slm , R = R , b = b) # SLM model
-############################ Wald tests about spatial-parameters in
-############################ spatio-temporal models
-## H0: equal lambdas in slm model for equations 1 and 2.
-R2 <- matrix(0, nrow = 1, ncol = 4)
-R2[1,1] <- 1; R2[1,2] <- -1
-b2 <- matrix(0, nrow = 1, ncol = 1)
-wald_deltas(pHR_slm, R = R2, b = b2)
-}
+#pHR_sim <- spsurtime(formula = form_pHR, data = pNCOVR, 
+#                    time = pNCOVR$time, type = "sim", fit_method = "ml")
+#summary(pHR_sim)
 
+## SLM by 3SLS. 
+
+#pHR_slm <- spsurtime(formula = form_pHR, data = pNCOVR, listw = lwncovr,
+#                     time = pNCOVR$time, type = "slm", 
+#                     fit_method = "3sls")
+#summary(pHR_slm)
+
+############################# Wald tests about betas in spatio-temporal models
+### H0: equal betas for PS in equations 1, 3 and 4.
+#R <- matrix(0, nrow = 2, ncol = 12) 
+## nrow = number of restrictions 
+## ncol = number of beta parameters
+#R[1, 2] <- 1; R[1, 8] <- -1 # PS beta coefficient in equations 1 equal to 3
+#R[2, 2] <- 1; R[2, 11] <- -1 # PS beta coefficient in equations 1 equal to 4
+#b <- matrix(0, nrow=2, ncol=1)
+#wald_betas(pHR_sim , R = R , b = b) # SIM model
+#wald_betas(pHR_slm , R = R , b = b) # SLM model
+############################# Wald tests about spatial-parameters in
+############################# spatio-temporal models
+### H0: equal rhos in slm model for equations 1 and 2.
+#R2 <- matrix(0, nrow = 1, ncol = 4)
+#R2[1, 1] <- 1; R2[1, 2] <- -1
+#b2 <- matrix(0, nrow = 1, ncol = 1)
+#wald_deltas(pHR_slm, R = R2, b = b2)
 }
 \references{
 \itemize{
@@ -201,7 +239,8 @@ wald_deltas(pHR_slm, R = R2, b = b2)
   }
 }
 \seealso{
-\code{\link{spsurml}}, \code{\link{spsur3sls}}, \code{\link{wald_betas}},
+\code{\link{spsurml}}, \code{\link{spsur3sls}}, 
+\code{\link{wald_betas}},  \code{\link{wald_deltas}},
 \code{\link{lmtestspsur}}, \code{\link{lrtestspsur}}
 }
 \author{

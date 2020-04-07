@@ -1,133 +1,123 @@
-cov_spsursim <- function(Tm,G,N,Y,X,W,
-                         deltas=NULL,Sigma,cov=FALSE,trace=FALSE){
+cov_spsursim_f <- function(env){
+  G <- env$G; N <- env$N; Tm <- env$Tm
+  Y <- env$Y; X <- env$X
+  Sigma <- env$Sigma
+  Sigmainv <- Matrix::solve(Sigma)
   IT <- Matrix::Diagonal(Tm)
   IR <- Matrix::Diagonal(N)
   IG <- Matrix::Diagonal(G)
   IGR <- Matrix::Diagonal(G*N)
-
   E <- get_array_E(G)
-  Sigmainv <- try(chol2inv(chol(Sigma)))
-  if (inherits(Sigmainv, "try-error"))
-    Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
-  #delta <- Matrix::Matrix(diag(as.vector(deltas)))
-  #A <- kronecker(IT,(IGR - kronecker(delta,W)))
-  #OME <- kronecker(IT,kronecker(Sigma,IR))
-  OMEinv <- kronecker(IT,kronecker(Sigmainv,IR))
+#  if (inherits(Sigmainv, "try-error"))
+#    Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
+  OMEinv <- Matrix::kronecker(IT, Matrix::kronecker(Sigmainv,IR))
   Bsim <- Matrix::solve(Matrix::crossprod(X,OMEinv %*% X),
                          Matrix::crossprod(X,OMEinv %*% Y))
-  Res <- matrix(Y - X %*% Bsim, nrow=nrow(Y))
+  Res <- matrix(Y - X %*% Bsim, ncol = 1)
   misim_inv <- Matrix::solve(Matrix::crossprod(X,OMEinv %*% X))
   tmp <- sqrt(Matrix::diag(misim_inv))
-  Sigmas <- get_Sigma(resids=Res,N=N,G=G,Tm=Tm)
+  Sigmas <- get_Sigma(resids=Res, N=N, G=G, Tm=Tm)
   Sigma_corr <- Sigmas$Sigma_corr
   rm(Sigmas)
   index_ltri <- lower.tri(Sigma_corr)
   BP <- N*Tm*sum(Sigma_corr[index_ltri]^2)
   # Se ajusta a una Chi con G*(G-1)/2 gl
   res <- list(
-    se_betas = as.vector(tmp[1:ncol(X)]),
-    cov = as.matrix(misim_inv),
+    rest.se = as.vector(tmp[1:ncol(X)]),
+    vcov = as.matrix(misim_inv),
     BP = as.numeric(BP)
   )
-
 }
 
-
 ###############################################
-  cov_spsurslm <- function(Tm,G,N,Y,X,W,
-                         deltas,Sigma,trace=FALSE){
-    W <- as(W,"dgCMatrix")
+cov_spsurslm_f <- function(env){
+    if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+    G <- env$G; N <- env$N; Tm <- env$Tm
+    Y <- env$Y; X <- env$X; Sigma <- env$Sigma
+    deltas <- env$deltas
+    #deltas <- as.vector(Matrix::diag(env$deltas))
+    ##### MATRIX DEFINITIONS
     IT <- Matrix::Diagonal(Tm)
     IR <- Matrix::Diagonal(N)
     IG <- Matrix::Diagonal(G)
     IGR <- Matrix::Diagonal(G*N)
     WtW <- as(Matrix::crossprod(W),"dgCMatrix")
-    WW <- as(W %*% W,"dgCMatrix")
+    W <- as(W,"dgCMatrix")
+    WW <- as(W%*%W,"dgCMatrix")
     Wt <- as(Matrix::t(W),"dgCMatrix")
-
     E <- get_array_E(G)
-    Sigma <- Matrix::Matrix(Sigma)
-    Sigmainv <- try(Matrix::solve(Sigma))
+    Sigmainv <- try( Matrix::solve(Sigma) )
     #Sigmainv <- try(chol2inv(chol(Sigma)))
     if (inherits(Sigmainv, "try-error"))
-      Sigmainv <- MASS::ginv(as.matrix(Sigma),tol = 1e-40)
-    delta <- Matrix::Matrix(diag(as.vector(deltas)))
-    # Auxiliar Matrices
-    Aux <- IGR-kronecker(delta,W)
+      Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
+    #### Auxiliar Matrices
+    Aux <- IGR - kronecker(deltas, W)
     Auxt <- Matrix::t(Aux)
-    Auxi <- Matrix::solve(Aux)
-    Auxit<-Matrix::t(Auxi)
+    
+    # Cálculo inversa utilizando function spdep::invIrW e 
+    #invirtiendo bloque por bloque y luego blockdiagonal
+    lAuxi <- vector("list", G)
+    for (i in 1:G){
+      # lAuxi[[i]] <- spdep::invIrW(W, rho=deltas[i,i], method="solve")  
+      # lAuxi[[i]] <- spdep::invIrW(W, rho=deltas[i, i], method="solve")
+      lAuxi[[i]] <- Matrix::solve(IR-deltas[i,i]*W)
+    }
+    Auxi <- Matrix::bdiag(lAuxi)
+    # Forma tradicional de Auxi
+    # Auxi <- Matrix::solve(Aux)## VIP: BOTTLENECK AQUÍ
+    
+    Auxit <- Matrix::t(Auxi)
     A <- kronecker(IT,Aux)
-    Ainv <- kronecker(IT,Auxi)
-    rm(Auxi,Aux)
-    OME <- kronecker(IT,kronecker(Sigma,IR))
-    OMEinv <- kronecker(IT,kronecker(Sigmainv,IR))
+    #Ainv <- kronecker(IT,Auxi)
+    rm(Aux)
+    OME <- kronecker(kronecker(IT,Sigma),IR)
+    OMEinv <- kronecker(kronecker(IT,Sigmainv),IR)
     AY <- A %*% Y
-    rm(A)
+
     Bslm <- Matrix::solve(Matrix::crossprod(X,OMEinv %*% X),
-                          Matrix::crossprod(X,OMEinv %*% AY) )
+                          Matrix::crossprod(X,OMEinv %*% AY))
     XBslm <- X %*% Bslm
-    Res <- matrix(AY - XBslm,nrow=nrow(Y))
+    Res <- matrix(AY - XBslm, nrow=nrow(as.matrix(Y)))
+    
     ################################
     #### Information Matrix SUR-SLM
     ################################
 
-    ## I11A
+    #### I11A
     tX_OMEinv <- Matrix::crossprod(X,OMEinv)
     I11A <- tX_OMEinv %*% X
-    ## I12A
-    I12A <- Matrix::Matrix(0,nrow=ncol(X),ncol=G)
-    Ainv_XBslm <-  Ainv %*% XBslm
-    rm(Ainv)
+    
+    #### I12A
+    I12A <- Matrix::Matrix(0, nrow=ncol(X), ncol=G)
+    Ainv_XBslm <-  Matrix::solve(A, XBslm)
     for (i in 1:G){
       I12A[,i] <- tX_OMEinv %*%
         (kronecker(kronecker(IT,E[,,i,i]),W) %*% Ainv_XBslm)
     }
     rm(tX_OMEinv)
-    ## I13A
+    
+    #### I13A
     fx <- nrow(I12A); cx <- ncol(I12A)
-    I13A <- Matrix::Matrix(0,nrow=fx,ncol=(G*(G+1)/2))
-    # ## I22A
-    # I22A <- Matrix::Matrix(0,nrow=G,ncol=G)
-    # for (i in 1:G){
-    #   IAgW <- Matrix::solve((IR - deltas[i]*W),W)
-    #   for (j in 1:G){
-    #     kk1 <- kronecker(IT,kronecker(E[,,i,i],W))%*%Ainv_XBslm
-    #     kk1 <- kronecker(IT,kronecker(Sigmainv,IR))%*%kk1
-    #     kk1 <- kronecker(IT,kronecker(E[,,j,j],Matrix::t(W)))%*%kk1
-    #     kk1 <- Matrix::solve(kronecker(IT,Auxt),kk1)
-    #     tXBslm_HH_XBslm <- Matrix::crossprod(XBslm,kk1)
-    #     rm(kk1)
-    #     k1 <- Auxit%*%kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
-    #     k2 <- kronecker(Sigma,IR)%*%Auxit
-    #     trace_HH_OME <- Tm*sum(k1*k2)
-    #     if (i==j){
-    #       I22A[i,j] <- Tm*sum(IAgW * Matrix::t(IAgW)) + tXBslm_HH_XBslm +
-    #         trace_HH_OME
-    #     } else {
-    #       I22A[i,j] <- tXBslm_HH_XBslm + trace_HH_OME
-    #     }
-    #   }
-    # }
-    # rm(k1,k2)
-
-    ## I22A
+    I13A <- Matrix::Matrix(0, nrow=fx, ncol=(G*(G+1)/2))
+    
+    #### I22A
     I22A <- Matrix::Matrix(0,nrow=G,ncol=G)
-    k2 <- kronecker(Sigma,IR)%*%Auxit
+    miA <- list()
     for (i in 1:G){
-      IAgW <- Matrix::solve((IR - deltas[i]*W),W)
+      miA[[i]] <- Matrix::solve(IR-deltas[i, i]*Wt)
+    }
+    for (i in 1:G){
+      IAgW <- Matrix::solve((IR - deltas[i, i]*W),W)
       for (j in 1:G){
         if (i>j){I22A[i,j]<-I22A[j,i]}
         else {
-          # kk1 <- kronecker(IT,Auxit%*%kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW))%*%Ainv_XBslm
-              kk1 <- kronecker(IT,kronecker(E[,,i,i],W))%*%Ainv_XBslm
-              kk1 <- kronecker(IT,kronecker(Sigmainv,IR))%*%kk1
-              kk1 <- kronecker(IT,kronecker(E[,,j,j],Matrix::t(W)))%*%kk1
-              kk1 <- Matrix::solve(kronecker(IT,Auxt),kk1)
+          kk1 <- kronecker(IT,kronecker(E[,,i,i],W))%*%Ainv_XBslm
+          kk1 <- kronecker(IT,kronecker(Sigmainv,IR))%*%kk1
+          kk1 <- kronecker(IT,kronecker(E[,,j,j],Matrix::t(W)))%*%kk1
+          kk1 <- Matrix::solve(kronecker(IT,Auxt),kk1)
           tXBslm_HH_XBslm <- Matrix::crossprod(XBslm,kk1)
           rm(kk1)
-          k1 <- Auxit%*%kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
-          trace_HH_OME <- Tm*sum(k1*k2)
+          trace_HH_OME <- Tm*Sigmainv[i,j]*Sigma[i,j]*sum((miA[[i]]%*%WtW)*miA[[j]])
           if (i==j){
             I22A[i,j] <- Tm*sum(IAgW * Matrix::t(IAgW)) + tXBslm_HH_XBslm +
               trace_HH_OME
@@ -137,25 +127,14 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
         }
       }
     }
-    rm(k1,k2)
+    
     ff_cf <- get_ff_cf(G=G)
     ff <- ff_cf$ff; cf <- ff_cf$cf; rm(ff_cf)
-    ## I23A
-    # I23A <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
-    # for (i in 1:G){
-    #   for (j in 1:(G*(G+1)/2)){
-    #     if ((ff[j]!=i)&(cf[j]!=i)){
-    #       I23A[i,j]<-0
-    #     }else{
-    #       k0 <- kronecker(E[,,ff[j],cf[j]]%*%Sigmainv%*%E[,,i,i],W)
-    #       I23A[i,j] <-Tm*sum(k0*Auxit)
-    #     }
-    #   }
-    # }
-    # rm(k0)
+    
+    #### I23A
     I23A <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
     for (i in 1:G){
-      Wti <- Matrix::solve(IR-deltas[i]*Wt)
+      Wti <- Matrix::solve(IR-deltas[i, i]*Wt)
       for (j in 1:(G*(G+1)/2)){
         if ((ff[j]!=i)&(cf[j]!=i)){
           I23A[i,j]<-0
@@ -164,7 +143,8 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
         }
       }
     }
-
+    
+    #### I33A
     I33A <- Matrix::Matrix(0,nrow=G*(G+1)/2,ncol=G*(G+1)/2)
     for (i in 1:(G*(G+1)/2)){
       for (j in 1:(G*(G+1)/2)){
@@ -173,19 +153,20 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
       }
     }
 
+    ####################################
     mislm <- rbind(cbind(I11A,I12A,I13A),
                    cbind(Matrix::t(I12A),I22A,I23A),
                    cbind(Matrix::t(I13A),Matrix::t(I23A),I33A))
     mislm_inv <- try(Matrix::solve(mislm,tol=1e-50))
     if (inherits(mislm_inv, "try-error"))
-      mislm_inv <- MASS::ginv(as.matrix(mislm), tol = 1e-70)
+      mislm_inv <- MASS::ginv(as.matrix(mislm),tol=1e-70)
     tmp <- sqrt(Matrix::diag(mislm_inv))
-
+    
     ################################################
     #### MARGINAL LM TEST: Test for SEM in SLM
     ################################################
 
-    if (trace) cat("Computing marginal test... \n")
+    #if (trace) cat("Computing marginal test... \n")
 
     # grad rho
     RT <- Matrix::Matrix(matrix(Res,nrow=N*G,ncol=Tm))
@@ -198,23 +179,12 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     }
     gradrho <- Matrix::colSums(Cgradrest)
 
-    ## Information Matrix
-    # P1 <- Matrix::Matrix(sum(Matrix::diag(WW)) * IG)
-    # P2 <- Matrix::Matrix(sum(Matrix::diag(WtW)) * (Sigmainv * Sigma))
-    # Irhorho <- Tm*(P1+P2)
-    # Ird <- Matrix::Matrix(0,nrow=G,ncol=G)
-    # for (i in 1:G){
-    #   for (j in 1:G){
-    #     P1s1 <- (Sigma%*%E[,,j,j]) %*% (Sigmainv %*%E[,,i,i])
-    #     P1 <- kronecker(kronecker(IT,P1s1),WtW)
-    #     P2s1 <- E[,,i,i] %*% E[,,j,j]
-    #     P2 <- kronecker(kronecker(IT,P2s1),WW)
-    #     Ird[i,j] <- sum( (P1+P2) * Matrix::t(Ainv) )
-    #   }
-    # }
+    #### Information Matrix
     P1 <- Matrix::Matrix(sum(Matrix::diag(WW)) * IG)
     P2 <- Matrix::Matrix(sum(Matrix::diag(WtW)) * (Sigmainv * Sigma))
     Irhorho <- Tm*(P1+P2)
+    
+    ####
     Ird <- Matrix::Matrix(0,nrow=G,ncol=G)
     for (i in 1:G){
       for (j in 1:G){
@@ -228,11 +198,15 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
       }
     }
 
+    ####
     Irhopslm <- cbind(Matrix::Matrix(0,nrow=G,ncol=fx),
                       Ird, Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2))
+    
+    ############
     imi <- Matrix::solve((Irhorho - Irhopslm %*% mislm_inv %*%
                             Matrix::t(Irhopslm)))
     LMMqsemenslm <- as.numeric(gradrho %*% imi  %*% gradrho)
+    
     #########################################################
     # Breusch_pagan Test de diagonalidad (Breusch-Pagan 1980)
     # ver: http://www.stata.com/manuals13/rsureg.pdf
@@ -242,36 +216,49 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     index_ltri <- lower.tri(Sigma_corr)
     BP <- N*Tm*sum(Sigma_corr[index_ltri]^2)
     # Se ajusta a una Chi con G*(G-1)/2 gl
-  res <- list(
-    se_betas = as.vector(tmp[1:ncol(X)]),
-    se_deltas = as.vector(tmp[(ncol(X)+1):(ncol(X)+G)]),
-    cov = as.matrix(mislm_inv),
+    res <- list(
+    rest.se = as.vector(tmp[1:ncol(X)]),
+    deltas.se = as.vector(tmp[(ncol(X)+1):(ncol(X)+G)]),
+    vcov = as.matrix(mislm_inv),
     LMM = as.numeric(LMMqsemenslm),
     BP = as.numeric(BP)
   )
 }
 
 #####################################################
-  cov_spsursem <- function(Tm,G,N,Y,X,W,
-                           deltas,Sigma,trace=FALSE){
+cov_spsursem_f <- function(env){
+    #### LOAD INPUTS FROM ENVIRONMENT
+    if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+    G <- env$G; N <- env$N; Tm <- env$Tm
+    Y <- env$Y; X <- env$X; Sigma <- env$Sigma
+    deltas <- env$deltas
+    ####
     IT <- Matrix::Diagonal(Tm)
     IR <- Matrix::Diagonal(N)
     IG <- Matrix::Diagonal(G)
     IGR <- Matrix::Diagonal(G*N)
-    WW <- W%*%W
-    WtW <- Matrix::crossprod(W)
+    W <- as(W,"dgCMatrix")
+    WW <- as(W%*%W,"dgCMatrix")
+    WtW <- as(Matrix::crossprod(W),"dgCMatrix")
     Wt <- Matrix::t(W)
     E <- get_array_E(G=G)
     ff_cf <- get_ff_cf(G=G)
     ff <- ff_cf$ff; cf <- ff_cf$cf; rm(ff_cf)
     Sigmainv <- try(chol2inv(chol(Sigma)))
     if (inherits(Sigmainv, "try-error"))
-      Sigmainv <- MASS::ginv(as.matrix(Sigma),tol=1e-40)
-    delta <- Matrix::Matrix(diag(as.vector(deltas)))
-    # Auxiliar matrices
-    Aux<-IGR-kronecker(delta,W)
+      Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
+    #delta <- Matrix::Matrix(diag(as.vector(deltas)))
+    
+    ## Auxiliar matrices
+    Aux<-IGR-kronecker(deltas,W)
     Auxt<-Matrix::t(Aux)
-    Auxi<-Matrix::solve(Aux)
+    lAuxi <- vector("list", G)
+    for (i in 1:G){
+      lAuxi[[i]] <- spdep::invIrW(W, rho=deltas[i,i], method="solve")  
+      #lAuxi[[i]] <- spdep::invIrW(W, rho=deltas[i, i], method="solve")
+    }
+    Auxi <- Matrix::bdiag(lAuxi)    
+    #Auxi<-Matrix::solve(Aux)
     Auxit<-Matrix::t(Auxi)
     #
     B <- kronecker(IT,Aux)
@@ -282,9 +269,8 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     BY <- as(B %*% Y,"dgCMatrix")
     Bsem <-Matrix::solve(Matrix::crossprod(BX,OMEinv %*% BX),
                          Matrix::crossprod(BX,OMEinv %*% BY))
-    # Bsem <-Matrix::solve(Matrix::crossprod(BX,Matrix::solve(OME,BX)),
-    #                       Matrix::crossprod(BX,Matrix::solve(OME,B%*%Y)))
     Res <- matrix(BY - (BX %*% Bsem),nrow=nrow(Y))
+
     ################################
     #### Information Matrix SUR-SEM
     ################################
@@ -292,38 +278,42 @@ cov_spsursim <- function(Tm,G,N,Y,X,W,
     J13A <- Matrix::Matrix(0,nrow=ncol(X),ncol=G*(G+1)/2)
     J22A <- Matrix::Matrix(0,nrow=G,ncol=G)
     J11A <- Matrix::crossprod(BX,Matrix::solve(OME,BX))
-    ## J22A
-
+    
+    #### J22A
+    miA <- list()
     for (i in 1:G){
-      k0 <- Matrix::solve(IR - deltas[i]*W)%*%W
+      miA[[i]] <- Matrix::solve(IR-deltas[i,i]*Wt)
+    }
+    for (i in 1:G){
+      k0 <- Matrix::solve(IR - deltas[i, i]*W,W)
+      k0 <- Tm*sum(k0*Matrix::t(k0))
       for (j in 1:G){
         if (i==j){
-          Auxiliar <- Matrix::Matrix(0,ncol=G,nrow=G)
-          Auxiliar[j,i] <- Sigmainv[j,i]
-          k1<-Matrix::crossprod(Auxi,kronecker(Auxiliar,WtW))
-          k2<-kronecker(Matrix::t(Sigma),IR)%*%Auxit
-          J22A[i,j] <- Tm*sum(k0*Matrix::t(k0)) + Tm*sum(k1*k2)
+          J22A[i,j] <- k0 +Tm*Sigmainv[j,i]*Sigma[j,i]*sum(Matrix::t(miA[[i]])*(WtW%*%Matrix::t(miA[[j]])))
         }
         if (j<i){J22A[i,j]=J22A[j,i]}
         if (j>i) {
-          Auxiliar <- Matrix::Matrix(0,ncol=G,nrow=G)
-          Auxiliar[j,i] <- Sigmainv[j,i]
-          k1<-kronecker(Auxiliar,WtW)%*%Auxi
-          k2=Auxi%*%kronecker(Sigma,IR)
-          J22A[i,j] <- Tm*sum(k1*k2)
+          J22A[i,j] <-Tm*Sigmainv[j,i]*Sigma[j,i]*sum(Matrix::t(miA[[i]])*(WtW%*%Matrix::t(miA[[j]])))
         }
       }
     }
-rm(k0,k1,k2,Auxiliar)
-    ## J23A
+    rm(k0)
+    
+   #### J23A
+    miAt <- Matrix::Matrix(0,nrow=1,ncol=G)
+    for (i in 1:G){
+      miAt[i] <- sum(Matrix::t(miA[[i]])*W)
+    }
     J23A <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
     for (i in 1:G){
       for (j in 1:(G*(G+1)/2)){
-        k0 <- kronecker(E[,,i,i] %*% Sigmainv %*% E[,,ff[j],cf[j]],W)
-        J23A[i,j] <- Tm*sum(k0*Auxi)
+        Auxiliar <- E[,,i,i] %*% Sigmainv %*% E[,,ff[j],cf[j]]
+        J23A[i,j] <- Tm*sum(diag(Auxiliar)*miAt) 
       }
     }
-    ## J33A
+    rm(miAt)
+    
+    #### J33A
     J33A <- Matrix::Matrix(0,nrow=G*(G+1)/2,ncol=G*(G+1)/2)
     for (i in 1:(G*(G+1)/2)){
       for (j in 1:(G*(G+1)/2)){
@@ -333,6 +323,7 @@ rm(k0,k1,k2,Auxiliar)
         }
     }
 
+    ###############################################
     misem <- rbind(cbind(J11A, J12A, J13A),
                            cbind(Matrix::t(J12A), J22A, J23A),
                            cbind(Matrix::t(J13A), Matrix::t(J23A), J33A))
@@ -340,10 +331,11 @@ rm(k0,k1,k2,Auxiliar)
     if (inherits(misem_inv, "try-error"))
       misem_inv <- MASS::ginv(as.matrix(misem), tol = 1e-40)
     tmp <- sqrt(Matrix::diag(misem_inv))
+    
     ################################################
     #### MARGINAL TEST: Test for SLM in SEM
     ################################################
-    if (trace) cat("Computing marginal test... \n")
+    #if (trace) cat("Computing marginal test... \n")
 
     RT <- Matrix::Matrix(matrix(Res,nrow=N*G,ncol=Tm))
     Yt <- Matrix::Matrix(matrix(Y,nrow=N*G,ncol=Tm))
@@ -352,14 +344,21 @@ rm(k0,k1,k2,Auxiliar)
       for (t in 1:Tm){
         Cgradrest[t,i] <- Matrix::crossprod(RT[,t],
                                             ( kronecker(Sigmainv %*% E[,,i,i],W) -
-                                                kronecker(Sigmainv %*% (delta %*% E[,,i,i]), WW))) %*% Yt[,t]
+                                                kronecker(Sigmainv %*% (deltas %*% E[,,i,i]), WW))) %*% Yt[,t]
       }
     }
     graddel <- Matrix::colSums(Cgradrest)
-    ## matriz de informacion
+    
+    ## Information Matrix
+    
     PP2 <- Matrix::Matrix(0,nrow=G,ncol=G)
+    miA1 <- list()
+    miA2 <- list()
+    for (i in 1:G){
+      miA1[[i]] <- (IR-deltas[i, i]*W)%*%W
+      miA2[[i]] <- miA1[[i]]%*%Matrix::solve((IR-deltas[i, i]*W)%*%(IR-deltas[i, i]*Wt))
+    }
     X_Bsem <- X%*%Bsem
-    k3 <- Auxi%*%kronecker(Sigma,IR)
     for (i in 1:G){
       for (j in 1:G){
         if (j<i){PP2[i,j]=PP2[j,i]} # Matriz simetrica
@@ -368,15 +367,16 @@ rm(k0,k1,k2,Auxiliar)
           k1 <- kronecker(Sigmainv,IR)%*%Aux%*%kronecker(E[,,i,i],W)
           JJ <- k0%*%k1
           HH <- kronecker(IT,JJ)
-          k2 <- Auxi%*%JJ;
-          PP2[i,j] <-  Matrix::crossprod(X_Bsem,HH%*%X_Bsem) +Tm*sum(k2*k3)
+          PP2[i,j] <-  Matrix::crossprod(X_Bsem,HH%*%X_Bsem) +Tm*Sigmainv[i,j]*Sigma[i,j]*sum(miA1[[i]]*miA2[[j]])
         }
       }
     }
-    rm(X_Bsem,k0,k1,k2,k3,HH)
-    ####
+    rm(miA1,miA2,X_Bsem,k0,k1,HH)
+    
+    #### Ideldel
     Ideldel <- Tm*sum(Matrix::diag(WW))*IG + PP2
-    ####
+    
+    #### Ideltabe
     Ideltabe <- Matrix::Matrix(0,nrow=G,ncol=ncol(X))
     for (i in 1:G)
     {
@@ -384,40 +384,41 @@ rm(k0,k1,k2,Auxiliar)
                                         kronecker(IT, kronecker(E[,,i,i], Wt))) %*%
         Matrix::crossprod(B,Matrix::solve(OME,B%*%X))
     }
-    ## Irhodel
+    
+    #### Irhodel
+    miA3 <- list()
+    for (i in 1:G){
+      miA3[[i]] <- miA[[i]]%*%Wt%*%(IR-deltas[i, i]*Wt)%*%W
+    }
     Irhodel <- Matrix::Matrix(0,nrow=G,ncol=G)
-    k0<-kronecker(Sigma,IR)%*%Auxit
     for (i in 1:G){
       for (j in 1:G){
         if(i==j){
-          k1<-kronecker(E[,,j,j]%*%Sigmainv,Wt)%*%Aux
-          k2<-kronecker(E[,,i,i],W)%*%Auxi
-          k12 <- Matrix::t(k1%*%k2)
-          k3<-kronecker(E[,,i,i],WW)
-          Irhodel[i,j] <-Tm*sum(k0*k12)+Tm*sum(k3*Auxit)
+          Irhodel[i,j] <- Tm*Sigmainv[j,i]*Sigma[j,i]*sum(miA[[j]]*miA3[[i]])+Tm*sum(WW*miA[[i]])
         }
         if (i!=j) {
-          k1<-kronecker(E[,,j,j]%*%Sigmainv,Wt)%*%Aux
-          k2<-kronecker(E[,,i,i],W)%*%Auxi
-          k12 <- Matrix::t(k1%*%k2)
-          Irhodel[i,j] <-Tm*sum(k0*k12)
+          Irhodel[i,j] <- Tm*Sigmainv[j,i]*Sigma[j,i]*sum(miA[[j]]*miA3[[i]])
         }
       }
     }
-    rm(k0,k1,k2,k12,k3)
-  #
+    rm(miA3)
+  
+    #### Ideltasig
     Ideltasig <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
-    # OJO: SALE NUMÉRICAMENTE LA MATRIZ NULA... REPASAR: Fdo --> En Matlab tb
+    # OJO: SALE NUMERICAMENTE LA MATRIZ NULA... REPASAR: Fdo --> En Matlab tb
     for (i in 1:G){
       for (j in 1:(G*(G+1)/2)){
-        k0<-(kronecker(E[,,ff[j],cf[j]]%*%Sigmainv,IR)%*%Aux)%*%kronecker(E[,,i,i],W)
+        k0 <-(kronecker(E[,,ff[j],cf[j]]%*%Sigmainv,IR)%*%Aux)%*%kronecker(E[,,i,i],W)
         Ideltasig[i,j] <- Tm*sum(k0*Auxit)
       }
     }
     rm(k0)
+    
+    ##########################################################
     Idelpsem <- cbind(Ideltabe, Matrix::t(Irhodel), Ideltasig)
     imi <- Matrix::solve(Ideldel - Idelpsem %*% Matrix::solve(misem,Matrix::t(Idelpsem)))
     LMMqslmensem <- Matrix::crossprod(graddel,imi %*% graddel)
+    
     ###########################################################
     #### Breusch_pagan Test de diagonalidad (Breusch-Pagan 1980)
     ## ver: http://www.stata.com/manuals13/rsureg.pdf
@@ -428,19 +429,21 @@ rm(k0,k1,k2,Auxiliar)
     BP <- N*Tm*sum(Sigma_corr[index_ltri]^2)
     # Se ajusta a una Chi con G*(G-1)/2 gl
     res <- list(
-      se_betas = as.vector(tmp[1:ncol(X)]),
-      se_deltas = as.vector(tmp[(ncol(X)+1):(ncol(X)+G)]),
-      cov = as.matrix(misem_inv),
+      rest.se = as.vector(tmp[1:ncol(X)]),
+      deltas.se = as.vector(tmp[(ncol(X)+1):(ncol(X)+G)]),
+      vcov = as.matrix(misem_inv),
       LMM = as.numeric(LMMqslmensem),
       BP = as.numeric(BP)
     )
   }
 
-
 #####################################################
-
-cov_spsursarar <- function(Tm,G,N,Y,X,W,
-                         deltas,Sigma,trace=FALSE){
+cov_spsursarar_f <- function(env){
+  #### LOAD INPUTS FROM ENVIRONMENT
+  if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+  G <- env$G; N <- env$N; Tm <- env$Tm
+  Y <- env$Y; X <- env$X; Sigma <- env$Sigma
+  deltas <- env$deltas
   W <- as(W,"dgCMatrix")
   IT <- Matrix::Diagonal(Tm)
   IR <- Matrix::Diagonal(N)
@@ -454,9 +457,10 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
   Sigmainv <- try(chol2inv(chol(Sigma)))
   if (inherits(Sigmainv, "try-error"))
     Sigmainv <- MASS::ginv(as.matrix(Sigma), tol = 1e-40)
-  delta_slm <- deltas[1:G]
-  delta_sem <- deltas[(G+1):(2*G)]
-  DELTA <- Matrix::Matrix(diag(deltas))
+  delta_slm <- Matrix::Matrix(deltas[(1:G), (1:G)])
+  delta_sem <- Matrix::Matrix(deltas[((G+1):(2*G)), ((G+1):(2*G))])
+  #DELTA <- Matrix::Matrix(diag(deltas))
+  DELTA <- deltas
   A <- kronecker(IT,(IGR - kronecker(DELTA[1:G,1:G],W)))
   B <- kronecker(IT,(IGR - kronecker(DELTA[(G+1):(2*G),(G+1):(2*G)],W)))
   OME <- kronecker(IT,kronecker(Sigma,IR))
@@ -495,6 +499,7 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
   J13A <- Matrix::Matrix(0,nrow=fx,ncol=G)
   J14A <- Matrix::Matrix(0,nrow=fx,ncol=G*(G+1)/2)
   J21A <- Matrix::t(J12A)
+  
   ## J22A
   J22A <- Matrix::Matrix(0,nrow=G,ncol=G)
   XXBsarar <- X %*% Bsarar
@@ -513,7 +518,7 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
       t1 <-Tm*sum(k4*k3)
       F0 <- Matrix::t(XXBsarar)%*%HHXXBsarar+t1
       if (i==j){
-        k50<- (IR - delta_slm[i]*W)
+        k50<- (IR - delta_slm[i, i]*W)
         k5 <- Matrix::solve(k50)
         k6 <- k5%*%W
         J22A[i,j] <- Tm*sum(k6*Matrix::t(k6))+ F0
@@ -525,63 +530,94 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
       }
   }
   rm(BF,XXBsarar,XXBSARAR,k0,k1,k3,k4,k5,k6)
+  
   ## J23A
   J23A <- Matrix::Matrix(0,nrow=G,ncol=G)
-  k0 <- Matrix::solve(AAux,BAuxi)
-  k0t <- Matrix::t(k0)
-  kkk <- (kronecker(Sigma,IR) %*% Matrix::t(BAuxi))
+  miA <- list()
+  miB <- list()
+  miAB <- list()
   for (i in 1:G){
-    k1 <-  kkk%*% kronecker(E[,,i,i]%*% Sigmainv,Wt)
+    # miA[[i]] <- Matrix::solve(IR-delta_slm[i, i]*Wt)
+    miB[[i]] <- Wt*(IR-delta_sem[i,i]*Wt)*W*Matrix::solve(IR-delta_sem[i,i]*W)
+    miAB[[i]] <- Matrix::solve((IR-delta_sem[i,i]*W)%*%(IR-delta_slm[i,i]*W))
+  }
+  # k0 <- Matrix::solve(AAux,BAuxi)
+  # k0t <- Matrix::t(k0)
+  # kkk <- (kronecker(Sigma,IR) %*% Matrix::t(BAuxi))
+  for (i in 1:G){
+    # k1 <-  kkk%*% kronecker(E[,,i,i]%*% Sigmainv,Wt)
     for (j in 1:G){
       if (j<i) {J23A[i,j]<-J23A[j,i]}
       else {
-     k2 <- BAux%*%kronecker(E[,,j,j],W)
-     k3 <- kronecker(E[,,i,i]%*%E[,,j,j],WW)
-     J23A[i,j] <- Tm*sum((k1%*%k2+k3)*k0t)
+        # k2 <- BAux%*%kronecker(E[,,j,j],W)
+        # k3 <- kronecker(E[,,i,i]%*%E[,,j,j],WW)
+        # J23A[i,j] <- Tm*sum((k1%*%k2+k3)*k0t)
+        J23A[i,j] <- Tm*Sigmainv[j,i]*Sigma[j,i]*sum(miB[[i]]*miAB[[i]])
+        if (i==j){
+          J23A[i,j] <- J23A[i,j] + Tm*sum(WW*miAB[[i]])
+        }
       }
-      }
+    }
   }
-  rm(k1,k2,k3,kkk)
+  # rm(k0,k0t)
+  # rm(k1,k2,k3,kkk)
+  
   ## J24A
+  # k0 <- Matrix::solve(AAux,BAuxi)
   J24A <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
   for (i in 1:G){
     for (j in 1:(G*(G+1)/2)) {
       if ((ff[j]!=i) & (cf[j]!=i)) {J24A[i,j] <- 0}
       else {
-        k1 <- (kronecker(E[,,ff[j],cf[j]] %*% Sigmainv, IR)%*%BAux)%*%kronecker(E[,,i,i],W)
-        J24A[i,j] <- Tm*sum(k1*Matrix::t(k0))}
+        # k1 <- (kronecker(E[,,ff[j],cf[j]] %*% Sigmainv, IR)%*%BAux)%*%kronecker(E[,,i,i],W)
+        # J24A[i,j] <- Tm*sum(k1*Matrix::t(k0))
+        miM <- Matrix::t(E[,,ff[j],cf[j]] %*% Sigmainv)
+        J24A[i,j] <- Tm*miM[i,i]*sum(((IR-delta_sem[i, i]*W)%*%W)*miAB[[i]])
       }
+    }
   }
+
   ## J33A
   J33A <- Matrix::Matrix(0,nrow=G,ncol=G)
-  k0 <- Matrix::t(BAuxi%*%kronecker(Sigma,IR))
-  k3 <- Matrix::solve(BAux,kronecker(Sigma,IR)%*%Matrix::t(BAuxi))
+  # k0 <- Matrix::t(BAuxi%*%kronecker(Sigma,IR))
+  # k3 <- Matrix::solve(BAux,kronecker(Sigma,IR)%*%Matrix::t(BAuxi))
   for (i in 1:G){
     for (j in 1:G){
       if (i==j){
-        BG <- Matrix::solve(IR - delta_sem[i]*W,W)
-        k1 <- Matrix::t(BAuxi)%*%kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
-        J33A[i,j] <- Tm*sum(BG*Matrix::t(BG)) + Tm*sum(k1*k0)
+        BG <- Matrix::solve(IR - delta_sem[i, i]*W,W)
+        # k1 <- Matrix::t(BAuxi)%*%kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
+        # J33A[i,j] <- Tm*sum(BG*Matrix::t(BG)) + Tm*sum(k1*k0)
+        J33A[i,j] <- Tm*sum(BG*Matrix::t(BG)) + Tm*Sigmainv[i,i]*Sigma[i,i]*sum((miB[[i]]%*%WtW)*miB[[i]])
       } else {
         if (i>j) {
           J33A[i,j] <- J33A[j,i]
         } else {
-          k1 <- kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
-          J33A[i,j] <- Tm*sum(k1*k3) # Tm*sum(k1*Matrix::t(k3))
+          # k1 <- kronecker(E[,,j,j]%*%Sigmainv%*%E[,,i,i],WtW)
+          # J33A[i,j] <- Tm*sum(k1*k3) # Tm*sum(k1*Matrix::t(k3))
+          J33A[i,j] <- Tm*Sigmainv[i,j]*Sigma[i,j]*sum((miB[[j]]%*%WtW)*miB[[i]])
         }
       }
     }
   }
-  rm(BG,k0,k1)
+
+  # rm(BG,k0,k1)
+  
   ## J34A
   J34A <- Matrix::Matrix(0,nrow=G,ncol=G*(G+1)/2)
+  miBt <- numeric()
+  for (i in 1:G){
+    miBt[i] <- sum(W*Matrix::t(miB[[i]]))
+  }
   for (i in 1:G){
     for (j in 1:(G*(G+1)/2)){
-      k1 <- kronecker(E[,,i,i] %*% Sigmainv %*% E[,,ff[j],cf[j]],W)
-      J34A[i,j] <- Tm*sum(k1*BAuxi)
+      # k1 <- kronecker(E[,,i,i] %*% Sigmainv %*% E[,,ff[j],cf[j]],W)
+      # J34A[i,j] <- Tm*sum(k1*BAuxi)
+      miM <- diag(Matrix::t(E[,,i,i] %*% Sigmainv %*% E[,,ff[j],cf[j]]))
+      J34A[i,j] <- Tm*sum(miM*miBt)
     }
   }
-  rm(k1)
+  # rm(k1)
+  
   ## J44A
   J44A <- Matrix::Matrix(0,nrow=G*(G+1)/2,ncol=G*(G+1)/2)
   for (i in 1:(G*(G+1)/2)){
@@ -604,19 +640,21 @@ cov_spsursarar <- function(Tm,G,N,Y,X,W,
   misarar_inv <- try(Matrix::solve(misarar,tol=1e-40))
 
   if (inherits(misarar_inv, "try-error"))
-    misarar_inv <- MASS::ginv(as.matrix(misarar),tol=1e-40)
+    misarar_inv <- MASS::ginv(as.matrix(misarar), tol = 1e-40)
   tmp <- sqrt(Matrix::diag(misarar_inv))
-  Sigmas <- get_Sigma(resids=Res,N=N,G=G,Tm=Tm)
+  Sigmas <- get_Sigma(resids = Res, N = N, G = G, Tm = Tm)
   Sigma_corr <- Sigmas$Sigma_corr
   rm(Sigmas)
   index_ltri <- lower.tri(Sigma_corr)
   BP <- N*Tm*sum(Sigma_corr[index_ltri]^2)
   # Se ajusta a una Chi con G*(G-1)/2 gl
   res <- list(
-    se_betas = as.vector(tmp[1:ncol(X)]),
-    se_deltas = as.vector(tmp[(ncol(X)+1):(ncol(X)+2*G)]),
-    cov = as.matrix(misarar_inv),
+    rest.se = as.vector(tmp[1:ncol(X)]),
+    deltas.se = as.vector(tmp[(ncol(X)+1):(ncol(X)+2*G)]),
+    vcov = as.matrix(misarar_inv),
     LMM = NULL,
     BP = as.numeric(BP)
   )
-}
+
+  
+  }

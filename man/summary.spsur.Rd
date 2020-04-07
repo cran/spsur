@@ -7,7 +7,7 @@
 \method{summary}{spsur}(object, ...)
 }
 \arguments{
-\item{object}{\emph{spsur} object estimated using \code{\link{spsurml}},
+\item{object}{An \emph{spsur} object estimated using \code{\link{spsurml}},
 \code{\link{spsur3sls}} or \code{\link{spsurtime}} functions.}
 
 \item{...}{further arguments passed to or from other methods.}

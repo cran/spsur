@@ -8,8 +8,8 @@
 #'  corresponding to the SUR model like the \emph{(GxG)} covariance matrix of the residuals of the
 #'  equations of the SUR, the estimated log-likelihood, the Breusch-Pagan diagonality test or the Marginal
 #'  Lagrange Multiplier, LMM, tests of spatial dependence.
-#'
-#' @param object \emph{spsur} object estimated using \code{\link{spsurml}},
+#'  
+#' @param object An \emph{spsur} object estimated using \code{\link{spsurml}},
 #'  \code{\link{spsur3sls}} or \code{\link{spsurtime}} functions.
 #' @param ... further arguments passed to or from other methods.
 #'
@@ -34,26 +34,31 @@
 summary.spsur <- function(object, ...) {
   z <- object
   stopifnot(inherits(z, "spsur"))
-  G <- z$G; N <- z$N; Tm <- z$Tm; p <- z$p
+  G <- z$G; N <- z$N; Tm <- z$Tm; p <- z$p 
   rdf <- z$df.residual
   r <- z$residuals
   f <- z$fitted.values
   rss <- sum(r^2)
   resvar <- rss/rdf
-  betas <- z$betas
-  se_betas <- z$se_betas
+  betas <- z$coefficients
+  se_betas <- z$rest.se
   t_betas <- betas / se_betas
   deltas <- z$deltas
-  se_deltas <- z$se_deltas
+  se_deltas <- z$deltas.se
   t_deltas <- deltas / se_deltas
+  Sigma <- z$Sigma
+  allSigmas <- get_Sigma(r, N, G, Tm)
+  z$Sigma_corr <- allSigmas$Sigma_corr
+  z$Sigma_inv <- allSigmas$Sigma_inv
+  rm(allSigmas)
   z$coef_table <- list(NULL)
  # Build coefficients table by Equation
   for (i in 1:G)
   {
-    if(i==1){
+    if (i == 1) {
       z$coef_table[[i]] <- cbind(betas[1:p[i]], se_betas[1:p[i]],
                                          t_betas[1:p[i]],
-                                         2 * pt(abs(t_betas[1:p[i]]),rdf,
+                                         2 * pt(abs(t_betas[1:p[i]]), rdf,
                                                 lower.tail = FALSE))
       colnames(z$coef_table[[i]] ) <- c("Estimate", "Std. Error",
                                         "t value", "Pr(>|t|)")
@@ -65,14 +70,13 @@ summary.spsur <- function(object, ...) {
                                    2 * pt(abs(t_betas[(cumsum(p)[i-1]+1):
                                                         cumsum(p)[i]]),rdf,
                                                         lower.tail = FALSE))
-
-      }
-    if(!is.null(deltas)){
+    }
+    if (!is.null(deltas)) {
       z$coef_table[[i]] <-  rbind(z$coef_table[[i]],
                                   cbind(deltas[i],se_deltas[i],t_deltas[i],
                                         2 * pt(abs(t_deltas[i]),rdf,
                                                lower.tail = FALSE)) )
-      if(z$type=="sarar") {
+      if (z$typ == "sarar") {
         z$coef_table[[i]] <-  rbind(z$coef_table[[i]],
                                     cbind(deltas[i+G],
                                           se_deltas[i+G],t_deltas[i+G],
