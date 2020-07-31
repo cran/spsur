@@ -1287,9 +1287,9 @@ window.buildTabsets = function(tocID) {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -1299,14 +1299,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -1315,9 +1317,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -1596,15 +1598,15 @@ div.tocify {
 <h4 class="author">Román Mínguez, University of Castilla-La Mancha (Spain)</h4>
 <h4 class="author">Fernando A. López, Technical University of Cartagena (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br></h4>
-<h4 class="date">2020-04-07 16:21:45 <br> <br> <br></h4>
+<h4 class="date">2020-07-30 10:44:58 <br> <br> <br></h4>
 
 </div>
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(spsur)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(spdep)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(spatialreg)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(sf)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(spsur)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(spdep)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(spatialreg)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(sf)</span></code></pre></div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>The <strong>spsur</strong> R-package (<span class="citation">López, Mínguez, and Mur (<a href="#ref-LopezMinguezMur2020" role="doc-biblioref">2020</a>)</span>) has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. On the oher hand, the <strong>spatialreg</strong> package ( <span class="citation">Bivand, Pebesma, and Gómez-Rubio (<a href="#ref-BivandPedesma2013" role="doc-biblioref">2013</a>)</span>; <span class="citation">Bivand and Piras (<a href="#ref-BivandPiras2015" role="doc-biblioref">2015</a>)</span>), is the most adequate alternative for working with uniequational models, in a pure cross-sectional setting. The purpose of this vignette is to compare the results of <strong>spsur</strong> and <strong>spatialreg</strong> in case of <em>uniequational models</em>. As we will see, the differences between the two are negligible.</p>
@@ -1631,127 +1633,96 @@ div.tocify {
 <li>SOUTH: dummy variable for Southern counties (South = 1)</li>
 </ul>
 <p>First, we can read the NCOVR dataset as a simple feature (sf) object (named NCOVR.sf),</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">data</span>(NCOVR, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">data</span>(NCOVR, <span class="dt">package =</span> <span class="st">&quot;spsur&quot;</span>)</span></code></pre></div>
 <p>The first three observations in NCOVR appear below:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">NCOVR &lt;-<span class="st"> </span><span class="kw">st_drop_geometry</span>(NCOVR.sf)</a>
-<a class="sourceLine" id="cb3-2" title="2">knitr<span class="op">::</span><span class="kw">kable</span>(</a>
-<a class="sourceLine" id="cb3-3" title="3">  <span class="kw">head</span>((NCOVR[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>])),</a>
-<a class="sourceLine" id="cb3-4" title="4">  <span class="dt">caption =</span> <span class="st">&#39;First observations of NCOVR dataset&#39;</span> )</a></code></pre></div>
-<div class="kable-table">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>NCOVR &lt;-<span class="st"> </span><span class="kw">st_drop_geometry</span>(NCOVR.sf)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>knitr<span class="op">::</span><span class="kw">kable</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="kw">head</span>((NCOVR[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>])),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">caption =</span> <span class="st">&#39;First observations of NCOVR dataset&#39;</span> )</span></code></pre></div>
 <table>
-<caption>
-<span id="tab:printdatatable">Table 2.1: </span>First observations of NCOVR dataset
-</caption>
 <thead>
 <tr class="header">
-<th align="left">
-NAME
-</th>
-<th align="left">
-STATE_NAME
-</th>
-<th align="left">
-FIPS
-</th>
-<th align="right">
-SOUTH
-</th>
-<th align="right">
-HR60
-</th>
-<th align="right">
-HR70
-</th>
+<th align="left">NAME</th>
+<th align="left">STATE_NAME</th>
+<th align="left">FIPS</th>
+<th align="right">SOUTH</th>
+<th align="right">HR60</th>
+<th align="right">HR70</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">
-Lake of the Woods
-</td>
-<td align="left">
-Minnesota
-</td>
-<td align="left">
-27077
-</td>
-<td align="right">
-0
-</td>
-<td align="right">
-0.000000
-</td>
-<td align="right">
-0.000000
-</td>
+<td align="left">Lake of the Woods</td>
+<td align="left">Minnesota</td>
+<td align="left">27077</td>
+<td align="right">0</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
 </tr>
 <tr class="even">
-<td align="left">
-Ferry
-</td>
-<td align="left">
-Washington
-</td>
-<td align="left">
-53019
-</td>
-<td align="right">
-0
-</td>
-<td align="right">
-0.000000
-</td>
-<td align="right">
-0.000000
-</td>
+<td align="left">Ferry</td>
+<td align="left">Washington</td>
+<td align="left">53019</td>
+<td align="right">0</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
 </tr>
 <tr class="odd">
-<td align="left">
-Stevens
-</td>
-<td align="left">
-Washington
-</td>
-<td align="left">
-53065
-</td>
-<td align="right">
-0
-</td>
-<td align="right">
-1.863863
-</td>
-<td align="right">
-1.915158
-</td>
+<td align="left">Stevens</td>
+<td align="left">Washington</td>
+<td align="left">53065</td>
+<td align="right">0</td>
+<td align="right">1.863863</td>
+<td align="right">1.915158</td>
 </tr>
 </tbody>
 </table>
-</div>
-<p>Whereas the geometry of the USA counties is shown in Figure <a href="#fig:plotgeom">2.1</a>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">plot</span>(<span class="kw">st_geometry</span>(NCOVR.sf))</a></code></pre></div>
-<div class="figure" style="text-align: center">
-<span id="fig:plotgeom"></span>
-<img src="data:image/png;base64,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n7vRUEtfFC4Kb+RzNxpq6ZvSl/7v5HM3Gmrpmyq8SqVluuw/WfuT7jTW0jfl/vLGHXSnsZa+qcKrVFqmwqtUWifzRw9voVsNtvRVjf8bivvoVoMtfVc3Y6sVXqXSQhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jIVXqXSMhVepdIyFV6l0jL9BzLrtM+Si6w8AAAAAElFTkSuQmCC" />
-<p class="caption">
-Figure 2.1: Geometry of the USA counties
-</p>
+<p>Whereas the geometry of the USA counties is shown in Figure 1:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">plot</span>(<span class="kw">st_geometry</span>(NCOVR.sf))</span></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" title="Figure 1: Geometry of the USA counties" alt />
+<p class="caption">Figure 1: Geometry of the USA counties</p>
 </div>
 <p>Following <span class="citation">Baller et al. (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span>, we consider a <strong>W</strong> matrix based on the criterion of 10 nearest-neighbourhood, which is immediate to obtain using the <strong>spdep</strong> package (<span class="citation">Bivand, Pebesma, and Gómez-Rubio (<a href="#ref-BivandPedesma2013" role="doc-biblioref">2013</a>)</span>; <span class="citation">Bivand and Wong (<a href="#ref-BivandWong2018" role="doc-biblioref">2018</a>)</span>). The resulting weighting matrix will be called <em>listw</em>. Note that this matrix is non-symmetric and it is row-standardized.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># Obtain coordinates of centroids</span></a>
-<a class="sourceLine" id="cb5-2" title="2">co &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st_coordinates</span>(sf<span class="op">::</span><span class="kw">st_centroid</span>(NCOVR.sf))</a>
-<a class="sourceLine" id="cb5-3" title="3">listw &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">nb2listw</span>(spdep<span class="op">::</span><span class="kw">knn2nb</span>(spdep<span class="op">::</span><span class="kw">knearneigh</span>(co, <span class="dt">k =</span> <span class="dv">10</span>,<span class="dt">longlat =</span> <span class="ot">TRUE</span>)))</a></code></pre></div>
-<p><span class="citation">Baller et al. (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span> specify a single linear model to explain the case of HR in the year 1960:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Obtain coordinates of centroids</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>co &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st_coordinates</span>(sf<span class="op">::</span><span class="kw">st_centroid</span>(NCOVR.sf))</span>
+<span id="cb5-3"><a href="#cb5-3"></a>listw &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">nb2listw</span>(spdep<span class="op">::</span><span class="kw">knn2nb</span>(spdep<span class="op">::</span><span class="kw">knearneigh</span>(co, <span class="dt">k =</span> <span class="dv">10</span>,<span class="dt">longlat =</span> <span class="ot">TRUE</span>)))</span></code></pre></div>
+<p><span class="citation">Baller et al. (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span> specify a single linear model to explain the case of HR in the year 1960 with the results shown in the Table below,</p>
 <p><span class="math display" id="eq:ols">\[\begin{equation}
 HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}DV_{60} +\beta_{5}UE_{60} +\beta_{6}SOUTH+\epsilon_{60} 
 \tag{2.1}
 \end{equation}\]</span></p>
-<p>This model can be estimated in usual way with the function <code>stats::lm</code> (<span class="citation">R Core Team (<a href="#ref-R2019" role="doc-biblioref">2019</a>)</span>),</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">formula_<span class="dv">60</span> &lt;-<span class="st"> </span>HR60 <span class="op">~</span><span class="st"> </span>RD60 <span class="op">+</span><span class="st"> </span>PS60 <span class="op">+</span><span class="st"> </span>MA60 <span class="op">+</span><span class="st"> </span>DV60 <span class="op">+</span><span class="st"> </span>UE60 <span class="op">+</span><span class="st"> </span>SOUTH</a>
-<a class="sourceLine" id="cb6-2" title="2">lm_<span class="dv">60</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="kw">summary</span>(lm_<span class="dv">60</span>)</a></code></pre></div>
-<pre><code>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>formula_<span class="dv">60</span> &lt;-<span class="st"> </span>HR60 <span class="op">~</span><span class="st"> </span>RD60 <span class="op">+</span><span class="st"> </span>PS60 <span class="op">+</span><span class="st"> </span>MA60 <span class="op">+</span><span class="st"> </span>DV60 <span class="op">+</span><span class="st"> </span>UE60 <span class="op">+</span><span class="st"> </span>SOUTH</span>
+<span id="cb6-2"><a href="#cb6-2"></a>lm_<span class="dv">60</span> &lt;-<span class="st"> </span>stats<span class="op">::</span><span class="kw">lm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">summary</span>(lm_<span class="dv">60</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; stats::lm(formula = formula_60, data = NCOVR.sf)
 #&gt; 
+#&gt; Residuals:
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -14.026  -2.217  -0.635   1.393  88.312 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  8.12591    0.63465  12.804  &lt; 2e-16 ***
+#&gt; RD60         1.79824    0.12341  14.571  &lt; 2e-16 ***
+#&gt; PS60         0.35871    0.09216   3.892 0.000101 ***
+#&gt; MA60        -0.23047    0.01932 -11.931  &lt; 2e-16 ***
+#&gt; DV60         1.16002    0.09483  12.233  &lt; 2e-16 ***
+#&gt; UE60        -0.06195    0.03515  -1.762 0.078138 .  
+#&gt; SOUTH        2.63862    0.23325  11.312  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+#&gt; 
+#&gt; Residual standard error: 4.743 on 3078 degrees of freedom
+#&gt; Multiple R-squared:  0.2966, Adjusted R-squared:  0.2952 
+#&gt; F-statistic: 216.3 on 6 and 3078 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The model can be estimated in usual way with the function <code>stats::lm</code> (<span class="citation">R Core Team (<a href="#ref-R2019" role="doc-biblioref">2019</a>)</span>),</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>formula_<span class="dv">60</span> &lt;-<span class="st"> </span>HR60 <span class="op">~</span><span class="st"> </span>RD60 <span class="op">+</span><span class="st"> </span>PS60 <span class="op">+</span><span class="st"> </span>MA60 <span class="op">+</span><span class="st"> </span>DV60 <span class="op">+</span><span class="st"> </span>UE60 <span class="op">+</span><span class="st"> </span>SOUTH</span>
+<span id="cb8-2"><a href="#cb8-2"></a>lm_<span class="dv">60</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">summary</span>(lm_<span class="dv">60</span>)</span></code></pre></div>
+<pre><code>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = formula_60, data = NCOVR.sf)
 #&gt; 
@@ -1773,19 +1744,17 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; 
 #&gt; Residual standard error: 4.743 on 3078 degrees of freedom
 #&gt; Multiple R-squared:  0.2966, Adjusted R-squared:  0.2952 
-#&gt; F-statistic: 216.3 on 6 and 3078 DF,  p-value: &lt; 2.2e-16
-</code></pre>
+#&gt; F-statistic: 216.3 on 6 and 3078 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The same results can be obtained with the function <code>spsurml</code> from <strong>spsur</strong>, selecting the argument <em>type = “sim”</em></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">ols.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;sim&quot;</span>, </a>
-<a class="sourceLine" id="cb7-2" title="2">                     <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="kw">summary</span>(ols.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; Initial point:  
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>ols.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;sim&quot;</span>, </span>
+<span id="cb10-2"><a href="#cb10-2"></a>                     <span class="dt">data =</span> NCOVR.sf)</span></code></pre></div>
+<pre><code>#&gt; Initial point:  
 #&gt; log_lik:  -9176.338 
 #&gt; Iteration:  1  log_lik:  -9176.338 
-#&gt; Time to fit the model:  0.06  seconds
-#&gt; Time to compute covariances:  0  seconds
-#&gt; Call:
+#&gt; Time to fit the model:  0.07  seconds
+#&gt; Time to compute covariances:  0  seconds</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">summary</span>(ols.spsur)</span></code></pre></div>
+<pre><code>#&gt; Call:
 #&gt; spsurml(formula = formula_60, data = NCOVR.sf, type = &quot;sim&quot;)
 #&gt; 
 #&gt;  
@@ -1804,15 +1773,14 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 #&gt; R-squared: 0.2966 
 #&gt;   
-#&gt; Residual standard error:  4.739
-</code></pre>
+#&gt; Residual standard error:  4.739</code></pre>
 <p>The two functions, <code>stats::lm</code> and <code>spsurml</code>, produce identical results. The output of <code>spsurml</code> is shorter than that of <code>lm</code> so, depending on the necessities of the user, he/she can choose between <code>lm</code> and <code>spsurml</code> without loss of information. If you want all the estimation details, then use <code>lm</code>.</p>
 </div>
 <div id="lm-tests-for-spatial-autocorrelation" class="section level1">
 <h1><span class="header-section-number">3</span> LM tests for spatial autocorrelation</h1>
 <p>The existence of omitted spatial dependence in the results of a SIM model, estimated by LS, can be tested by using the classical LM tests. The function <code>spdep::lm.LMtests</code> report the values of these Lagrange Multipliers</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">lmtest.spdep &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">lm.LMtests</span>(lm_<span class="dv">60</span>, listw, <span class="dt">test =</span> <span class="st">&quot;all&quot;</span>)</a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="kw">print</span>(lmtest.spdep)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>lmtest.spdep &lt;-<span class="st"> </span>spdep<span class="op">::</span><span class="kw">lm.LMtests</span>(lm_<span class="dv">60</span>, listw, <span class="dt">test =</span> <span class="st">&quot;all&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">print</span>(lmtest.spdep)</span></code></pre></div>
 <pre><code>#&gt; 
 #&gt;  Lagrange multiplier diagnostics for spatial dependence
 #&gt; 
@@ -1856,12 +1824,11 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; SARMA = 233.25, df = 2, p-value &lt; 2.2e-16
-</code></pre>
+#&gt; SARMA = 233.25, df = 2, p-value &lt; 2.2e-16</code></pre>
 <p>The same tests can be obtained with the function <code>lmtestspsur</code></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">lmtest.spsur &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </a>
-<a class="sourceLine" id="cb9-2" title="2">                            <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="kw">print</span>(lmtest.spsur)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>lmtest.spsur &lt;-<span class="st"> </span><span class="kw">lmtestspsur</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </span>
+<span id="cb16-2"><a href="#cb16-2"></a>                            <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="kw">print</span>(lmtest.spsur)</span></code></pre></div>
 <pre><code>#&gt; [[1]]
 #&gt; 
 #&gt;  LM-SUR-SLM
@@ -1899,8 +1866,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM-SUR-SARAR
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 233.11, df = 2, p-value &lt; 2.2e-16
-</code></pre>
+#&gt; LM-stat = 233.11, df = 2, p-value &lt; 2.2e-16</code></pre>
 <p>Note that the ordering of the battery of Lagrange Multipliers is not the same. Otherwise, the results are almost identical.</p>
 </div>
 <div id="the-spatial-lag-model" class="section level1">
@@ -1913,19 +1879,18 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 \end{equation}
 \]</span></p>
 <p>The ML estimation of equation <a href="#eq:slm">(4.1)</a> using the function <code>spsurml()</code> of <strong>spsur</strong> renders the following results:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">slm.spsur &lt;-<span class="st"> </span>spsur<span class="op">::</span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, </a>
-<a class="sourceLine" id="cb10-2" title="2">                            <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="kw">summary</span>(slm.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; neighbourhood matrix eigenvalues
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>slm.spsur &lt;-<span class="st"> </span>spsur<span class="op">::</span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, </span>
+<span id="cb18-2"><a href="#cb18-2"></a>                            <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</span></code></pre></div>
+<pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
 #&gt; Initial point:   log_lik:  -9101.721  rhos:  0.364 
 #&gt; Iteration:  1   log_lik:  -9098.57  rhos:  0.37 
 #&gt; Iteration:  2   log_lik:  -9098.569  rhos:  0.37 
-#&gt; Time to fit the model:  0.92  seconds
-#&gt; Time to compute covariances:  5.39  seconds
-#&gt; Call:
+#&gt; Time to fit the model:  1.18  seconds
+#&gt; Time to compute covariances:  5.68  seconds</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">summary</span>(slm.spsur)</span></code></pre></div>
+<pre><code>#&gt; Call:
 #&gt; spsur::spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
 #&gt;     type = &quot;slm&quot;)
 #&gt; 
@@ -1947,15 +1912,13 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; R-squared: 0.3409 
 #&gt;   
 #&gt; Residual standard error:  4.588
-#&gt;  LMM: 22.393  p-value: (2.22e-06)
-</code></pre>
+#&gt;  LMM: 22.393  p-value: (2.22e-06)</code></pre>
 <p>The output of the function <code>spatialreg::lagsarlm()</code> from <strong>spatialreg</strong> is</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">slm.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">lagsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </a>
-<a class="sourceLine" id="cb11-2" title="2">                                       <span class="dt">listw =</span> listw, <span class="dt">type =</span> <span class="st">&quot;lag&quot;</span>, </a>
-<a class="sourceLine" id="cb11-3" title="3">                                       <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="kw">summary</span>(slm.spatialreg)</a></code></pre></div>
-<pre><code>
-#&gt; 
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>slm.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">lagsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </span>
+<span id="cb22-2"><a href="#cb22-2"></a>                                       <span class="dt">listw =</span> listw, <span class="dt">type =</span> <span class="st">&quot;lag&quot;</span>, </span>
+<span id="cb22-3"><a href="#cb22-3"></a>                                       <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">summary</span>(slm.spatialreg)</span></code></pre></div>
+<pre><code>#&gt; 
 #&gt; Call:
 #&gt; spatialreg::lagsarlm(formula = formula_60, data = NCOVR.sf, listw = listw, 
 #&gt;     type = &quot;lag&quot;)
@@ -1986,105 +1949,21 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; Number of parameters estimated: 9 
 #&gt; AIC: 18215, (AIC for lm: 18369)
 #&gt; LM test for residual autocorrelation
-#&gt; test value: 22.435, p-value: 2.1742e-06
-</code></pre>
+#&gt; test value: 22.435, p-value: 2.1742e-06</code></pre>
 <p>Once again, the two estimations are almost the same. The estimated log-likelihood of the SLM can be recovered using the function <code>logLik()</code></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">logLik</span>(slm.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; &#39;log Lik.&#39; -9098.569 (df=9)
-</code></pre>
-<p>The log-likelihood corresponding to the SIM model is much lower, -9176.338, which points to a severe misspecification in the last model. More formally, the LR, obtained with the function <code>lrtestspsur</code> of <strong>spsur</strong> strongly rejects the SIM model in favour of the SLM alternative; the AIC statistic indicates the same.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">lrtestspsur</span>(ols.spsur, slm.spsur)</a></code></pre></div>
-<div class="kable-table">
-<table>
-<thead>
-<tr class="header">
-<th>
-</th>
-<th align="right">
-Model
-</th>
-<th align="right">
-df
-</th>
-<th align="right">
-AIC
-</th>
-<th align="right">
-logLik
-</th>
-<th align="left">
-Test
-</th>
-<th align="right">
-L.Ratio
-</th>
-<th align="right">
-p-value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>
-sim model
-</td>
-<td align="right">
-1
-</td>
-<td align="right">
-8
-</td>
-<td align="right">
-18368.68
-</td>
-<td align="right">
--9176.338
-</td>
-<td align="left">
-</td>
-<td align="right">
-NA
-</td>
-<td align="right">
-NA
-</td>
-</tr>
-<tr class="even">
-<td>
-slm model
-</td>
-<td align="right">
-2
-</td>
-<td align="right">
-9
-</td>
-<td align="right">
-18215.14
-</td>
-<td align="right">
--9098.569
-</td>
-<td align="left">
-1 vs 2
-</td>
-<td align="right">
-155.5376
-</td>
-<td align="right">
-0
-</td>
-</tr>
-</tbody>
-</table>
-</div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">logLik</span>(slm.spsur)</span></code></pre></div>
+<pre><code>#&gt; &#39;log Lik.&#39; -9098.569 (df=9)</code></pre>
+<p>The log-likelihood corresponding to the SIM model is much lower, -9176.338, which points to a severe misspecification in the last model. More formally, the LR, obtained with the function <code>anova</code> of <strong>spsur</strong> strongly rejects the SIM model in favour of the SLM alternative; the AIC and BIC statistics indicates the same.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">anova</span>(ols.spsur, slm.spsur)</span></code></pre></div>
+<pre><code>#&gt;               logLik df   AIC   BIC LRtest      p.val
+#&gt; model 1: sim -9176.3  8 18369 18353                  
+#&gt; model 2: slm -9098.6  9 18215 18197 155.54 1.0684e-35</code></pre>
 <p>The SLM model can also be estimate by Three Stages-Least-Squares (3SLS) by both R-packages. The function for <strong>spsur</strong> is <code>spsur3sls()</code></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">slm<span class="fl">.3</span>sls.spsur &lt;-<span class="st"> </span><span class="kw">spsur3sls</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, </a>
-<a class="sourceLine" id="cb14-2" title="2">                            <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="kw">summary</span>(slm<span class="fl">.3</span>sls.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; Call:
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>slm<span class="fl">.3</span>sls.spsur &lt;-<span class="st"> </span><span class="kw">spsur3sls</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;slm&quot;</span>, </span>
+<span id="cb28-2"><a href="#cb28-2"></a>                            <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</span></code></pre></div>
+<pre><code>#&gt; Time to fit the model:  0.05  seconds</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">summary</span>(slm<span class="fl">.3</span>sls.spsur)</span></code></pre></div>
+<pre><code>#&gt; Call:
 #&gt; spsur3sls(formula = formula_60, data = NCOVR.sf, listw = listw, 
 #&gt;     type = &quot;slm&quot;)
 #&gt; 
@@ -2105,15 +1984,14 @@ slm model
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 #&gt; R-squared: 0.3447 
 #&gt;   
-#&gt; Residual standard error:  4.695
-</code></pre>
+#&gt; Residual standard error:  4.695</code></pre>
 <p>Whereas <strong>spatialreg</strong> uses the function <code>spatialreg::stsls()</code></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">slm<span class="fl">.3</span>sls.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">stsls</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </a>
-<a class="sourceLine" id="cb15-2" title="2">                             <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="kw">summary</span>(slm<span class="fl">.3</span>sls.spatialreg)</a></code></pre></div>
-<pre><code>
-#&gt; 
-#&gt; Call:spatialreg::stsls(formula = formula_60, data = NCOVR.sf, listw = listw)
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>slm<span class="fl">.3</span>sls.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">stsls</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </span>
+<span id="cb32-2"><a href="#cb32-2"></a>                             <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="kw">summary</span>(slm<span class="fl">.3</span>sls.spatialreg)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; spatialreg::stsls(formula = formula_60, data = NCOVR.sf, listw = listw)
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
@@ -2130,8 +2008,7 @@ slm model
 #&gt; UE60         0.00058645  0.03487833  0.0168  0.986585
 #&gt; SOUTH        0.64329382  0.34152520  1.8836  0.059620
 #&gt; 
-#&gt; Residual variance (sigma squared): 20.967, (sigma: 4.579)
-</code></pre>
+#&gt; Residual variance (sigma squared): 20.967, (sigma: 4.579)</code></pre>
 <p>There is hardly any difference between them because the estimation algorithm is quasilinear and both functions use the same set of instruments. The case of the SDM model produces identical results.</p>
 </div>
 <div id="spatial-error-model" class="section level1">
@@ -2145,11 +2022,10 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 \end{equation}
 \]</span></p>
 <p>which can be solved by ML using the function <code>spatialreg::errorsarlm()</code>, from <strong>spatialreg</strong>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">sem.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">errorsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </a>
-<a class="sourceLine" id="cb16-2" title="2">                             <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="kw">summary</span>(sem.spatialreg)</a></code></pre></div>
-<pre><code>
-#&gt; 
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>sem.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">errorsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </span>
+<span id="cb34-2"><a href="#cb34-2"></a>                             <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="kw">summary</span>(sem.spatialreg)</span></code></pre></div>
+<pre><code>#&gt; 
 #&gt; Call:spatialreg::errorsarlm(formula = formula_60, data = NCOVR.sf, 
 #&gt;     listw = listw)
 #&gt; 
@@ -2177,22 +2053,20 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; ML residual variance (sigma squared): 21.124, (sigma: 4.5961)
 #&gt; Number of observations: 3085 
 #&gt; Number of parameters estimated: 9 
-#&gt; AIC: 18230, (AIC for lm: 18369)
-</code></pre>
+#&gt; AIC: 18230, (AIC for lm: 18369)</code></pre>
 <p><strong>spsur</strong> always uses the same function for the ML algorithm, <code>spsurml()</code>; you only have to change the type of model to estimate.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">sem.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;sem&quot;</span>,</a>
-<a class="sourceLine" id="cb17-2" title="2">                     <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="kw">summary</span>(sem.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; neighbourhood matrix eigenvalues
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>sem.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">type =</span> <span class="st">&quot;sem&quot;</span>,</span>
+<span id="cb36-2"><a href="#cb36-2"></a>                     <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</span></code></pre></div>
+<pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
 #&gt; Initial point:   log_lik:  -9108.886  lambdas:  0.375 
 #&gt; Iteration:  1  log_lik:  -9106.101  lambdas:  0.382 
 #&gt; Iteration:  2  log_lik:  -9106.1  lambdas:  0.382 
-#&gt; Time to fit the model:  1.9  seconds
-#&gt; Time to compute covariances:  59.38  seconds
-#&gt; Call:
+#&gt; Time to fit the model:  2.52  seconds
+#&gt; Time to compute covariances:  97.7  seconds</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">summary</span>(sem.spsur)</span></code></pre></div>
+<pre><code>#&gt; Call:
 #&gt; spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
 #&gt;     type = &quot;sem&quot;)
 #&gt; 
@@ -2214,99 +2088,15 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; R-squared: 0.3387 
 #&gt;   
 #&gt; Residual standard error:  4.597
-#&gt;  LMM:  1.193  p-value: (0.275)
-</code></pre>
-<p>The LR test for nested models, in this case SIM vs SEM, can be obtained as before using the function <code>lrtestspsur()</code></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">lrtestspsur</span>(ols.spsur, sem.spsur)</a></code></pre></div>
-<div class="kable-table">
-<table>
-<thead>
-<tr class="header">
-<th>
-</th>
-<th align="right">
-Model
-</th>
-<th align="right">
-df
-</th>
-<th align="right">
-AIC
-</th>
-<th align="right">
-logLik
-</th>
-<th align="left">
-Test
-</th>
-<th align="right">
-L.Ratio
-</th>
-<th align="right">
-p-value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>
-sim model
-</td>
-<td align="right">
-1
-</td>
-<td align="right">
-8
-</td>
-<td align="right">
-18368.68
-</td>
-<td align="right">
--9176.338
-</td>
-<td align="left">
-</td>
-<td align="right">
-NA
-</td>
-<td align="right">
-NA
-</td>
-</tr>
-<tr class="even">
-<td>
-sem model
-</td>
-<td align="right">
-2
-</td>
-<td align="right">
-9
-</td>
-<td align="right">
-18230.20
-</td>
-<td align="right">
--9106.100
-</td>
-<td align="left">
-1 vs 2
-</td>
-<td align="right">
-140.4756
-</td>
-<td align="right">
-0
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Clearly, the SEM model is preferable to the SIM specification because there is spatial dependence in the data, which has been effectively captured by the SEM mechanism. Moreover, according to the LMM test below (this is a Marginal Lagrange Multiplier of the type <span class="math inline">\(LM(\rho|\lambda)\)</span>; see the <em>spsur User’s Guide</em>), once the spatial errors are introduced in the equation, the spatial lag of the endogenous variable, <span class="math inline">\(WHR_{60}\)</span> is not statistically significant.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">print</span>(sem.spsur<span class="op">$</span>LMM)</a></code></pre></div>
-<pre><code>
-#&gt; [1] 1.193044
-</code></pre>
+#&gt;  LMM:  1.193  p-value: (0.275)</code></pre>
+<p>The LR test for nested models, in this case SIM vs SEM, can be obtained as before using the function <code>anova()</code></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">anova</span>(ols.spsur, sem.spsur)</span></code></pre></div>
+<pre><code>#&gt;               logLik df   AIC   BIC LRtest      p.val
+#&gt; model 1: sim -9176.3  8 18369 18353                  
+#&gt; model 2: sem -9106.1  9 18230 18212 140.48 2.0951e-32</code></pre>
+<p>Clearly, the SEM model is preferable to the SIM specification because there is spatial dependence in the data, which has been effectively captured by the SEM mechanism. Moreover, according to the LMM test below (this is a Marginal Lagrange Multiplier of the type <span class="math inline">\(LM(\rho|\lambda)\)</span>; see the <em>spsur user guide</em>), once the spatial errors are introduced in the equation, the spatial lag of the endogenous variable, <span class="math inline">\(WHR_{60}\)</span> is not statistically significant.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">print</span>(sem.spsur<span class="op">$</span>LMM)</span></code></pre></div>
+<pre><code>#&gt; [1] 1.193044</code></pre>
 </div>
 <div id="spatial-simultaneous-autoregressive-model-sarar" class="section level1">
 <h1><span class="header-section-number">6</span> Spatial Simultaneous Autoregressive Model (SARAR)</h1>
@@ -2319,11 +2109,9 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 \end{equation}
 \]</span></p>
 <p><strong>spsur</strong> estimates this model by using the funtion <code>spsurml()</code>; you only have to adjust the argument <em>type</em> to <em>sarar</em>, that is</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">sarar.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </a>
-<a class="sourceLine" id="cb20-2" title="2">                       <span class="dt">type =</span><span class="st">&quot;sarar&quot;</span>,<span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="kw">summary</span>(sarar.spsur)</a></code></pre></div>
-<pre><code>
-#&gt; neighbourhood matrix eigenvalues
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>sarar.spsur &lt;-<span class="st"> </span><span class="kw">spsurml</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, <span class="dt">listw =</span> listw, </span>
+<span id="cb44-2"><a href="#cb44-2"></a>                       <span class="dt">type =</span><span class="st">&quot;sarar&quot;</span>,<span class="dt">data =</span> NCOVR.sf)</span></code></pre></div>
+<pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
 #&gt; Initial point:   log_lik:  -9085.419  rhos:  0.663  lambdas:  -0.603 
@@ -2333,9 +2121,10 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; Iteration:  4  log_lik:  -9060.259  rhos:  0.777  lambdas:  -0.93 
 #&gt; Iteration:  5  log_lik:  -9060.257  rhos:  0.777  lambdas:  -0.932 
 #&gt; Iteration:  6  log_lik:  -9060.256  rhos:  0.778  lambdas:  -0.932 
-#&gt; Time to fit the model:  47.83  seconds
-#&gt; Time to compute covariances:  10.5  seconds
-#&gt; Call:
+#&gt; Time to fit the model:  46.67  seconds
+#&gt; Time to compute covariances:  9.31  seconds</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="kw">summary</span>(sarar.spsur)</span></code></pre></div>
+<pre><code>#&gt; Call:
 #&gt; spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
 #&gt;     type = &quot;sarar&quot;)
 #&gt; 
@@ -2357,15 +2146,14 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 #&gt; R-squared: 0.444 
 #&gt;   
-#&gt; Residual standard error:  4.241
-</code></pre>
+#&gt; Residual standard error:  4.241</code></pre>
 <p>In the case of <strong>spatialreg</strong>, the function for this case is <code>spatialreg::sacsar()</code></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">sarar.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">sacsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </a>
-<a class="sourceLine" id="cb21-2" title="2">                             <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="kw">summary</span>(sarar.spatialreg)</a></code></pre></div>
-<pre><code>
-#&gt; 
-#&gt; Call:spatialreg::sacsarlm(formula = formula_60, data = NCOVR.sf, listw = listw)
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>sarar.spatialreg &lt;-<span class="st"> </span>spatialreg<span class="op">::</span><span class="kw">sacsarlm</span>(<span class="dt">formula =</span> formula_<span class="dv">60</span>, </span>
+<span id="cb48-2"><a href="#cb48-2"></a>                             <span class="dt">listw =</span> listw, <span class="dt">data =</span> NCOVR.sf)</span>
+<span id="cb48-3"><a href="#cb48-3"></a><span class="kw">summary</span>(sarar.spatialreg)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; spatialreg::sacsarlm(formula = formula_60, data = NCOVR.sf, listw = listw)
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
@@ -2395,180 +2183,17 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; ML residual variance (sigma squared): 17.974, (sigma: 4.2396)
 #&gt; Number of observations: 3085 
 #&gt; Number of parameters estimated: 10 
-#&gt; AIC: 18141, (AIC for lm: 18369)
-</code></pre>
+#&gt; AIC: 18141, (AIC for lm: 18369)</code></pre>
 <p>The same as before, the differences between the two codes are minimal.</p>
-<p>Finally, according to the <code>lrtestspsur()</code> function of <strong>spsur</strong>, the SARAR model is preferable to the SLM and SEM alternatives, which are nested in the SARAR, in spite of the high value estimated for the parameter <span class="math inline">\(\lambda\)</span>, -0.93327, close to a unit root case. The LR and the AIC statistics coincide in this point.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">lrtestspsur</span>(slm.spsur,sarar.spsur)</a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="kw">lrtestspsur</span>(sem.spsur,sarar.spsur)</a></code></pre></div>
-<div class="kable-table">
-<table>
-<thead>
-<tr class="header">
-<th>
-</th>
-<th align="right">
-Model
-</th>
-<th align="right">
-df
-</th>
-<th align="right">
-AIC
-</th>
-<th align="right">
-logLik
-</th>
-<th align="left">
-Test
-</th>
-<th align="right">
-L.Ratio
-</th>
-<th align="right">
-p-value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>
-slm model
-</td>
-<td align="right">
-1
-</td>
-<td align="right">
-9
-</td>
-<td align="right">
-18215.14
-</td>
-<td align="right">
--9098.569
-</td>
-<td align="left">
-</td>
-<td align="right">
-NA
-</td>
-<td align="right">
-NA
-</td>
-</tr>
-<tr class="even">
-<td>
-sarar model
-</td>
-<td align="right">
-2
-</td>
-<td align="right">
-10
-</td>
-<td align="right">
-18140.51
-</td>
-<td align="right">
--9060.256
-</td>
-<td align="left">
-1 vs 2
-</td>
-<td align="right">
-76.62546
-</td>
-<td align="right">
-0
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="kable-table">
-<table>
-<thead>
-<tr class="header">
-<th>
-</th>
-<th align="right">
-Model
-</th>
-<th align="right">
-df
-</th>
-<th align="right">
-AIC
-</th>
-<th align="right">
-logLik
-</th>
-<th align="left">
-Test
-</th>
-<th align="right">
-L.Ratio
-</th>
-<th align="right">
-p-value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>
-sem model
-</td>
-<td align="right">
-1
-</td>
-<td align="right">
-9
-</td>
-<td align="right">
-18230.20
-</td>
-<td align="right">
--9106.100
-</td>
-<td align="left">
-</td>
-<td align="right">
-NA
-</td>
-<td align="right">
-NA
-</td>
-</tr>
-<tr class="even">
-<td>
-sarar model
-</td>
-<td align="right">
-2
-</td>
-<td align="right">
-10
-</td>
-<td align="right">
-18140.51
-</td>
-<td align="right">
--9060.256
-</td>
-<td align="left">
-1 vs 2
-</td>
-<td align="right">
-91.68739
-</td>
-<td align="right">
-0
-</td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>Finally, according to the <code>anova()</code> function of <strong>spsur</strong>, the SARAR model is preferable to the SLM and SEM alternatives, which are nested in the SARAR, in spite of the high value estimated for the parameter <span class="math inline">\(\lambda\)</span>, -0.93327, close to a unit root case. The LR and both AIC and BIC statistics reach the same conclusion.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">anova</span>(slm.spsur,sarar.spsur)</span></code></pre></div>
+<pre><code>#&gt;                 logLik df   AIC   BIC LRtest      p.val
+#&gt; model 1: slm   -9098.6  9 18215 18197                  
+#&gt; model 2: sarar -9060.3 10 18141 18121 76.625 2.0666e-18</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">anova</span>(sem.spsur,sarar.spsur)</span></code></pre></div>
+<pre><code>#&gt;                 logLik df   AIC   BIC LRtest      p.val
+#&gt; model 1: sem   -9106.1  9 18230 18212                  
+#&gt; model 2: sarar -9060.3 10 18141 18121 91.687 1.0151e-21</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
