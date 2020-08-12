@@ -504,7 +504,7 @@ impactspsur <- function(obj, ..., tr = NULL,
         Pi <- cbind(b1i[1:(pi/2)], b1i[((pi/2) + 1):pi])
         bnamesi <- names(b1i[1:(pi/2)])
       }  
-      n <- N*Tm
+      #n <- N*Tm
       mu_i <- NULL
       Sigma_i <- NULL
       if (!is.null(R)) {
@@ -514,7 +514,7 @@ impactspsur <- function(obj, ..., tr = NULL,
       }  
       res_i <- spatialreg::intImpacts(rho = rho_i, 
                                       beta = betai, 
-                                      P = Pi, n = n, 
+                                      P = Pi, n = N, 
                                       mu = mu_i, 
                                       Sigma = Sigma_i, 
                                       irho = irho, 

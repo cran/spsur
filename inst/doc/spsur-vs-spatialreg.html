@@ -1283,6 +1283,22 @@ window.buildTabsets = function(tocID) {
 };
 
 </script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -2202,7 +2218,7 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 <p>Baller, Robert D, Luc Anselin, Steven F Messner, Glenn Deane, and Darnell F Hawkins. 2001. “Structural Covariates of Us County Homicide Rates: Incorporating Spatial Effects.” <em>Criminology</em> 39 (3): 561–88.</p>
 </div>
 <div id="ref-BivandPedesma2013">
-<p>Bivand, Roger, Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with R, Second Edition</em>. Springer, NY. <a href="http://www.asdar-book.org/">http://www.asdar-book.org/</a>.</p>
+<p>Bivand, Roger, Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with R, Second Edition</em>. Springer, NY. <a href="https://asdar-book.org/">https://asdar-book.org/</a>.</p>
 </div>
 <div id="ref-BivandPiras2015">
 <p>Bivand, Roger, and Gianfranco Piras. 2015. “Comparing Implementations of Estimation Methods for Spatial Econometrics.” <em>Journal of Statistical Software</em> 63 (18): 1–36. <a href="https://www.jstatsoft.org/v63/i18/">https://www.jstatsoft.org/v63/i18/</a>.</p>
@@ -2211,7 +2227,7 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 <p>Bivand, Roger, and David W. S. Wong. 2018. “Comparing Implementations of Global and Local Indicators of Spatial Association.” <em>TEST</em> 27 (3): 716–48. <a href="https://doi.org/10.1007/s11749-018-0599-x">https://doi.org/10.1007/s11749-018-0599-x</a>.</p>
 </div>
 <div id="ref-LopezMinguezMur2020">
-<p>López, Fernando A., Román Mínguez, and Jesús Mur. 2020. <em>spsur: Spatial Seemingly Unrelated Regression Models</em>. <a href="http://github.com/rominsal/spsur">http://github.com/rominsal/spsur</a>.</p>
+<p>López, Fernando A., Román Mínguez, and Jesús Mur. 2020. <em>spsur: Spatial Seemingly Unrelated Regression Models</em>. <a href="https://github.com/rominsal/spsur">https://github.com/rominsal/spsur</a>.</p>
 </div>
 <div id="ref-R2019">
 <p>R Core Team. 2019. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
@@ -2269,7 +2285,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

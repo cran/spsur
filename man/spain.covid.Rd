@@ -48,4 +48,76 @@ are expressed with respect to the pre-COVID week of February 14th-20th, 2020 (we
 indicate a reduction of the mobility. Upper values than 1 indicate an increase in the mobility with respect
 to the reference week (week0).
 }
+\section{Details}{
+
+\itemize{
+\item Mobility
+  \cr
+  \cr
+The mobility indices Within and Exits has been obtain as ratio of the total number of weekly travels
+in reference to the total number of travels in the week of reference (week0). \cr
+In particular, 
+\cr 
+\cr 
+ \eqn{
+ Within = \frac{\textnormal{Number of travels within the province 
+ 'indiv' in the week 'time'}} 
+  {\textnormal{Number of travels within the province 'indiv' in the 
+  reference week (week0)}} }
+  \cr 
+  \cr 
+  \eqn{
+  Exits = \frac{ 
+    \begin{tabular}{c}
+      \textnormal{Number of travels with origin in the 
+                  province 'indiv' and arrival to another} \\
+      \textnormal{province in the week 'time'} 
+    \end{tabular} } 
+  { \begin{tabular}{c}
+      \textnormal{Number of travels with origin in the province 
+                  'indiv' and arrival to another} \\
+       \textnormal{province in the reference week (week0)} 
+    \end{tabular} } 
+   }
+  \cr 
+  \cr
+  A ‘travel’ is a displacement from an origin to a destination of at least 500m. A travel can have several stages.
+  These stages of the same travel are calculated based on the duration of the intermediate stop. For example
+  , if I move from origin A to destination B with a stop at a point C of long duration, it
+  is considered two travels, but if the stop is short, it is considered a single travel. For example,
+  I can go by train from Madrid to Alicante, and there takes a bus to Benidorm. The travel will be one
+  (Madrid-Benidorm). If I do the same but the stop in Alicante is long (or an overnight stay, for example),
+  two travels will be considered (Madrid-Alicante, and Alicante-Benidorm). Similarly, if I go by car from
+  Madrid to Alicante and stop for 15 minutes to take a coffee, it is also considered only one travel and not two.
+  The travels considered in this study are always from 500m, due to the limitation of source data that is based
+  on mobile telephony and its antennas. But one travel can be 600 meters or 600km.
+  \cr
+  \cr
+  \item Incidence
+  \cr
+  \cr
+  \eqn{
+  Incidence = \log \left( 
+    \frac{ 
+      \begin{tabular}{c}
+         \textnormal{total diagnostic cases of 
+                     COVID-19, PCR test in the week 'time'} \\
+         \textnormal{at the province 'indiv'} 
+      \end{tabular} }  
+  {\textnormal{total population in the province 'indiv'}}
+  \right) }
+  \cr
+  \cr
+  \item Essential activities
+  \cr
+  \cr
+  Essential activities. Economic activities whose activities are essential for the population. By example, essential activities are
+  healthcare, food supply, State security, media and communication, refuse collection, management and public transport, etc.
+  Non essential activities are by example, restaurants, hotels, hairdressers, etc. A full list in the Spanish official bulletin
+  \cr
+  \cr
+  \url{https://www.boe.es/boe/dias/2020/03/29/pdfs/BOE-A-2020-4166.pdf}
+}
+}
+
 \keyword{datasets}

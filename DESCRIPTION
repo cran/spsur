@@ -1,8 +1,8 @@
 Package: spsur
 Type: Package
 Title: Spatial Seemingly Unrelated Regression Models
-Version: 1.0.1.4
-Date: 2020-07-30
+Version: 1.0.1.5
+Date: 2020-08-08
 Authors@R: c(person("Ana", "Angulo", email = "aangulo@unizar.es", 
                   role = "aut"),
            person("Fernando A", "Lopez", email = "fernando.lopez@upct.es", 
@@ -39,13 +39,13 @@ Suggests: bookdown (>= 0.18), dplyr (>= 0.8.5), knitr (>= 1.28),
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 RdMacros: Rdpack
-URL: http://github.com/rominsal/spsur
-BugReports: http://github.com/rominsal/spsur/issues
+URL: https://github.com/rominsal/spsur
+BugReports: https://github.com/rominsal/spsur/issues
 NeedsCompilation: no
-Packaged: 2020-07-30 18:50:09 UTC; roman
+Packaged: 2020-08-11 21:10:49 UTC; Roman.Minguez
 Author: Ana Angulo [aut],
   Fernando A Lopez [aut],
   Roman Minguez [aut, cre],
   Jesus Mur [aut]
 Repository: CRAN
-Date/Publication: 2020-07-31 01:00:06 UTC
+Date/Publication: 2020-08-12 08:20:03 UTC

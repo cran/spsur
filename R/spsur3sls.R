@@ -399,6 +399,15 @@ spsur3sls <- function(formula = NULL, data = NULL, na.action,
           && (b[i] == 0)) {
         coefforig[widxRi[2]] <- coefforig[widxRi[1]]
         seorig[widxRi[2]] <- seorig[widxRi[1]]
+        # Updates covariance matrix to include constrained coefficient
+        name1 <- names(coefforig)[widxRi[1]]
+        name2 <- names(coefforig)[widxRi[2]]
+        pr1 <- rbind(resvar, resvar[name1, ])
+        rownames(pr1) <- c(rownames(resvar), name2)
+        pr2 <- cbind(pr1, c(resvar[, name1], resvar[name1, name1]))
+        colnames(pr2) <- rownames(pr2)
+        resvar <- pr2
+        rm(pr1, pr2)
       }
       # ## Check if the constraint is individual coefficient = 0
       # if ((length(widxRi) == 1) && (vidxRi == 0)&& (b[i] == 0)) {
