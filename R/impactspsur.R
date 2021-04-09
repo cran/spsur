@@ -145,8 +145,9 @@
 #'      \item López, F.A., Mur, J., and Angulo, A. (2014). Spatial model
 #'        selection strategies in a SUR framework. The case of regional
 #'        productivity in EU. \emph{Annals of Regional Science}, 53(1), 197-220.
+#'        
 #'      \item Mur, J., López, F., and Herrera, M. (2010). Testing for spatial
-#'        effects in seemingly unrelated regressions. 
+#'        effects in seemingly unrelated regressions.
 #'        \emph{Spatial Economic Analysis}, 5(4), 399-440.
 #'   }
 #'

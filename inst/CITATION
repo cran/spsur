@@ -1,0 +1,17 @@
+citHeader("To cite spsur in publications use:")
+
+citEntry(entry = "Article",
+  title        = "ML versus IV estimates of spatial SUR models: evidence from the case of Airbnb in Madrid urban area",
+  author       =  personList(as.person("Fernando Lopez"),
+                             as.person("Roman Minguez"), 
+                             as.person("Jesus Mur")),
+  journal      = "Annals of Regional Science",
+  year         = "2020",
+  volume       = "64",
+  number       = "2",
+  pages        = "313--347",
+  textVersion  =
+  paste("Lopez Fernando, Minguez Roman, Mur Jesus (2020).",
+        "ML versus IV estimates of spatial SUR models: evidence from the case of Airbnb in Madrid urban area.",
+        "Annals of Regional Science, 64(2), 313-346.")
+)

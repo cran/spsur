@@ -245,6 +245,13 @@ listw = lwncovr)
        selection strategies in a SUR framework. The case of regional
        productivity in EU. \emph{Annals of Regional Science}, 53(1),
        197-220.
+       \item Anselin, L. (1988) A test for spatial autocorrelation in seemingly unrelated 
+       regressions \emph{Economics Letters} 28(4), 335-341.  
+       \item Anselin, L. (1988) \emph{Spatial econometrics: methods and models} 
+       Chap. 9 Dordrecht
+       \item Anselin, L. (2016) Estimation and Testing in the Spatial Seemingly 
+      Unrelated Regression (SUR). \emph{Geoda Center for Geospatial Analysis 
+      and Computation, Arizona State University}. Working Paper 2016-01.
   }
 }
 \seealso{
