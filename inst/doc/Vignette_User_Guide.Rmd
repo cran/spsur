@@ -16,6 +16,8 @@ output:
       collapsed: no
       smooth_scroll: no
     toc_title: Article Outline
+    css: "custom.css"
+    
 linkcolor: red
 link-citations: yes
 bibliography: bibliosure.bib

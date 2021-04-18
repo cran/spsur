@@ -1,11 +1,15 @@
 ---
 title: "spsur vs spatialreg" 
-subtitle: "Uniequational model <br>  <br>  <br>"
+subtitle: "In uni-equational model framework<br>  <br>  <br>"
 author:
 - Román Mínguez, University of Castilla-La Mancha (Spain)
 - Fernando A. López, Technical University of Cartagena (Spain)
 - Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
 date: "2021-04-07  <br>  <br> <br>"
+
+abstract: >
+   The **spsur** R-package has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. The purpose of this vignette is to compare the results of **spsur** and **spatialreg** in case of uniequational models. As we will see, the differences between the two are negligible.
+   
 output: 
   bookdown::html_document2:
     df_print: kable
@@ -18,6 +22,7 @@ output:
       collapsed: no
       smooth_scroll: yes
     toc_title: spsur vs spse
+    css: "custom.css"
     # code_folding: hide
 bibliography: bibliosure.bib
 link-citations: yes
