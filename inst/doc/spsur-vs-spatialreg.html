@@ -13,7 +13,7 @@
 <meta name="author" content="Fernando A. López, Technical University of Cartagena (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2021-04-07" />
+<meta name="date" content="2021-06-25" />
 
 <title>spsur vs spatialreg</title>
 
@@ -60,6 +60,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -142,16 +143,6 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 })();
 </script>
 
-<style type="text/css">
-  p.abstract{
-    text-align: center;
-    font-weight: bold;
-  }
-  div.abstract{
-    margin: auto;
-    width: 90%;
-  }
-</style>
 
 
 <style type="text/css">
@@ -177,7 +168,6 @@ div.csl-indent {
 }
 </style>
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Atext%2Dalign%3A%20justify%3B%0A%7D" type="text/css" />
 
 
 
@@ -349,12 +339,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -364,15 +354,11 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">spsur vs spatialreg</h1>
-<h3 class="subtitle">In uni-equational model framework<br> <br> <br></h3>
+<h3 class="subtitle">Uniequational model <br> <br> <br></h3>
 <h4 class="author">Román Mínguez, University of Castilla-La Mancha (Spain)</h4>
 <h4 class="author">Fernando A. López, Technical University of Cartagena (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br></h4>
-<h4 class="date">2021-04-07 <br> <br> <br></h4>
-<div class="abstract">
-<p class="abstract">Abstract</p>
-<p>The <strong>spsur</strong> R-package has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. The purpose of this vignette is to compare the results of <strong>spsur</strong> and <strong>spatialreg</strong> in case of uniequational models. As we will see, the differences between the two are negligible.</p>
-</div>
+<h4 class="date">2021-06-25 <br> <br> <br></h4>
 
 </div>
 
@@ -414,6 +400,7 @@ div.tocify {
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>((NCOVR[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>])),</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;First observations of NCOVR dataset&#39;</span> )</span></code></pre></div>
 <table>
+<caption>First observations of NCOVR dataset</caption>
 <thead>
 <tr class="header">
 <th align="left">NAME</th>
@@ -451,12 +438,9 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<p>Whereas the geometry of the USA counties is shown in Figure 1:</p>
+<p>Whereas the geometry of the USA counties is shown in Figure <a href="#fig:plotgeom"><strong>??</strong></a>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(NCOVR.sf))</span></code></pre></div>
-<div class="figure">
-<img src="data:image/png;base64,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" title="Figure 1: Geometry of the USA counties" alt />
-<p class="caption">Figure 1: Geometry of the USA counties</p>
-</div>
+<p><img src="data:image/png;base64,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" title="Geometry of the USA counties" alt="Geometry of the USA counties" style="display: block; margin: auto;" /></p>
 <p>Following <span class="citation"><a href="#ref-Baller2001" role="doc-biblioref">Baller et al.</a> (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span>, we consider a <strong>W</strong> matrix based on the criterion of 10 nearest-neighbourhood, which is immediate to obtain using the <strong>spdep</strong> package (<span class="citation"><a href="#ref-BivandPedesma2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio</a> (<a href="#ref-BivandPedesma2013" role="doc-biblioref">2013</a>)</span>; <span class="citation"><a href="#ref-BivandWong2018" role="doc-biblioref">Bivand and Wong</a> (<a href="#ref-BivandWong2018" role="doc-biblioref">2018</a>)</span>). The resulting weighting matrix will be called <em>listw</em>. Note that this matrix is non-symmetric and it is row-standardized.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain coordinates of centroids</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>co <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_coordinates</span>(sf<span class="sc">::</span><span class="fu">st_centroid</span>(NCOVR.sf))</span>
@@ -525,7 +509,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 <pre><code>#&gt; Initial point:  
 #&gt; log_lik:  -9176.338 
 #&gt; Iteration:  1  log_lik:  -9176.338 
-#&gt; Time to fit the model:  0.07  seconds
+#&gt; Time to fit the model:  0.03  seconds
 #&gt; Time to compute covariances:  0  seconds</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ols.spsur)</span></code></pre></div>
 <pre><code>#&gt; Call:
@@ -562,7 +546,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; LMerr = 208.12, df = 1, p-value &lt; 2.2e-16
+#&gt; LMerr = 208.32, df = 1, p-value &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt;  Lagrange multiplier diagnostics for spatial dependence
@@ -571,7 +555,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; LMlag = 232.1, df = 1, p-value &lt; 2.2e-16
+#&gt; LMlag = 232.36, df = 1, p-value &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt;  Lagrange multiplier diagnostics for spatial dependence
@@ -580,7 +564,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; RLMerr = 1.1565, df = 1, p-value = 0.2822
+#&gt; RLMerr = 1.1473, df = 1, p-value = 0.2841
 #&gt; 
 #&gt; 
 #&gt;  Lagrange multiplier diagnostics for spatial dependence
@@ -589,7 +573,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; RLMlag = 25.138, df = 1, p-value = 5.337e-07
+#&gt; RLMlag = 25.19, df = 1, p-value = 5.196e-07
 #&gt; 
 #&gt; 
 #&gt;  Lagrange multiplier diagnostics for spatial dependence
@@ -598,7 +582,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt; model: lm(formula = formula_60, data = NCOVR.sf)
 #&gt; weights: listw
 #&gt; 
-#&gt; SARMA = 233.25, df = 2, p-value &lt; 2.2e-16</code></pre>
+#&gt; SARMA = 233.51, df = 2, p-value &lt; 2.2e-16</code></pre>
 <p>The same tests can be obtained with the function <code>lmtestspsur</code></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lmtest.spsur <span class="ot">&lt;-</span> <span class="fu">lmtestspsur</span>(<span class="at">formula =</span> formula_60, <span class="at">listw =</span> listw, </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> NCOVR.sf)</span>
@@ -608,7 +592,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM-SUR-SLM
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 231.96, df = 1, p-value &lt; 2.2e-16
+#&gt; LM-stat = 232.22, df = 1, p-value &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[2]]
@@ -616,7 +600,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM-SUR-SEM
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 207.98, df = 1, p-value &lt; 2.2e-16
+#&gt; LM-stat = 208.19, df = 1, p-value &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[3]]
@@ -624,7 +608,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM*-SUR-SLM
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 25.13, df = 1, p-value = 5.36e-07
+#&gt; LM-stat = 25.181, df = 1, p-value = 5.218e-07
 #&gt; 
 #&gt; 
 #&gt; [[4]]
@@ -632,7 +616,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM*-SUR-SEM
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 1.1523, df = 1, p-value = 0.2831
+#&gt; LM-stat = 1.1431, df = 1, p-value = 0.285
 #&gt; 
 #&gt; 
 #&gt; [[5]]
@@ -640,7 +624,7 @@ HR_{60} = \beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}MA_{60}+\beta_{4}
 #&gt;  LM-SUR-SARAR
 #&gt; 
 #&gt; data:  NCOVR.sf
-#&gt; LM-stat = 233.11, df = 2, p-value &lt; 2.2e-16</code></pre>
+#&gt; LM-stat = 233.37, df = 2, p-value &lt; 2.2e-16</code></pre>
 <p>Note that the ordering of the battery of Lagrange Multipliers is not the same. Otherwise, the results are almost identical.</p>
 </div>
 <div id="the-spatial-lag-model" class="section level1" number="4">
@@ -658,11 +642,11 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 <pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
-#&gt; Initial point:   log_lik:  -9101.721  rhos:  0.364 
-#&gt; Iteration:  1   log_lik:  -9098.57  rhos:  0.37 
-#&gt; Iteration:  2   log_lik:  -9098.569  rhos:  0.37 
-#&gt; Time to fit the model:  1.18  seconds
-#&gt; Time to compute covariances:  5.68  seconds</code></pre>
+#&gt; Initial point:   log_lik:  -9101.642  rhos:  0.364 
+#&gt; Iteration:  1   log_lik:  -9098.484  rhos:  0.371 
+#&gt; Iteration:  2   log_lik:  -9098.484  rhos:  0.371 
+#&gt; Time to fit the model:  1.54  seconds
+#&gt; Time to compute covariances:  4.63  seconds</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(slm.spsur)</span></code></pre></div>
 <pre><code>#&gt; Call:
 #&gt; spsur::spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
@@ -673,20 +657,20 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; 
 #&gt; Equation  1 
 #&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    
-#&gt; (Intercept)_1  5.475515   0.647627  8.4547 &lt; 2.2e-16 ***
-#&gt; RD60_1         1.358071   0.125738 10.8008 &lt; 2.2e-16 ***
-#&gt; PS60_1         0.284375   0.089320  3.1838  0.001468 ** 
-#&gt; MA60_1        -0.165479   0.019384 -8.5367 &lt; 2.2e-16 ***
-#&gt; DV60_1         0.884739   0.093725  9.4398 &lt; 2.2e-16 ***
-#&gt; UE60_1        -0.021741   0.034004 -0.6394  0.522641    
-#&gt; SOUTH_1        1.355704   0.244626  5.5419 3.244e-08 ***
-#&gt; rho_1          0.370414   0.030275 12.2350 &lt; 2.2e-16 ***
+#&gt; (Intercept)_1  5.473546   0.647627  8.4517 &lt; 2.2e-16 ***
+#&gt; RD60_1         1.357784   0.125733 10.7989 &lt; 2.2e-16 ***
+#&gt; PS60_1         0.284344   0.089317  3.1835  0.001469 ** 
+#&gt; MA60_1        -0.165429   0.019384 -8.5342 &lt; 2.2e-16 ***
+#&gt; DV60_1         0.884949   0.093721  9.4424 &lt; 2.2e-16 ***
+#&gt; UE60_1        -0.021774   0.034003 -0.6404  0.521983    
+#&gt; SOUTH_1        1.354664   0.244606  5.5382 3.314e-08 ***
+#&gt; rho_1          0.370632   0.030271 12.2436 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 #&gt; R-squared: 0.3409 
 #&gt;   
 #&gt; Residual standard error:  4.588
-#&gt;  LMM: 22.393  p-value: (2.22e-06)</code></pre>
+#&gt;  LMM: 22.483  p-value: (2.12e-06)</code></pre>
 <p>The output of the function <code>spatialreg::lagsarlm()</code> from <strong>spatialreg</strong> is</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>slm.spatialreg <span class="ot">&lt;-</span> spatialreg<span class="sc">::</span><span class="fu">lagsarlm</span>(<span class="at">formula =</span> formula_60, </span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">listw =</span> listw, <span class="at">type =</span> <span class="st">&quot;lag&quot;</span>, </span>
@@ -699,43 +683,43 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
-#&gt; -13.54416  -2.11106  -0.63828   1.30754  88.57312 
+#&gt; -13.54486  -2.11156  -0.63891   1.30728  88.57308 
 #&gt; 
 #&gt; Type: lag 
 #&gt; Coefficients: (asymptotic standard errors) 
 #&gt;              Estimate Std. Error z value  Pr(&gt;|z|)
-#&gt; (Intercept)  5.475272   0.647529  8.4556 &lt; 2.2e-16
-#&gt; RD60         1.358031   0.125719 10.8021 &lt; 2.2e-16
-#&gt; PS60         0.284368   0.089306  3.1842  0.001452
-#&gt; MA60        -0.165474   0.019381 -8.5377 &lt; 2.2e-16
-#&gt; DV60         0.884714   0.093710  9.4410 &lt; 2.2e-16
-#&gt; UE60        -0.021737   0.033999 -0.6393  0.522596
-#&gt; SOUTH        1.355586   0.244590  5.5423 2.986e-08
+#&gt; (Intercept)  5.473303   0.647529  8.4526 &lt; 2.2e-16
+#&gt; RD60         1.357744   0.125714 10.8002 &lt; 2.2e-16
+#&gt; PS60         0.284338   0.089303  3.1840  0.001453
+#&gt; MA60        -0.165423   0.019381 -8.5352 &lt; 2.2e-16
+#&gt; DV60         0.884924   0.093706  9.4436 &lt; 2.2e-16
+#&gt; UE60        -0.021771   0.033998 -0.6404  0.521938
+#&gt; SOUTH        1.354546   0.244570  5.5385 3.051e-08
 #&gt; 
-#&gt; Rho: 0.37045, LR test value: 155.54, p-value: &lt; 2.22e-16
-#&gt; Asymptotic standard error: 0.030274
-#&gt;     z-value: 12.237, p-value: &lt; 2.22e-16
-#&gt; Wald statistic: 149.74, p-value: &lt; 2.22e-16
+#&gt; Rho: 0.37067, LR test value: 155.71, p-value: &lt; 2.22e-16
+#&gt; Asymptotic standard error: 0.03027
+#&gt;     z-value: 12.245, p-value: &lt; 2.22e-16
+#&gt; Wald statistic: 149.95, p-value: &lt; 2.22e-16
 #&gt; 
-#&gt; Log likelihood: -9098.569 for lag model
-#&gt; ML residual variance (sigma squared): 21.043, (sigma: 4.5872)
+#&gt; Log likelihood: -9098.484 for lag model
+#&gt; ML residual variance (sigma squared): 21.041, (sigma: 4.5871)
 #&gt; Number of observations: 3085 
 #&gt; Number of parameters estimated: 9 
 #&gt; AIC: 18215, (AIC for lm: 18369)
 #&gt; LM test for residual autocorrelation
-#&gt; test value: 22.435, p-value: 2.1742e-06</code></pre>
+#&gt; test value: 22.524, p-value: 2.0753e-06</code></pre>
 <p>Once again, the two estimations are almost the same. The estimated log-likelihood of the SLM can be recovered using the function <code>logLik()</code></p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(slm.spsur)</span></code></pre></div>
-<pre><code>#&gt; &#39;log Lik.&#39; -9098.569 (df=9)</code></pre>
+<pre><code>#&gt; &#39;log Lik.&#39; -9098.484 (df=9)</code></pre>
 <p>The log-likelihood corresponding to the SIM model is much lower, -9176.338, which points to a severe misspecification in the last model. More formally, the LR, obtained with the function <code>anova</code> of <strong>spsur</strong> strongly rejects the SIM model in favour of the SLM alternative; the AIC and BIC statistics indicates the same.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(ols.spsur, slm.spsur)</span></code></pre></div>
-<pre><code>#&gt;               logLik df   AIC   BIC LRtest      p.val
-#&gt; model 1: sim -9176.3  8 18369 18353                  
-#&gt; model 2: slm -9098.6  9 18215 18197 155.54 1.0684e-35</code></pre>
+<pre><code>#&gt;               logLik df   AIC   BIC LRtest     p.val
+#&gt; model 1: sim -9176.3  8 18369 18353                 
+#&gt; model 2: slm -9098.5  9 18215 18197 155.71 9.805e-36</code></pre>
 <p>The SLM model can also be estimate by Three Stages-Least-Squares (3SLS) by both R-packages. The function for <strong>spsur</strong> is <code>spsur3sls()</code></p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>slm<span class="fl">.3</span>sls.spsur <span class="ot">&lt;-</span> <span class="fu">spsur3sls</span>(<span class="at">formula =</span> formula_60, <span class="at">type =</span> <span class="st">&quot;slm&quot;</span>, </span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">listw =</span> listw, <span class="at">data =</span> NCOVR.sf)</span></code></pre></div>
-<pre><code>#&gt; Time to fit the model:  0.05  seconds</code></pre>
+<pre><code>#&gt; Time to fit the model:  0.04  seconds</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(slm<span class="fl">.3</span>sls.spsur)</span></code></pre></div>
 <pre><code>#&gt; Call:
 #&gt; spsur3sls(formula = formula_60, data = NCOVR.sf, listw = listw, 
@@ -746,19 +730,19 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; 
 #&gt; Equation  1 
 #&gt;                  Estimate  Std. Error t value  Pr(&gt;|t|)    
-#&gt; (Intercept)_1  4.00373231  0.83096624  4.8182 1.519e-06 ***
-#&gt; RD60_1         1.11364326  0.15193264  7.3298 2.931e-13 ***
-#&gt; PS60_1         0.24309853  0.09249060  2.6284  0.008622 ** 
-#&gt; MA60_1        -0.12938710  0.02331379 -5.5498 3.103e-08 ***
-#&gt; DV60_1         0.73187418  0.10955683  6.6803 2.819e-11 ***
-#&gt; UE60_1         0.00058645  0.03576227  0.0164  0.986917    
-#&gt; SOUTH_1        0.64329382  0.35018066  1.8370  0.066301 .  
-#&gt; rho_1          0.57610680  0.07601797  7.5786 4.595e-14 ***
+#&gt; (Intercept)_1  3.99354886  0.80980919  4.9315 8.594e-07 ***
+#&gt; RD60_1         1.11201434  0.14804917  7.5111 7.638e-14 ***
+#&gt; PS60_1         0.24285142  0.09010103  2.6953   0.00707 ** 
+#&gt; MA60_1        -0.12913458  0.02271825 -5.6842 1.437e-08 ***
+#&gt; DV60_1         0.73146230  0.10670843  6.8548 8.595e-12 ***
+#&gt; UE60_1         0.00064201  0.03483656  0.0184   0.98530    
+#&gt; SOUTH_1        0.63822931  0.34132155  1.8699   0.06160 .  
+#&gt; rho_1          0.57744206  0.07411084  7.7916 8.979e-15 ***
 #&gt; ---
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 #&gt; R-squared: 0.3447 
 #&gt;   
-#&gt; Residual standard error:  4.695</code></pre>
+#&gt; Residual standard error:  4.574</code></pre>
 <p>Whereas <strong>spatialreg</strong> uses the function <code>spatialreg::stsls()</code></p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>slm<span class="fl">.3</span>sls.spatialreg <span class="ot">&lt;-</span> spatialreg<span class="sc">::</span><span class="fu">stsls</span>(<span class="at">formula =</span> formula_60, <span class="at">listw =</span> listw, </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> NCOVR.sf)</span>
@@ -769,20 +753,20 @@ HR_{60} = \rho W HR_{60} +\beta_{0}+\beta_{1}RD_{60}+\beta_{2}PS_{60}+\beta_{3}M
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
-#&gt; -14.78215  -2.06681  -0.57751   1.22823  88.71807 
+#&gt; -14.79844  -2.06529  -0.57084   1.22908  88.71872 
 #&gt; 
 #&gt; Coefficients: 
 #&gt;                Estimate  Std. Error t value  Pr(&gt;|t|)
-#&gt; Rho          0.57610680  0.07413902  7.7706 7.772e-15
-#&gt; (Intercept)  4.00373231  0.81042715  4.9403 7.801e-07
-#&gt; RD60         1.11364326  0.14817730  7.5156 5.662e-14
-#&gt; PS60         0.24309853  0.09020450  2.6950  0.007039
-#&gt; MA60        -0.12938710  0.02273754 -5.6905 1.267e-08
-#&gt; DV60         0.73187418  0.10684890  6.8496 7.405e-12
-#&gt; UE60         0.00058645  0.03487833  0.0168  0.986585
-#&gt; SOUTH        0.64329382  0.34152520  1.8836  0.059620
+#&gt; Rho          0.57744206  0.07419509  7.7828 7.105e-15
+#&gt; (Intercept)  3.99354886  0.81072980  4.9259 8.399e-07
+#&gt; RD60         1.11201434  0.14821748  7.5026 6.262e-14
+#&gt; PS60         0.24285142  0.09020346  2.6923  0.007097
+#&gt; MA60        -0.12913458  0.02274408 -5.6777 1.365e-08
+#&gt; DV60         0.73146230  0.10682974  6.8470 7.542e-12
+#&gt; UE60         0.00064201  0.03487617  0.0184  0.985313
+#&gt; SOUTH        0.63822931  0.34170958  1.8678  0.061796
 #&gt; 
-#&gt; Residual variance (sigma squared): 20.967, (sigma: 4.579)</code></pre>
+#&gt; Residual variance (sigma squared): 20.966, (sigma: 4.5788)</code></pre>
 <p>There is hardly any difference between them because the estimation algorithm is quasilinear and both functions use the same set of instruments. The case of the SDM model produces identical results.</p>
 </div>
 <div id="spatial-error-model" class="section level1" number="5">
@@ -805,26 +789,26 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
-#&gt; -13.54014  -2.10753  -0.66838   1.27875  88.31401 
+#&gt; -13.54039  -2.10737  -0.66853   1.27843  88.31442 
 #&gt; 
 #&gt; Type: error 
 #&gt; Coefficients: (asymptotic standard errors) 
 #&gt;              Estimate Std. Error z value  Pr(&gt;|z|)
-#&gt; (Intercept)  7.527982   0.766617  9.8197 &lt; 2.2e-16
-#&gt; RD60         1.742357   0.148632 11.7226 &lt; 2.2e-16
-#&gt; PS60         0.346866   0.109221  3.1758  0.001494
-#&gt; MA60        -0.208285   0.023388 -8.9057 &lt; 2.2e-16
-#&gt; DV60         0.957248   0.108389  8.8316 &lt; 2.2e-16
-#&gt; UE60         0.018210   0.039933  0.4560  0.648383
-#&gt; SOUTH        2.495326   0.316229  7.8909 3.109e-15
+#&gt; (Intercept)  7.527324   0.766690  9.8179 &lt; 2.2e-16
+#&gt; RD60         1.742345   0.148640 11.7219 &lt; 2.2e-16
+#&gt; PS60         0.346998   0.109230  3.1768  0.001489
+#&gt; MA60        -0.208238   0.023391 -8.9024 &lt; 2.2e-16
+#&gt; DV60         0.957270   0.108387  8.8320 &lt; 2.2e-16
+#&gt; UE60         0.018167   0.039935  0.4549  0.649165
+#&gt; SOUTH        2.494740   0.316266  7.8881 3.109e-15
 #&gt; 
-#&gt; Lambda: 0.38244, LR test value: 140.48, p-value: &lt; 2.22e-16
-#&gt; Asymptotic standard error: 0.032062
-#&gt;     z-value: 11.928, p-value: &lt; 2.22e-16
-#&gt; Wald statistic: 142.28, p-value: &lt; 2.22e-16
+#&gt; Lambda: 0.38258, LR test value: 140.59, p-value: &lt; 2.22e-16
+#&gt; Asymptotic standard error: 0.032059
+#&gt;     z-value: 11.934, p-value: &lt; 2.22e-16
+#&gt; Wald statistic: 142.41, p-value: &lt; 2.22e-16
 #&gt; 
-#&gt; Log likelihood: -9106.1 for error model
-#&gt; ML residual variance (sigma squared): 21.124, (sigma: 4.5961)
+#&gt; Log likelihood: -9106.043 for error model
+#&gt; ML residual variance (sigma squared): 21.123, (sigma: 4.596)
 #&gt; Number of observations: 3085 
 #&gt; Number of parameters estimated: 9 
 #&gt; AIC: 18230, (AIC for lm: 18369)</code></pre>
@@ -834,11 +818,11 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 <pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
-#&gt; Initial point:   log_lik:  -9108.886  lambdas:  0.375 
-#&gt; Iteration:  1  log_lik:  -9106.101  lambdas:  0.382 
-#&gt; Iteration:  2  log_lik:  -9106.1  lambdas:  0.382 
-#&gt; Time to fit the model:  2.52  seconds
-#&gt; Time to compute covariances:  97.7  seconds</code></pre>
+#&gt; Initial point:   log_lik:  -9108.833  lambdas:  0.375 
+#&gt; Iteration:  1  log_lik:  -9106.044  lambdas:  0.382 
+#&gt; Iteration:  2  log_lik:  -9106.043  lambdas:  0.383 
+#&gt; Time to fit the model:  1.91  seconds
+#&gt; Time to compute covariances:  67.81  seconds</code></pre>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sem.spsur)</span></code></pre></div>
 <pre><code>#&gt; Call:
 #&gt; spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
@@ -849,28 +833,28 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; 
 #&gt; Equation  1 
 #&gt;                Estimate Std. Error t value  Pr(&gt;|t|)    
-#&gt; (Intercept)_1  7.528052   0.766724  9.8185 &lt; 2.2e-16 ***
-#&gt; RD60_1         1.742363   0.148653 11.7210 &lt; 2.2e-16 ***
-#&gt; PS60_1         0.346864   0.109237  3.1753  0.001511 ** 
-#&gt; MA60_1        -0.208288   0.023391 -8.9046 &lt; 2.2e-16 ***
-#&gt; DV60_1         0.957272   0.108405  8.8305 &lt; 2.2e-16 ***
-#&gt; UE60_1         0.018201   0.039939  0.4557  0.648628    
-#&gt; SOUTH_1        2.495357   0.316267  7.8900 4.163e-15 ***
-#&gt; lambda_1       0.382398   0.032109 11.9095 &lt; 2.2e-16 ***
+#&gt; (Intercept)_1  7.527394   0.766797  9.8167 &lt; 2.2e-16 ***
+#&gt; RD60_1         1.742351   0.148661 11.7203 &lt; 2.2e-16 ***
+#&gt; PS60_1         0.346996   0.109246  3.1763  0.001507 ** 
+#&gt; MA60_1        -0.208241   0.023395 -8.9013 &lt; 2.2e-16 ***
+#&gt; DV60_1         0.957295   0.108403  8.8309 &lt; 2.2e-16 ***
+#&gt; UE60_1         0.018158   0.039940  0.4546  0.649409    
+#&gt; SOUTH_1        2.494771   0.316304  7.8873 4.255e-15 ***
+#&gt; lambda_1       0.382536   0.032105 11.9151 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-#&gt; R-squared: 0.3387 
+#&gt; R-squared: 0.3388 
 #&gt;   
 #&gt; Residual standard error:  4.597
-#&gt;  LMM:  1.193  p-value: (0.275)</code></pre>
+#&gt;  LMM: 1.1852  p-value: (0.276)</code></pre>
 <p>The LR test for nested models, in this case SIM vs SEM, can be obtained as before using the function <code>anova()</code></p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(ols.spsur, sem.spsur)</span></code></pre></div>
 <pre><code>#&gt;               logLik df   AIC   BIC LRtest      p.val
 #&gt; model 1: sim -9176.3  8 18369 18353                  
-#&gt; model 2: sem -9106.1  9 18230 18212 140.48 2.0951e-32</code></pre>
+#&gt; model 2: sem -9106.0  9 18230 18212 140.59 1.9786e-32</code></pre>
 <p>Clearly, the SEM model is preferable to the SIM specification because there is spatial dependence in the data, which has been effectively captured by the SEM mechanism. Moreover, according to the LMM test below (this is a Marginal Lagrange Multiplier of the type <span class="math inline">\(LM(\rho|\lambda)\)</span>; see the <em>spsur user guide</em>), once the spatial errors are introduced in the equation, the spatial lag of the endogenous variable, <span class="math inline">\(WHR_{60}\)</span> is not statistically significant.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sem.spsur<span class="sc">$</span>LMM)</span></code></pre></div>
-<pre><code>#&gt; [1] 1.193044</code></pre>
+<pre><code>#&gt; [1] 1.185223</code></pre>
 </div>
 <div id="spatial-simultaneous-autoregressive-model-sarar" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> Spatial Simultaneous Autoregressive Model (SARAR)</h1>
@@ -888,15 +872,15 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 <pre><code>#&gt; neighbourhood matrix eigenvalues
 #&gt; Computing eigenvalues ...
 #&gt; 
-#&gt; Initial point:   log_lik:  -9085.419  rhos:  0.663  lambdas:  -0.603 
-#&gt; Iteration:  1  log_lik:  -9062.889  rhos:  0.748  lambdas:  -0.837 
-#&gt; Iteration:  2  log_lik:  -9060.502  rhos:  0.769  lambdas:  -0.905 
-#&gt; Iteration:  3  log_lik:  -9060.28  rhos:  0.775  lambdas:  -0.925 
-#&gt; Iteration:  4  log_lik:  -9060.259  rhos:  0.777  lambdas:  -0.93 
-#&gt; Iteration:  5  log_lik:  -9060.257  rhos:  0.777  lambdas:  -0.932 
-#&gt; Iteration:  6  log_lik:  -9060.256  rhos:  0.778  lambdas:  -0.932 
-#&gt; Time to fit the model:  46.67  seconds
-#&gt; Time to compute covariances:  9.31  seconds</code></pre>
+#&gt; Initial point:   log_lik:  -9085.318  rhos:  0.663  lambdas:  -0.603 
+#&gt; Iteration:  1  log_lik:  -9062.748  rhos:  0.748  lambdas:  -0.837 
+#&gt; Iteration:  2  log_lik:  -9060.355  rhos:  0.77  lambdas:  -0.905 
+#&gt; Iteration:  3  log_lik:  -9060.132  rhos:  0.776  lambdas:  -0.925 
+#&gt; Iteration:  4  log_lik:  -9060.111  rhos:  0.777  lambdas:  -0.931 
+#&gt; Iteration:  5  log_lik:  -9060.109  rhos:  0.778  lambdas:  -0.933 
+#&gt; Iteration:  6  log_lik:  -9060.108  rhos:  0.778  lambdas:  -0.933 
+#&gt; Time to fit the model:  44.37  seconds
+#&gt; Time to compute covariances:  9.89  seconds</code></pre>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sarar.spsur)</span></code></pre></div>
 <pre><code>#&gt; Call:
 #&gt; spsurml(formula = formula_60, data = NCOVR.sf, listw = listw, 
@@ -907,20 +891,20 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; 
 #&gt; Equation  1 
 #&gt;                Estimate Std. Error  t value  Pr(&gt;|t|)    
-#&gt; (Intercept)_1  2.424897   0.391608   6.1922 6.723e-10 ***
-#&gt; RD60_1         0.657738   0.079705   8.2521 2.281e-16 ***
-#&gt; PS60_1         0.149831   0.054133   2.7678  0.005677 ** 
-#&gt; MA60_1        -0.079625   0.011841  -6.7245 2.093e-11 ***
-#&gt; DV60_1         0.500529   0.063120   7.9298 3.044e-15 ***
-#&gt; UE60_1        -0.031844   0.021379  -1.4895  0.136455    
-#&gt; SOUTH_1        0.261410   0.127913   2.0437  0.041072 *  
-#&gt; rho_1          0.777641   0.018131  42.8893 &lt; 2.2e-16 ***
-#&gt; lambda_1      -0.932459   0.083230 -11.2034 &lt; 2.2e-16 ***
+#&gt; (Intercept)_1  2.421946   0.391455   6.1870 6.942e-10 ***
+#&gt; RD60_1         0.657214   0.079674   8.2488 2.344e-16 ***
+#&gt; PS60_1         0.149669   0.054110   2.7660  0.005708 ** 
+#&gt; MA60_1        -0.079578   0.011837  -6.7230 2.114e-11 ***
+#&gt; DV60_1         0.500917   0.063113   7.9369 2.880e-15 ***
+#&gt; UE60_1        -0.031826   0.021372  -1.4892  0.136550    
+#&gt; SOUTH_1        0.260660   0.127846   2.0389  0.041550 *  
+#&gt; rho_1          0.777937   0.018114  42.9474 &lt; 2.2e-16 ***
+#&gt; lambda_1      -0.933030   0.083248 -11.2078 &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-#&gt; R-squared: 0.444 
+#&gt; R-squared: 0.4441 
 #&gt;   
-#&gt; Residual standard error:  4.241</code></pre>
+#&gt; Residual standard error:   4.24</code></pre>
 <p>In the case of <strong>spatialreg</strong>, the function for this case is <code>spatialreg::sacsar()</code></p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>sarar.spatialreg <span class="ot">&lt;-</span> spatialreg<span class="sc">::</span><span class="fu">sacsarlm</span>(<span class="at">formula =</span> formula_60, </span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">listw =</span> listw, <span class="at">data =</span> NCOVR.sf)</span>
@@ -931,43 +915,43 @@ u_{60} = \lambda W u_{60} + \epsilon_{60}\
 #&gt; 
 #&gt; Residuals:
 #&gt;       Min        1Q    Median        3Q       Max 
-#&gt; -12.72590  -1.99405  -0.57621   1.20291  80.72854 
+#&gt; -12.73012  -1.99470  -0.57684   1.20274  80.71945 
 #&gt; 
 #&gt; Type: sac 
 #&gt; Coefficients: (asymptotic standard errors) 
 #&gt;              Estimate Std. Error z value  Pr(&gt;|z|)
-#&gt; (Intercept)  2.422847   0.410239  5.9059 3.506e-09
-#&gt; RD60         0.657260   0.085075  7.7256 1.110e-14
-#&gt; PS60         0.149719   0.054436  2.7504  0.005953
-#&gt; MA60        -0.079565   0.012404 -6.4146 1.412e-10
-#&gt; DV60         0.500200   0.066423  7.5305 5.063e-14
-#&gt; UE60        -0.031823   0.021382 -1.4883  0.136671
-#&gt; SOUTH        0.260793   0.131656  1.9809  0.047606
+#&gt; (Intercept)  2.419903   0.410043  5.9016 3.600e-09
+#&gt; RD60         0.656738   0.085035  7.7232 1.132e-14
+#&gt; PS60         0.149557   0.054411  2.7486  0.005985
+#&gt; MA60        -0.079518   0.012398 -6.4137 1.420e-10
+#&gt; DV60         0.500589   0.066415  7.5373 4.796e-14
+#&gt; UE60        -0.031805   0.021375 -1.4879  0.136767
+#&gt; SOUTH        0.260047   0.131573  1.9764  0.048104
 #&gt; 
-#&gt; Rho: 0.77788
-#&gt; Asymptotic standard error: 0.023069
-#&gt;     z-value: 33.72, p-value: &lt; 2.22e-16
-#&gt; Lambda: -0.93327
-#&gt; Asymptotic standard error: 0.072704
-#&gt;     z-value: -12.837, p-value: &lt; 2.22e-16
+#&gt; Rho: 0.77818
+#&gt; Asymptotic standard error: 0.023041
+#&gt;     z-value: 33.774, p-value: &lt; 2.22e-16
+#&gt; Lambda: -0.93384
+#&gt; Asymptotic standard error: 0.072693
+#&gt;     z-value: -12.846, p-value: &lt; 2.22e-16
 #&gt; 
-#&gt; LR test value: 232.16, p-value: &lt; 2.22e-16
+#&gt; LR test value: 232.46, p-value: &lt; 2.22e-16
 #&gt; 
-#&gt; Log likelihood: -9060.256 for sac model
-#&gt; ML residual variance (sigma squared): 17.974, (sigma: 4.2396)
+#&gt; Log likelihood: -9060.108 for sac model
+#&gt; ML residual variance (sigma squared): 17.97, (sigma: 4.2391)
 #&gt; Number of observations: 3085 
 #&gt; Number of parameters estimated: 10 
-#&gt; AIC: 18141, (AIC for lm: 18369)</code></pre>
+#&gt; AIC: 18140, (AIC for lm: 18369)</code></pre>
 <p>The same as before, the differences between the two codes are minimal.</p>
 <p>Finally, according to the <code>anova()</code> function of <strong>spsur</strong>, the SARAR model is preferable to the SLM and SEM alternatives, which are nested in the SARAR, in spite of the high value estimated for the parameter <span class="math inline">\(\lambda\)</span>, -0.93327, close to a unit root case. The LR and both AIC and BIC statistics reach the same conclusion.</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(slm.spsur,sarar.spsur)</span></code></pre></div>
 <pre><code>#&gt;                 logLik df   AIC   BIC LRtest      p.val
-#&gt; model 1: slm   -9098.6  9 18215 18197                  
-#&gt; model 2: sarar -9060.3 10 18141 18121 76.625 2.0666e-18</code></pre>
+#&gt; model 1: slm   -9098.5  9 18215 18197                  
+#&gt; model 2: sarar -9060.1 10 18140 18120 76.751 1.9393e-18</code></pre>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(sem.spsur,sarar.spsur)</span></code></pre></div>
 <pre><code>#&gt;                 logLik df   AIC   BIC LRtest      p.val
-#&gt; model 1: sem   -9106.1  9 18230 18212                  
-#&gt; model 2: sarar -9060.3 10 18141 18121 91.687 1.0151e-21</code></pre>
+#&gt; model 1: sem   -9106.0  9 18230 18212                  
+#&gt; model 2: sarar -9060.1 10 18140 18120  91.87 9.2565e-22</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
@@ -1031,6 +1015,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

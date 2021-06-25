@@ -120,8 +120,6 @@ Object of \code{spsur} class with the output of the
  A list with:
   \tabular{ll}{
     \code{call} \tab Matched call. \cr
-    \code{formula} \tab formula in the call or \emph{NULL}. \cr
-    \code{data} \tab data.frame used as database or \emph{NULL}. \cr
     \code{type} \tab  Type of model specified. \cr
     \code{method} \tab Value of \code{method} argument to compute the 
       Jacobian \cr
@@ -138,10 +136,12 @@ Object of \code{spsur} class with the output of the
       maximum-likelihood estimates. \cr
     \code{R2} \tab Coefficient of determination for each equation, 
       obtained as the squared of the correlation coefficient between the 
-      corresponding explained variable and its estimate. 
-      \code{spsurml} also shows a \emph{global} coefficient of
-       determination obtained, in the same manner, for the set of 
-         the \emph{G} equations. \cr
+      corresponding explained variable and fitted values. \cr
+    \code{R2 pooled} \tab \emph{Global} coefficient of determination 
+      obtained for the set of the \emph{G} equations. 
+      It is computed in the same way than uniequational \code{R2} but 
+      joining the dependent variable and fitted values in single vectors 
+      instead of one vector for each equation. \cr
     \code{Sigma} \tab Estimated covariance matrix for the residuals of 
       the \emph{G} equations. \cr
     \code{fdHess} \tab Logical value of \code{fdHess} argument when 
@@ -535,11 +535,11 @@ if (require(gridExtra)) {
       and applications}, Pion. 
     \item LeSage J and Pace, R.K. (2009). \emph{Introduction to Spatial 
       Econometrics.} CRC Press, Boca Raton.
-     \item López, F.A., Mur, J., and Angulo, A. (2014). Spatial model
+     \item Lopez, F.A., Mur, J., and Angulo, A. (2014). Spatial model
        selection strategies in a SUR framework. The case of regional
        productivity in EU. \emph{Annals of Regional Science}, 53(1), 197-220.
        <doi:10.1007/s00168-014-0624-2>
-    \item Mur, J., López, F., and Herrera, M. (2010). Testing for spatial
+    \item Mur, J., Lopez, F., and Herrera, M. (2010). Testing for spatial
       effects in seemingly unrelated regressions.
       \emph{Spatial Economic Analysis}, 5(4), 399-440.
       <doi:10.1080/17421772.2010.516443>
@@ -555,8 +555,8 @@ if (require(gridExtra)) {
 }
 \author{
 \tabular{ll}{
-  Fernando López  \tab \email{fernando.lopez@upct.es} \cr
-  Román Mínguez  \tab \email{roman.minguez@uclm.es} \cr
-  Jesús Mur  \tab \email{jmur@unizar.es} \cr
+  Fernando Lopez  \tab \email{fernando.lopez@upct.es} \cr
+  Roman Minguez  \tab \email{roman.minguez@uclm.es} \cr
+  Jesus Mur  \tab \email{jmur@unizar.es} \cr
   }
 }

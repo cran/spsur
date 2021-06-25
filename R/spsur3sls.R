@@ -101,8 +101,6 @@
 #'   A list with:
 #'   \tabular{ll}{
 #'     \code{call} \tab Matched call. \cr
-#'     \code{formula} \tab formula in the call or \emph{NULL}. \cr
-#'     \code{data} \tab data.frame used as database or \emph{NULL}. \cr
 #'     \code{type} \tab  Type of model specified. \cr
 #'     \code{Durbin} \tab Value of \code{Durbin} argument. \cr
 #'     \code{coefficients} \tab Estimated coefficients for the regressors. \cr
@@ -114,11 +112,13 @@
 #'     \code{resvar} \tab Estimated covariance matrix for the estimates of 
 #'       \emph{beta's} and spatial coefficients.\cr
 #'     \code{R2} \tab Coefficient of determination for each equation, 
-#'       obtained as the squared of the correlation coefficient between 
-#'       the corresponding explained variable and its estimates. 
-#'       \emph{spsur3sls} also shows a \emph{global} coefficient of
-#'        determination obtained, in the same manner, for the set of 
-#'        \emph{G} equations. \cr
+#'       obtained as the squared of the correlation coefficient between the 
+#'       corresponding explained variable and fitted values. \cr
+#'     \code{R2 pooled} \tab \emph{Global} coefficient of determination 
+#'       obtained for the set of the \emph{G} equations. 
+#'       It is computed in the same way than uniequational \code{R2} but 
+#'       joining the dependent variable and fitted values in single vectors 
+#'       instead of one vector for each equation. \cr
 #'     \code{Sigma} \tab Estimated covariance matrix for the residuals of the 
 #'       \emph{G} equations. \cr
 #'     \code{residuals} \tab Residuals of the model. \cr
@@ -137,15 +137,15 @@
 #'
 #' @author
 #'   \tabular{ll}{
-#'   Fernando López  \tab \email{fernando.lopez@@upct.es} \cr
-#'   Román Mínguez  \tab \email{roman.minguez@@uclm.es} \cr
-#'   Jesús Mur  \tab \email{jmur@@unizar.es} \cr
+#'   Fernando Lopez  \tab \email{fernando.lopez@@upct.es} \cr
+#'   Roman Minguez  \tab \email{roman.minguez@@uclm.es} \cr
+#'   Jesus Mur  \tab \email{jmur@@unizar.es} \cr
 #'   }
 #
 #'
 #' @references
 #'   \itemize{
-#'       \item López, F. A., Mínguez, R., Mur, J. (2020). ML versus IV estimates 
+#'       \item Lopez, F. A., Minguez, R., Mur, J. (2020). ML versus IV estimates 
 #'       of spatial SUR models: evidence from the case of Airbnb in Madrid urban 
 #'       area. \emph{The Annals of Regional Science}, 64(2), 313-347.
 #'       <doi:10.1007/s00168-019-00914-1>
@@ -425,8 +425,8 @@ spsur3sls <- function(formula = NULL, data = NULL, na.action,
     coefficients <- coefforig
     rest.se <- seorig
   }  
-  ret <- new_spsur(list(call = cl, type = type, formula = formula,
-                        data = data, W = W, Durbin = Durbin, 
+  ret <- new_spsur(list(call = cl, type = type, 
+                        Durbin = Durbin, 
                         G = G, N = N, Tm = Tm, 
                         deltas = deltas, 
                         deltas.se = deltas.se,  
@@ -442,7 +442,7 @@ spsur3sls <- function(formula = NULL, data = NULL, na.action,
                         residuals = z$residuals, 
                         df.residual = df.residual,
                         fitted.values = z$fitted.values,
-                        Y = Y, X = X,  
+                        Y = Y, X = X, W = W,  
                         zero.policy = zero.policy, 
                         listw_style = listw$style, 
                         maxlagW = maxlagW))
