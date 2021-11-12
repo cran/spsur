@@ -1,8 +1,8 @@
 Package: spsur
 Type: Package
 Title: Spatial Seemingly Unrelated Regression Models
-Version: 1.0.1.9
-Date: 2021-06-25
+Version: 1.0.2.0
+Date: 2021-11-12
 Authors@R: c(person("Ana", "Angulo", email = "aangulo@unizar.es", 
                   role = "aut"),
            person("Fernando A", "Lopez", email = "fernando.lopez@upct.es", 
@@ -29,23 +29,23 @@ LazyData: true
 Encoding: UTF-8
 License: GPL-3
 Depends: R (>= 4.1), methods (>= 4.1), stats (>= 4.1)
-Imports: car (>= 3.0-10), Formula (>= 1.2-4), ggplot2 (>= 3.3.4),
-        gmodels (>= 2.18.1), gridExtra (>= 2.3), knitr (>= 1.33),
-        lmtest (>= 0.9-38), MASS (>= 7.3-54), Matrix (>= 1.3-4), minqa
-        (>= 1.2.4), numDeriv (>= 2016.8-1.1), rlang (>= 0.4.11), Rdpack
-        (>= 2.1.2), rmarkdown (>= 2.9), sparseMVN (>= 0.2.1.1),
-        spatialreg (>= 1.1-8), spdep (>= 1.1-8)
-Suggests: bookdown (>= 0.22), dplyr (>= 1.0.7), sf (>= 1.0-0)
+Imports: car (>= 3.0-12), Formula (>= 1.2-4), ggplot2 (>= 3.3.5),
+        gmodels (>= 2.18.1), gridExtra (>= 2.3), knitr (>= 1.36),
+        lmtest (>= 0.9-39), MASS (>= 7.3-54), Matrix (>= 1.3-4), minqa
+        (>= 1.2.4), numDeriv (>= 2016.8-1.1), rlang (>= 0.4.12), Rdpack
+        (>= 2.1.2), rmarkdown (>= 2.11), sparseMVN (>= 0.2.2),
+        spatialreg (>= 1.2-1), spdep (>= 1.1-12)
+Suggests: bookdown (>= 0.24), dplyr (>= 1.0.7), sf (>= 1.0-3)
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 RdMacros: Rdpack
 URL: https://CRAN.R-project.org/package=spsur
 BugReports: https://github.com/rominsal/spsur/issues
 NeedsCompilation: no
-Packaged: 2021-06-25 15:40:09 UTC; roman
+Packaged: 2021-11-12 11:26:12 UTC; roman
 Author: Ana Angulo [aut],
   Fernando A Lopez [aut],
   Roman Minguez [aut, cre],
   Jesus Mur [aut]
 Repository: CRAN
-Date/Publication: 2021-06-25 16:10:01 UTC
+Date/Publication: 2021-11-12 13:10:02 UTC

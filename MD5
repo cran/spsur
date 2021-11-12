@@ -1,5 +1,5 @@
-71a39ab37e9cd62f127c64bb0a30373d *DESCRIPTION
-dda2c3e051eb7b20fc24db59bcc13987 *NAMESPACE
+c7142d054ff4d58882743a89a8339beb *DESCRIPTION
+b93d32d54886139f92eadb83b50a061e *NAMESPACE
 cd02ab22b2d9ee31547bda603425a7b8 *R/LMSURquedaSEM.R
 e59bba6cf89f7ba22f0edbd85c6c84aa *R/LMSURquedaSLM.R
 af49d3479be9da382fc6af8cdb5d56ff *R/LRSUR2_SARAR.R
@@ -7,7 +7,7 @@ af49d3479be9da382fc6af8cdb5d56ff *R/LRSUR2_SARAR.R
 1ebfecd8418f09eb7d9829cfaf1a749a *R/X_restr.R
 f676c582e821cfe706a0e8aa6772abd5 *R/aux_functions.R
 0ea022e7826412d075016dc659ead939 *R/betas_restr.R
-13e03673e655777916545fb28f6931a2 *R/cov_spsur_f.R
+d540766850870e242108b38d49b5628d *R/cov_spsur_f.R
 d8ba5f27d81ca5c366dd1315ee2b35e0 *R/datasets.R
 25abd46e7ee0ea6b03bd7177da63daa8 *R/demeaning.R
 9045f940d204914d4822e67f8cf8dbbb *R/dgp_spSUR.R
@@ -21,7 +21,7 @@ e1ba39631c6182dd85b6c68fb97283d0 *R/lmtestspsur.R
 7b4b8d2f90b27a7e2e298eef1d581a24 *R/lr_betas.R
 3c93c1ec283fb2fd17c86159c0ae2679 *R/methods_spsur.R
 641cae9c29b61524153cf638453a3754 *R/print.summary.spsur.R
-56cdcb3aa8bf4168faa79f6bd82fc0dd *R/spSUR-package.R
+de5e3225524e654e2ea786de7774da3b *R/spSUR-package.R
 c21aa631c217f9d0d46d45ac605f53da *R/spsur3sls.R
 7077e03614ed776b713b52d85195126a *R/spsurml.R
 ded249b71f255fb283d520c81d2a248a *R/spsurtime.R
@@ -29,7 +29,7 @@ ded249b71f255fb283d520c81d2a248a *R/spsurtime.R
 fca5d912e7f3a393c421117447405cc9 *R/sur3_spdiag.R
 e3a76f3d458d4c8e1163440f5eb80433 *R/wald_betas.R
 1d67791ff1ff5c61324eeb1eaa37a597 *R/wald_deltas.R
-d34765c87a68402530cbb32f3f7d5c0e *build/vignette.rds
+17b9a9eeafd314924f387272d087b3bc *build/vignette.rds
 8ed66e9bd3eb79be50d3ed5ac744e199 *data/NCOVR.RData
 1ef1a5c306e49f60b0946a39e8142c07 *data/spain.covid.RData
 0057f6678332112da8d4684e22f03a04 *data/spc.RData
@@ -46,9 +46,9 @@ ad2daf3a5e4806369713b57865373677 *demo/demo_spsurml.R
 267812346dcf7b420eae2562ffc4ec2b *demo/demo_wald_deltas.R
 c1f163d9d6209f5f9b88fad5d09c2bcc *inst/CITATION
 3c846276c36e868ddea3819112aa5cb5 *inst/doc/Vignette_User_Guide.Rmd
-5b2d422a5fab627e3262fdbe2a7ae82b *inst/doc/Vignette_User_Guide.html
+8515c72d359e9d28aaebaa991572713d *inst/doc/Vignette_User_Guide.html
 c547a8330dda8664782bc6bc2b4d68cb *inst/doc/spsur-vs-spatialreg.Rmd
-551b1ef6ba8f092f26e82bb7a604c9d3 *inst/doc/spsur-vs-spatialreg.html
+bcfc0e0a3acb7db3752b575e96364ed6 *inst/doc/spsur-vs-spatialreg.html
 a310236fce81e81ad3463f4ac1006c35 *inst/extdata/codebook.pdf
 8c1154f27187f6e9bdc11d62caf32059 *man/NCOVR.sf.Rd
 d2d75b6817d5f130da53c59b154064a0 *man/Wspc.Rd
