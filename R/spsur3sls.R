@@ -112,13 +112,11 @@
 #'     \code{resvar} \tab Estimated covariance matrix for the estimates of 
 #'       \emph{beta's} and spatial coefficients.\cr
 #'     \code{R2} \tab Coefficient of determination for each equation, 
-#'       obtained as the squared of the correlation coefficient between the 
-#'       corresponding explained variable and fitted values. \cr
-#'     \code{R2 pooled} \tab \emph{Global} coefficient of determination 
-#'       obtained for the set of the \emph{G} equations. 
-#'       It is computed in the same way than uniequational \code{R2} but 
-#'       joining the dependent variable and fitted values in single vectors 
-#'       instead of one vector for each equation. \cr
+#'       obtained as the squared of the correlation coefficient between 
+#'       the corresponding explained variable and its estimates. 
+#'       \emph{spsur3sls} also shows a \emph{global} coefficient of
+#'        determination obtained, in the same manner, for the set of 
+#'        \emph{G} equations. \cr
 #'     \code{Sigma} \tab Estimated covariance matrix for the residuals of the 
 #'       \emph{G} equations. \cr
 #'     \code{residuals} \tab Residuals of the model. \cr

@@ -1,11 +1,10 @@
 ---
 title: "spsur user guide"
-subtitle: "The user guide <br>  <br>  <br>"
 author:
 - Román Mínguez, University of Castilla-La Mancha (Spain)
 - Fernando A. López, Technical University of Cartagena (Spain)
 - Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: '2021-06-25 <br>  <br> <br>'
+date: '2022-04-22 16:22:12 <br>  <br> <br>'
 output:
   bookdown::html_document2:
     number_sections: yes
@@ -18,7 +17,7 @@ output:
     toc_title: Article Outline
 linkcolor: red
 link-citations: yes
-
+subtitle: The user guide <br>  <br>  <br>
 bibliography: bibliosure.bib
 vignette: |
   %\VignetteIndexEntry{spsur user guide}
@@ -41,7 +40,7 @@ library(dplyr)
 
 # Introduction
 
-The purpose of this vignette is to show the functionalities of the new R-package **spsur**. In the vignette the reader will find information about the following aspects:
+The purpose of this vignette is to show the functionalities of the new R-package **spsur** (@spsur_jss_forthcoming). In the vignette the reader will find information about the following aspects:
 
 * Description of the dataset NCOVR, employed to illustrate the use of the package.
 * Estimation of SUR models without spatial effects (the so called SUR-SIM models).
@@ -103,7 +102,7 @@ Whereas the geometry of the USA counties is shown in Figure  \@ref(fig:plotgeom)
 plot(st_geometry(NCOVR.sf))
 ```
 
-<img src="plotgeom-1.png" title="Geometry of the USA counties" alt="Geometry of the USA counties" style="display: block; margin: auto;" />
+<img src="plotgeom-1-vignette1.png" title="Geometry of the USA counties" alt="Geometry of the USA counties" style="display: block; margin: auto;" />
 
 Following @Baller2001, we consider a **W** matrix based on the criterion of 10 nearest-neighbourhood, which is inmediate to obtain using the **spdep** package, @BivandPedesma2013. The resulting weighting matrix can be obtained using *lwncovr* object. Note that this matrix is non-symmetric.
 
@@ -125,7 +124,7 @@ plot(NCOVR.sf["qm"], pal = c("#FFFEDE","#FFDFA2", "#FFA93F", "#D5610D"),
      main = "")
 ```
 
-<img src="quantilemap-1.png" title="Quantile Map; Variable HR60" alt="Quantile Map; Variable HR60" style="display: block; margin: auto;" />
+<img src="quantilemap-1-vignette1.png" title="Quantile Map; Variable HR60" alt="Quantile Map; Variable HR60" style="display: block; margin: auto;" />
 
 @Baller2001 specify a single linear model to explain the case of HR in the year 1960 with the results shown in the Table below, identical to those in Table 1 of @Baller2001.
 
@@ -152,16 +151,25 @@ summary(lm_60)
 #> -14.026  -2.217  -0.635   1.393  88.312 
 #> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  8.12591    0.63465  12.804  < 2e-16 ***
-#> RD60         1.79824    0.12341  14.571  < 2e-16 ***
-#> PS60         0.35871    0.09216   3.892 0.000101 ***
-#> MA60        -0.23047    0.01932 -11.931  < 2e-16 ***
-#> DV60         1.16002    0.09483  12.233  < 2e-16 ***
-#> UE60        -0.06195    0.03515  -1.762 0.078138 .  
-#> SOUTH        2.63862    0.23325  11.312  < 2e-16 ***
+#>             Estimate Std. Error t value Pr(>|t|)
+#> (Intercept)  8.12591    0.63465  12.804  < 2e-16
+#> RD60         1.79824    0.12341  14.571  < 2e-16
+#> PS60         0.35871    0.09216   3.892 0.000101
+#> MA60        -0.23047    0.01932 -11.931  < 2e-16
+#> DV60         1.16002    0.09483  12.233  < 2e-16
+#> UE60        -0.06195    0.03515  -1.762 0.078138
+#> SOUTH        2.63862    0.23325  11.312  < 2e-16
+#>                
+#> (Intercept) ***
+#> RD60        ***
+#> PS60        ***
+#> MA60        ***
+#> DV60        ***
+#> UE60        .  
+#> SOUTH       ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
 #> Residual standard error: 4.743 on 3078 degrees of freedom
 #> Multiple R-squared:  0.2966,	Adjusted R-squared:  0.2952 
@@ -177,7 +185,7 @@ NCOVR.sf$qmr <- (lm_60$residuals > q[2]) + (lm_60$residuals > q[3]) + (lm_60$res
 plot(NCOVR.sf["qmr"], pal = c("#FFFEDE","#FFDFA2", "#FFA93F", "#D5610D"), main = "")
 ```
 
-<img src="residualquantilemap-1.png" title="Quantile Map of LS residuals" alt="Quantile Map of LS residuals" style="display: block; margin: auto;" />
+<img src="residualquantilemap-1-vignette1.png" title="Quantile Map of LS residuals" alt="Quantile Map of LS residuals" style="display: block; margin: auto;" />
 
 The battery of LM tests for omitted spatial structure, supplied by **spdep** @BivandPedesma2013, confirms the misspecification of \@ref(eq:ols). According to these results, the most adequate specification is a spatial lag model. Similar results are obtained for the years 1970, 1980 and 1990, which we omit for reasons of space.
 
@@ -188,46 +196,56 @@ print(spdep::lm.LMtests(model=lm_60,listw = lwncovr,test="all"))
 
 ```
 #> 
-#> 	Lagrange multiplier diagnostics for spatial dependence
+#> 	Lagrange multiplier diagnostics for spatial
+#> 	dependence
 #> 
 #> data:  
-#> model: lm(formula = formula_60, data = NCOVR.sf)
+#> model: lm(formula = formula_60, data =
+#> NCOVR.sf)
 #> weights: lwncovr
 #> 
 #> LMerr = 208.32, df = 1, p-value < 2.2e-16
 #> 
 #> 
-#> 	Lagrange multiplier diagnostics for spatial dependence
+#> 	Lagrange multiplier diagnostics for spatial
+#> 	dependence
 #> 
 #> data:  
-#> model: lm(formula = formula_60, data = NCOVR.sf)
+#> model: lm(formula = formula_60, data =
+#> NCOVR.sf)
 #> weights: lwncovr
 #> 
 #> LMlag = 232.36, df = 1, p-value < 2.2e-16
 #> 
 #> 
-#> 	Lagrange multiplier diagnostics for spatial dependence
+#> 	Lagrange multiplier diagnostics for spatial
+#> 	dependence
 #> 
 #> data:  
-#> model: lm(formula = formula_60, data = NCOVR.sf)
+#> model: lm(formula = formula_60, data =
+#> NCOVR.sf)
 #> weights: lwncovr
 #> 
 #> RLMerr = 1.1473, df = 1, p-value = 0.2841
 #> 
 #> 
-#> 	Lagrange multiplier diagnostics for spatial dependence
+#> 	Lagrange multiplier diagnostics for spatial
+#> 	dependence
 #> 
 #> data:  
-#> model: lm(formula = formula_60, data = NCOVR.sf)
+#> model: lm(formula = formula_60, data =
+#> NCOVR.sf)
 #> weights: lwncovr
 #> 
 #> RLMlag = 25.19, df = 1, p-value = 5.196e-07
 #> 
 #> 
-#> 	Lagrange multiplier diagnostics for spatial dependence
+#> 	Lagrange multiplier diagnostics for spatial
+#> 	dependence
 #> 
 #> data:  
-#> model: lm(formula = formula_60, data = NCOVR.sf)
+#> model: lm(formula = formula_60, data =
+#> NCOVR.sf)
 #> weights: lwncovr
 #> 
 #> SARMA = 233.51, df = 2, p-value < 2.2e-16
@@ -265,8 +283,8 @@ sur.sim <- spsurml(formula = formula_sur, type = "sim", data = NCOVR.sf)
 #> log_lik:  -18908.66 
 #> Iteration:  1  log_lik:  -18908.64 
 #> Iteration:  2  log_lik:  -18908.64 
-#> Time to fit the model:  0.08  seconds
-#> Time to compute covariances:  0.02  seconds
+#> Time to fit the model:  0.12  seconds
+#> Time to compute covariances:  0.05  seconds
 ```
 
 ```r
@@ -281,28 +299,46 @@ summary(sur.sim)
 #> Spatial SUR model type:  sim 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1  7.934600   0.628650  12.6216 < 2.2e-16 ***
-#> RD60_1         1.704134   0.122195  13.9461 < 2.2e-16 ***
-#> PS60_1         0.336554   0.091928   3.6610 0.0002533 ***
-#> MA60_1        -0.222449   0.019157 -11.6119 < 2.2e-16 ***
-#> DV60_1         1.111576   0.093760  11.8555 < 2.2e-16 ***
-#> UE60_1        -0.063549   0.034323  -1.8515 0.0641472 .  
-#> SOUTH_1        2.764987   0.232276  11.9039 < 2.2e-16 ***
+#>                Estimate Std. Error  t value
+#> (Intercept)_1  7.934600   0.628650  12.6216
+#> RD60_1         1.704134   0.122195  13.9461
+#> PS60_1         0.336554   0.091928   3.6610
+#> MA60_1        -0.222449   0.019157 -11.6119
+#> DV60_1         1.111576   0.093760  11.8555
+#> UE60_1        -0.063549   0.034323  -1.8515
+#> SOUTH_1        2.764987   0.232276  11.9039
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1        0.0002533 ***
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1        0.0641472 .  
+#> SOUTH_1       < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.2964 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  8.457736   0.760008 11.1285 < 2.2e-16 ***
-#> RD70_2         2.775541   0.147823 18.7761 < 2.2e-16 ***
-#> PS70_2         0.772452   0.116483  6.6315 3.606e-11 ***
-#> MA70_2        -0.186988   0.022532 -8.2988 < 2.2e-16 ***
-#> DV70_2         1.162703   0.103180 11.2687 < 2.2e-16 ***
-#> UE70_2        -0.223708   0.048739 -4.5899 4.522e-06 ***
-#> SOUTH_2        3.768599   0.284478 13.2474 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  8.457736   0.760008 11.1285
+#> RD70_2         2.775541   0.147823 18.7761
+#> PS70_2         0.772452   0.116483  6.6315
+#> MA70_2        -0.186988   0.022532 -8.2988
+#> DV70_2         1.162703   0.103180 11.2687
+#> UE70_2        -0.223708   0.048739 -4.5899
+#> SOUTH_2        3.768599   0.284478 13.2474
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        3.606e-11 ***
+#> MA70_2        < 2.2e-16 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        4.522e-06 ***
+#> SOUTH_2       < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3609 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -331,7 +367,7 @@ plot(NCOVR.sf[c("SUR_residuals_1960","SUR_residuals_1970")],
      pal = c("#FFFEDE","#FFDFA2", "#FFA93F", "#D5610D"))
 ```
 
-<img src="residualsurquantilemap-1.png" title="Quantile Map of LS residuals for SUR-SIM model" alt="Quantile Map of LS residuals for SUR-SIM model" style="display: block; margin: auto;" />
+<img src="residualsurquantilemap-1-vignette1.png" title="Quantile Map of LS residuals for SUR-SIM model" alt="Quantile Map of LS residuals for SUR-SIM model" style="display: block; margin: auto;" />
 
 The battery of Lagrange Multipliers that appear below are obtained with the function `lmtestspsur()`. The output is a list of 5 elements each one of the class `htest`. They are the traditional LM misspecification tests [@anselinbera1998] for omitted spatial elements, adapted to a SUR framework by [@Mur2010]. All the Multipliers are statistically significant, both the raw and robust LMs as well as the joint LM for SARMA processes.
 
@@ -364,7 +400,8 @@ print(lmtest.sur)
 #> 	LM*-SUR-SLM
 #> 
 #> data:  NCOVR.sf
-#> LM-stat = 37.893, df = 2, p-value = 5.909e-09
+#> LM-stat = 37.893, df = 2, p-value =
+#> 5.909e-09
 #> 
 #> 
 #> [[4]]
@@ -416,7 +453,7 @@ sur.slx <- spsurml(formula = formula_sur, listw = lwncovr,
 #> log_lik:  -18855.05 
 #> Iteration:  1  log_lik:  -18855.03 
 #> Iteration:  2  log_lik:  -18855.03 
-#> Time to fit the model:  0.13  seconds
+#> Time to fit the model:  0.14  seconds
 #> Time to compute covariances:  0.03  seconds
 ```
 
@@ -433,40 +470,70 @@ summary(sur.slx)
 #> Spatial SUR model type:  slx 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  9.404828   0.853987 11.0128 < 2.2e-16 ***
-#> RD60_1         1.391044   0.198872  6.9947 2.941e-12 ***
-#> PS60_1         0.356695   0.139140  2.5636  0.010384 *  
-#> MA60_1        -0.165999   0.029995 -5.5343 3.255e-08 ***
-#> DV60_1         0.677292   0.127589  5.3084 1.145e-07 ***
-#> UE60_1         0.069895   0.045621  1.5321  0.125560    
-#> SOUTH_1       -0.525968   0.854098 -0.6158  0.538038    
-#> lag.RD60_1     0.584993   0.258440  2.2636  0.023636 *  
-#> lag.PS60_1     0.177608   0.188824  0.9406  0.346946    
-#> lag.MA60_1    -0.105561   0.039854 -2.6487  0.008102 ** 
-#> lag.DV60_1     1.028709   0.186037  5.5296 3.342e-08 ***
-#> lag.UE60_1    -0.356007   0.070416 -5.0558 4.411e-07 ***
-#> lag.SOUTH_1    3.210259   0.913464  3.5144  0.000444 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  9.404828   0.853987 11.0128
+#> RD60_1         1.391044   0.198872  6.9947
+#> PS60_1         0.356695   0.139140  2.5636
+#> MA60_1        -0.165999   0.029995 -5.5343
+#> DV60_1         0.677292   0.127589  5.3084
+#> UE60_1         0.069895   0.045621  1.5321
+#> SOUTH_1       -0.525968   0.854098 -0.6158
+#> lag.RD60_1     0.584993   0.258440  2.2636
+#> lag.PS60_1     0.177608   0.188824  0.9406
+#> lag.MA60_1    -0.105561   0.039854 -2.6487
+#> lag.DV60_1     1.028709   0.186037  5.5296
+#> lag.UE60_1    -0.356007   0.070416 -5.0558
+#> lag.SOUTH_1    3.210259   0.913464  3.5144
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        2.941e-12 ***
+#> PS60_1         0.010384 *  
+#> MA60_1        3.255e-08 ***
+#> DV60_1        1.145e-07 ***
+#> UE60_1         0.125560    
+#> SOUTH_1        0.538038    
+#> lag.RD60_1     0.023636 *  
+#> lag.PS60_1     0.346946    
+#> lag.MA60_1     0.008102 ** 
+#> lag.DV60_1    3.342e-08 ***
+#> lag.UE60_1    4.411e-07 ***
+#> lag.SOUTH_1    0.000444 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3111 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2 12.602327   1.089181 11.5705 < 2.2e-16 ***
-#> RD70_2         2.522825   0.221812 11.3737 < 2.2e-16 ***
-#> PS70_2         0.647317   0.171823  3.7673 0.0001665 ***
-#> MA70_2        -0.086290   0.030895 -2.7930 0.0052380 ** 
-#> DV70_2         1.107498   0.134853  8.2127 2.614e-16 ***
-#> UE70_2        -0.078082   0.067052 -1.1645 0.2442653    
-#> SOUTH_2       -0.470890   1.062144 -0.4433 0.6575362    
-#> lag.RD70_2     0.211881   0.306704  0.6908 0.4896967    
-#> lag.PS70_2     0.191860   0.234513  0.8181 0.4133196    
-#> lag.MA70_2    -0.231245   0.045318 -5.1028 3.448e-07 ***
-#> lag.DV70_2     0.278746   0.200030  1.3935 0.1635134    
-#> lag.UE70_2    -0.335257   0.097691 -3.4318 0.0006035 ***
-#> lag.SOUTH_2    4.365239   1.145596  3.8105 0.0001401 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2 12.602327   1.089181 11.5705
+#> RD70_2         2.522825   0.221812 11.3737
+#> PS70_2         0.647317   0.171823  3.7673
+#> MA70_2        -0.086290   0.030895 -2.7930
+#> DV70_2         1.107498   0.134853  8.2127
+#> UE70_2        -0.078082   0.067052 -1.1645
+#> SOUTH_2       -0.470890   1.062144 -0.4433
+#> lag.RD70_2     0.211881   0.306704  0.6908
+#> lag.PS70_2     0.191860   0.234513  0.8181
+#> lag.MA70_2    -0.231245   0.045318 -5.1028
+#> lag.DV70_2     0.278746   0.200030  1.3935
+#> lag.UE70_2    -0.335257   0.097691 -3.4318
+#> lag.SOUTH_2    4.365239   1.145596  3.8105
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        0.0001665 ***
+#> MA70_2        0.0052380 ** 
+#> DV70_2        2.614e-16 ***
+#> UE70_2        0.2442653    
+#> SOUTH_2       0.6575362    
+#> lag.RD70_2    0.4896967    
+#> lag.PS70_2    0.4133196    
+#> lag.MA70_2    3.448e-07 ***
+#> lag.DV70_2    0.1635134    
+#> lag.UE70_2    0.0006035 ***
+#> lag.SOUTH_2   0.0001401 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3729 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -496,7 +563,7 @@ sur.slx2 <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1  log_lik:  -18884.68 
 #> Iteration:  2  log_lik:  -18884.68 
 #> Time to fit the model:  0.08  seconds
-#> Time to compute covariances:  0.03  seconds
+#> Time to compute covariances:  0.02  seconds
 ```
 
 ```r
@@ -512,31 +579,52 @@ summary(sur.slx2)
 #> Spatial SUR model type:  slx 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1  7.448268   0.646136  11.5274 < 2.2e-16 ***
-#> RD60_1         1.818289   0.124973  14.5495 < 2.2e-16 ***
-#> PS60_1         0.431162   0.094674   4.5542 5.360e-06 ***
-#> MA60_1        -0.224768   0.019122 -11.7541 < 2.2e-16 ***
-#> DV60_1         0.793588   0.123881   6.4060 1.604e-10 ***
-#> UE60_1        -0.081763   0.034481  -2.3712   0.01776 *  
-#> SOUTH_1        2.720467   0.231839  11.7343 < 2.2e-16 ***
-#> lag.DV60_1     0.673003   0.171295   3.9289 8.626e-05 ***
+#>                Estimate Std. Error  t value
+#> (Intercept)_1  7.448268   0.646136  11.5274
+#> RD60_1         1.818289   0.124973  14.5495
+#> PS60_1         0.431162   0.094674   4.5542
+#> MA60_1        -0.224768   0.019122 -11.7541
+#> DV60_1         0.793588   0.123881   6.4060
+#> UE60_1        -0.081763   0.034481  -2.3712
+#> SOUTH_1        2.720467   0.231839  11.7343
+#> lag.DV60_1     0.673003   0.171295   3.9289
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1        5.360e-06 ***
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        1.604e-10 ***
+#> UE60_1          0.01776 *  
+#> SOUTH_1       < 2.2e-16 ***
+#> lag.DV60_1    8.626e-05 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared:   0.3 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2 12.555608   1.066183 11.7762 < 2.2e-16 ***
-#> RD70_2         2.703380   0.148060 18.2587 < 2.2e-16 ***
-#> PS70_2         0.753631   0.115894  6.5028 8.506e-11 ***
-#> MA70_2        -0.093202   0.029255 -3.1858  0.001451 ** 
-#> DV70_2         1.196064   0.103131 11.5975 < 2.2e-16 ***
-#> UE70_2        -0.098783   0.065843 -1.5003  0.133594    
-#> SOUTH_2        3.727983   0.283123 13.1674 < 2.2e-16 ***
-#> lag.MA70_2    -0.214336   0.041967 -5.1073 3.366e-07 ***
-#> lag.UE70_2    -0.249813   0.089822 -2.7812  0.005432 ** 
+#>                Estimate Std. Error t value
+#> (Intercept)_2 12.555608   1.066183 11.7762
+#> RD70_2         2.703380   0.148060 18.2587
+#> PS70_2         0.753631   0.115894  6.5028
+#> MA70_2        -0.093202   0.029255 -3.1858
+#> DV70_2         1.196064   0.103131 11.5975
+#> UE70_2        -0.098783   0.065843 -1.5003
+#> SOUTH_2        3.727983   0.283123 13.1674
+#> lag.MA70_2    -0.214336   0.041967 -5.1073
+#> lag.UE70_2    -0.249813   0.089822 -2.7812
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        8.506e-11 ***
+#> MA70_2         0.001451 ** 
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2         0.133594    
+#> SOUTH_2       < 2.2e-16 ***
+#> lag.MA70_2    3.366e-07 ***
+#> lag.UE70_2     0.005432 ** 
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3685 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -579,9 +667,9 @@ sur.slm <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1   log_lik:  -18761.92  rhos:  0.346 0.392 
 #> Iteration:  2   log_lik:  -18761.91  rhos:  0.347 0.392 
 #> Iteration:  3   log_lik:  -18761.91  rhos:  0.347 0.392 
-#> Time to fit the model:  9.95  seconds
+#> Time to fit the model:  10  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  2.42  seconds
+#> Time to compute covariances:  2.5  seconds
 ```
 
 ```r
@@ -597,30 +685,50 @@ summary(sur.slm)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.607039   0.611284  9.1726 < 2.2e-16 ***
-#> RD60_1         1.334302   0.118840 11.2277 < 2.2e-16 ***
-#> PS60_1         0.274533   0.089149  3.0795  0.002083 ** 
-#> MA60_1        -0.166818   0.018620 -8.9593 < 2.2e-16 ***
-#> DV60_1         0.879740   0.091235  9.6426 < 2.2e-16 ***
-#> UE60_1        -0.030516   0.033559 -0.9093  0.363211    
-#> SOUTH_1        1.505887   0.225400  6.6810 2.582e-11 ***
-#> rho_1          0.346704   0.028108 12.3345 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.607039   0.611284  9.1726
+#> RD60_1         1.334302   0.118840 11.2277
+#> PS60_1         0.274533   0.089149  3.0795
+#> MA60_1        -0.166818   0.018620 -8.9593
+#> DV60_1         0.879740   0.091235  9.6426
+#> UE60_1        -0.030516   0.033559 -0.9093
+#> SOUTH_1        1.505887   0.225400  6.6810
+#> rho_1          0.346704   0.028108 12.3345
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1         0.002083 ** 
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1         0.363211    
+#> SOUTH_1       2.582e-11 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3396 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.163757   0.729968  7.0739 1.673e-12 ***
-#> RD70_2         2.202376   0.141982 15.5116 < 2.2e-16 ***
-#> PS70_2         0.648888   0.111547  5.8172 6.286e-09 ***
-#> MA70_2        -0.121944   0.021633 -5.6369 1.808e-08 ***
-#> DV70_2         0.987289   0.099166  9.9559 < 2.2e-16 ***
-#> UE70_2        -0.169083   0.047060 -3.5929 0.0003295 ***
-#> SOUTH_2        1.622783   0.272704  5.9507 2.817e-09 ***
-#> rho_2          0.392398   0.026755 14.6661 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.163757   0.729968  7.0739
+#> RD70_2         2.202376   0.141982 15.5116
+#> PS70_2         0.648888   0.111547  5.8172
+#> MA70_2        -0.121944   0.021633 -5.6369
+#> DV70_2         0.987289   0.099166  9.9559
+#> UE70_2        -0.169083   0.047060 -3.5929
+#> SOUTH_2        1.622783   0.272704  5.9507
+#> rho_2          0.392398   0.026755 14.6661
+#>                Pr(>|t|)    
+#> (Intercept)_2 1.673e-12 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        6.286e-09 ***
+#> MA70_2        1.808e-08 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.0003295 ***
+#> SOUTH_2       2.817e-09 ***
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4151 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -642,7 +750,7 @@ The `plot()` function allows the user to plot both beta and spatial coefficients
 plot(sur.slm)
 ```
 
-![plot of chunk unnamed-chunk-2](unnamed-chunk-2-1.png)![plot of chunk unnamed-chunk-2](unnamed-chunk-2-2.png)![plot of chunk unnamed-chunk-2](unnamed-chunk-2-3.png)
+![plot of chunk unnamed-chunk-2](unnamed-chunk-2-1-vignette1.png)![plot of chunk unnamed-chunk-2](unnamed-chunk-2-2-vignette1.png)![plot of chunk unnamed-chunk-2](unnamed-chunk-2-3-vignette1.png)
 
 The `print()` function is used to print short tables including the values of beta and spatial coefficients as well as p-values of significance test for each coefficient. This can be used as an alternative to `summary()` when a brief output is needed. The *NA* values indicate that the coefficient has not been fitted in the corresponding equation.
 
@@ -697,9 +805,9 @@ sur.sem <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1  log_lik:  -18770.25  lambdas:  0.347 0.428 
 #> Iteration:  2  log_lik:  -18770.23  lambdas:  0.348 0.429 
 #> Iteration:  3  log_lik:  -18770.23  lambdas:  0.348 0.429 
-#> Time to fit the model:  13.53  seconds
+#> Time to fit the model:  13.81  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  3.35  seconds
+#> Time to compute covariances:  3.06  seconds
 ```
 
 ```r
@@ -715,30 +823,50 @@ summary(sur.sem)
 #> Spatial SUR model type:  sem 
 #> 
 #> Equation  1 
-#>                 Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1  7.5045154  0.6128069  12.2461 < 2.2e-16 ***
-#> RD60_1         1.6575708  0.1191356  13.9133 < 2.2e-16 ***
-#> PS60_1         0.3200992  0.0893764   3.5815 0.0003443 ***
-#> MA60_1        -0.2056675  0.0186661 -11.0182 < 2.2e-16 ***
-#> DV60_1         0.9408534  0.0914611  10.2869 < 2.2e-16 ***
-#> UE60_1         0.0024792  0.0336388   0.0737 0.9412509    
-#> SOUTH_1        2.6238095  0.2259711  11.6113 < 2.2e-16 ***
-#> lambda_1       0.3475733  0.0303355  11.4576 < 2.2e-16 ***
+#>                 Estimate Std. Error  t value
+#> (Intercept)_1  7.5045154  0.6128069  12.2461
+#> RD60_1         1.6575708  0.1191356  13.9133
+#> PS60_1         0.3200992  0.0893764   3.5815
+#> MA60_1        -0.2056675  0.0186661 -11.0182
+#> DV60_1         0.9408534  0.0914611  10.2869
+#> UE60_1         0.0024792  0.0336388   0.0737
+#> SOUTH_1        2.6238095  0.2259711  11.6113
+#> lambda_1       0.3475733  0.0303355  11.4576
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1        0.0003443 ***
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1        0.9412509    
+#> SOUTH_1       < 2.2e-16 ***
+#> lambda_1      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3369 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  6.733361   0.728904  9.2376 < 2.2e-16 ***
-#> RD70_2         2.803254   0.141775 19.7725 < 2.2e-16 ***
-#> PS70_2         0.732532   0.111391  6.5762 5.223e-11 ***
-#> MA70_2        -0.132271   0.021602 -6.1231 9.744e-10 ***
-#> DV70_2         1.110862   0.099021 11.2185 < 2.2e-16 ***
-#> UE70_2        -0.146826   0.046986 -3.1249  0.001787 ** 
-#> SOUTH_2        3.462542   0.272318 12.7151 < 2.2e-16 ***
-#> lambda_2       0.429273   0.028909 14.8489 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  6.733361   0.728904  9.2376
+#> RD70_2         2.803254   0.141775 19.7725
+#> PS70_2         0.732532   0.111391  6.5762
+#> MA70_2        -0.132271   0.021602 -6.1231
+#> DV70_2         1.110862   0.099021 11.2185
+#> UE70_2        -0.146826   0.046986 -3.1249
+#> SOUTH_2        3.462542   0.272318 12.7151
+#> lambda_2       0.429273   0.028909 14.8489
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        5.223e-11 ***
+#> MA70_2        9.744e-10 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2         0.001787 ** 
+#> SOUTH_2       < 2.2e-16 ***
+#> lambda_2      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4175 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -762,7 +890,7 @@ if (require(gridExtra)) {
 }
 ```
 
-![plot of chunk unnamed-chunk-4](unnamed-chunk-4-1.png)
+![plot of chunk unnamed-chunk-4](unnamed-chunk-4-1-vignette1.png)
 
 ## SUR-SDEM model {#model-sursdem} 
 
@@ -793,9 +921,9 @@ sur.sdem <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1  log_lik:  -18756.13  lambdas:  0.337 0.409 
 #> Iteration:  2  log_lik:  -18756.11  lambdas:  0.338 0.41 
 #> Iteration:  3  log_lik:  -18756.11  lambdas:  0.338 0.41 
-#> Time to fit the model:  12.31  seconds
+#> Time to fit the model:  11.95  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  3.16  seconds
+#> Time to compute covariances:  3  seconds
 ```
 
 ```r
@@ -811,33 +939,56 @@ summary(sur.sdem)
 #> Spatial SUR model type:  sdem 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1  6.753198   0.630626  10.7087 < 2.2e-16 ***
-#> RD60_1         1.774281   0.122014  14.5417 < 2.2e-16 ***
-#> PS60_1         0.416248   0.092215   4.5139 6.484e-06 ***
-#> MA60_1        -0.207519   0.018651 -11.1262 < 2.2e-16 ***
-#> DV60_1         0.762641   0.121494   6.2772 3.682e-10 ***
-#> UE60_1        -0.015030   0.033819  -0.4444 0.6567495    
-#> SOUTH_1        2.626739   0.225833  11.6313 < 2.2e-16 ***
-#> lag.DV60_1     0.651886   0.168599   3.8665 0.0001115 ***
-#> lambda_1       0.337726   0.030428  11.0990 < 2.2e-16 ***
+#>                Estimate Std. Error  t value
+#> (Intercept)_1  6.753198   0.630626  10.7087
+#> RD60_1         1.774281   0.122014  14.5417
+#> PS60_1         0.416248   0.092215   4.5139
+#> MA60_1        -0.207519   0.018651 -11.1262
+#> DV60_1         0.762641   0.121494   6.2772
+#> UE60_1        -0.015030   0.033819  -0.4444
+#> SOUTH_1        2.626739   0.225833  11.6313
+#> lag.DV60_1     0.651886   0.168599   3.8665
+#> lambda_1       0.337726   0.030428  11.0990
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1        6.484e-06 ***
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        3.682e-10 ***
+#> UE60_1        0.6567495    
+#> SOUTH_1       < 2.2e-16 ***
+#> lag.DV60_1    0.0001115 ***
+#> lambda_1      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3382 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2 12.159198   1.029354 11.8125 < 2.2e-16 ***
-#> RD70_2         2.745663   0.142555 19.2604 < 2.2e-16 ***
-#> PS70_2         0.711354   0.111258  6.3937 1.738e-10 ***
-#> MA70_2        -0.094813   0.028296 -3.3508 0.0008107 ***
-#> DV70_2         1.126964   0.099349 11.3435 < 2.2e-16 ***
-#> UE70_2        -0.093728   0.063881 -1.4672 0.1423681    
-#> SOUTH_2        3.396315   0.272058 12.4838 < 2.2e-16 ***
-#> lag.MA70_2    -0.194266   0.040755 -4.7667 1.916e-06 ***
-#> lag.UE70_2    -0.219844   0.087180 -2.5217 0.0117034 *  
-#> lambda_2       0.410148   0.029237 14.0283 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2 12.159198   1.029354 11.8125
+#> RD70_2         2.745663   0.142555 19.2604
+#> PS70_2         0.711354   0.111258  6.3937
+#> MA70_2        -0.094813   0.028296 -3.3508
+#> DV70_2         1.126964   0.099349 11.3435
+#> UE70_2        -0.093728   0.063881 -1.4672
+#> SOUTH_2        3.396315   0.272058 12.4838
+#> lag.MA70_2    -0.194266   0.040755 -4.7667
+#> lag.UE70_2    -0.219844   0.087180 -2.5217
+#> lambda_2       0.410148   0.029237 14.0283
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        1.738e-10 ***
+#> MA70_2        0.0008107 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.1423681    
+#> SOUTH_2       < 2.2e-16 ***
+#> lag.MA70_2    1.916e-06 ***
+#> lag.UE70_2    0.0117034 *  
+#> lambda_2      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4197 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -861,7 +1012,7 @@ if (require(gridExtra)) {
 }
 ```
 
-![plot of chunk unnamed-chunk-5](unnamed-chunk-5-1.png)
+![plot of chunk unnamed-chunk-5](unnamed-chunk-5-1-vignette1.png)
 
 ## SUR-SDM model {#model-sursdm} 
 
@@ -881,8 +1032,8 @@ sur.sdm <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1   log_lik:  -18748.26  rhos:  0.338 0.43 
 #> Iteration:  2   log_lik:  -18748.24  rhos:  0.339 0.43 
 #> Iteration:  3   log_lik:  -18748.24  rhos:  0.339 0.43 
-#> Time to fit the model:  9.97  seconds
-#> Time to compute covariances:  15.64  seconds
+#> Time to fit the model:  9.75  seconds
+#> Time to compute covariances:  16.67  seconds
 ```
 
 ```r
@@ -898,37 +1049,64 @@ summary(sur.sdm)
 #> Spatial SUR model type:  sdm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.201209   0.823810  6.3136 2.917e-10 ***
-#> RD60_1         1.532098   0.193832  7.9043 3.172e-15 ***
-#> PS60_1         0.405662   0.135846  2.9862  0.002836 ** 
-#> MA60_1        -0.175128   0.029229 -5.9915 2.197e-09 ***
-#> DV60_1         0.698312   0.125316  5.5724 2.619e-08 ***
-#> UE60_1        -0.038033   0.033872 -1.1229  0.261537    
-#> SOUTH_1        1.625201   0.263590  6.1656 7.466e-10 ***
-#> lag.RD60_1    -0.209570   0.254599 -0.8231  0.410462    
-#> lag.PS60_1    -0.135340   0.181434 -0.7459  0.455728    
-#> lag.MA60_1     0.012344   0.038860  0.3176  0.750762    
-#> lag.DV60_1     0.345669   0.183290  1.8859  0.059353 .  
-#> rho_1          0.338781   0.032763 10.3403 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.201209   0.823810  6.3136
+#> RD60_1         1.532098   0.193832  7.9043
+#> PS60_1         0.405662   0.135846  2.9862
+#> MA60_1        -0.175128   0.029229 -5.9915
+#> DV60_1         0.698312   0.125316  5.5724
+#> UE60_1        -0.038033   0.033872 -1.1229
+#> SOUTH_1        1.625201   0.263590  6.1656
+#> lag.RD60_1    -0.209570   0.254599 -0.8231
+#> lag.PS60_1    -0.135340   0.181434 -0.7459
+#> lag.MA60_1     0.012344   0.038860  0.3176
+#> lag.DV60_1     0.345669   0.183290  1.8859
+#> rho_1          0.338781   0.032763 10.3403
+#>                Pr(>|t|)    
+#> (Intercept)_1 2.917e-10 ***
+#> RD60_1        3.172e-15 ***
+#> PS60_1         0.002836 ** 
+#> MA60_1        2.197e-09 ***
+#> DV60_1        2.619e-08 ***
+#> UE60_1         0.261537    
+#> SOUTH_1       7.466e-10 ***
+#> lag.RD60_1     0.410462    
+#> lag.PS60_1     0.455728    
+#> lag.MA60_1     0.750762    
+#> lag.DV60_1     0.059353 .  
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3404 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.536728   0.780199  7.0966 1.423e-12 ***
-#> RD70_2         2.684812   0.210829 12.7345 < 2.2e-16 ***
-#> PS70_2         0.569640   0.162032  3.5156 0.0004419 ***
-#> MA70_2        -0.128319   0.021950 -5.8459 5.296e-09 ***
-#> DV70_2         1.157963   0.128915  8.9824 < 2.2e-16 ***
-#> UE70_2        -0.143561   0.047563 -3.0184 0.0025519 ** 
-#> SOUTH_2        2.076092   0.330381  6.2839 3.528e-10 ***
-#> lag.RD70_2    -1.082892   0.291690 -3.7125 0.0002071 ***
-#> lag.PS70_2    -0.015655   0.217823 -0.0719 0.9427092    
-#> lag.DV70_2    -0.484365   0.185938 -2.6050 0.0092100 ** 
-#> rho_2          0.430468   0.029709 14.4895 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.536728   0.780199  7.0966
+#> RD70_2         2.684812   0.210829 12.7345
+#> PS70_2         0.569640   0.162032  3.5156
+#> MA70_2        -0.128319   0.021950 -5.8459
+#> DV70_2         1.157963   0.128915  8.9824
+#> UE70_2        -0.143561   0.047563 -3.0184
+#> SOUTH_2        2.076092   0.330381  6.2839
+#> lag.RD70_2    -1.082892   0.291690 -3.7125
+#> lag.PS70_2    -0.015655   0.217823 -0.0719
+#> lag.DV70_2    -0.484365   0.185938 -2.6050
+#> rho_2          0.430468   0.029709 14.4895
+#>                Pr(>|t|)    
+#> (Intercept)_2 1.423e-12 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        0.0004419 ***
+#> MA70_2        5.296e-09 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.0025519 ** 
+#> SOUTH_2       3.528e-10 ***
+#> lag.RD70_2    0.0002071 ***
+#> lag.PS70_2    0.9427092    
+#> lag.DV70_2    0.0092100 ** 
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4217 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -954,7 +1132,7 @@ if (require(gridExtra)) {
 }
 ```
 
-![plot of chunk unnamed-chunk-6](unnamed-chunk-6-1.png)
+![plot of chunk unnamed-chunk-6](unnamed-chunk-6-1-vignette1.png)
 
 ## SUR-SARAR model {#model-sursarar}
 
@@ -977,9 +1155,9 @@ sur.sarar <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  4  log_lik:  -18722.67  rhos:  0.76 0.489  lambdas:  -0.922 -0.14 
 #> Iteration:  5  log_lik:  -18722.66  rhos:  0.761 0.489  lambdas:  -0.923 -0.141 
 #> Iteration:  6  log_lik:  -18722.66  rhos:  0.761 0.489  lambdas:  -0.924 -0.141 
-#> Time to fit the model:  267.55  seconds
+#> Time to fit the model:  268.67  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  17.82  seconds
+#> Time to compute covariances:  16.49  seconds
 ```
 
 ```r
@@ -995,32 +1173,54 @@ summary(sur.sarar)
 #> Spatial SUR model type:  sarar 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1  2.474406   0.566119   4.3708 1.258e-05 ***
-#> RD60_1         0.679803   0.110059   6.1767 6.964e-10 ***
-#> PS60_1         0.154146   0.082567   1.8669   0.06196 .  
-#> MA60_1        -0.080400   0.017244  -4.6625 3.190e-06 ***
-#> DV60_1         0.520909   0.084493   6.1651 7.490e-10 ***
-#> UE60_1        -0.035785   0.031076  -1.1515   0.24956    
-#> SOUTH_1        0.324308   0.208755   1.5535   0.12035    
-#> rho_1          0.761130   0.021654  35.1494 < 2.2e-16 ***
-#> lambda_1      -0.923930   0.066419 -13.9106 < 2.2e-16 ***
+#>                Estimate Std. Error  t value
+#> (Intercept)_1  2.474406   0.566119   4.3708
+#> RD60_1         0.679803   0.110059   6.1767
+#> PS60_1         0.154146   0.082567   1.8669
+#> MA60_1        -0.080400   0.017244  -4.6625
+#> DV60_1         0.520909   0.084493   6.1651
+#> UE60_1        -0.035785   0.031076  -1.1515
+#> SOUTH_1        0.324308   0.208755   1.5535
+#> rho_1          0.761130   0.021654  35.1494
+#> lambda_1      -0.923930   0.066419 -13.9106
+#>                Pr(>|t|)    
+#> (Intercept)_1 1.258e-05 ***
+#> RD60_1        6.964e-10 ***
+#> PS60_1          0.06196 .  
+#> MA60_1        3.190e-06 ***
+#> DV60_1        7.490e-10 ***
+#> UE60_1          0.24956    
+#> SOUTH_1         0.12035    
+#> rho_1         < 2.2e-16 ***
+#> lambda_1      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4408 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  4.510457   0.725557  6.2165 5.416e-10 ***
-#> RD70_2         1.963636   0.141124 13.9143 < 2.2e-16 ***
-#> PS70_2         0.600454   0.110880  5.4154 6.348e-08 ***
-#> MA70_2        -0.109294   0.021503 -5.0828 3.829e-07 ***
-#> DV70_2         0.919778   0.098566  9.3316 < 2.2e-16 ***
-#> UE70_2        -0.168928   0.046771 -3.6118 0.0003065 ***
-#> SOUTH_2        1.225847   0.271067  4.5223 6.232e-06 ***
-#> rho_2          0.489302   0.067616  7.2364 5.169e-13 ***
-#> lambda_2      -0.141340   0.120773 -1.1703 0.2419269    
+#>                Estimate Std. Error t value
+#> (Intercept)_2  4.510457   0.725557  6.2165
+#> RD70_2         1.963636   0.141124 13.9143
+#> PS70_2         0.600454   0.110880  5.4154
+#> MA70_2        -0.109294   0.021503 -5.0828
+#> DV70_2         0.919778   0.098566  9.3316
+#> UE70_2        -0.168928   0.046771 -3.6118
+#> SOUTH_2        1.225847   0.271067  4.5223
+#> rho_2          0.489302   0.067616  7.2364
+#> lambda_2      -0.141340   0.120773 -1.1703
+#>                Pr(>|t|)    
+#> (Intercept)_2 5.416e-10 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        6.348e-08 ***
+#> MA70_2        3.829e-07 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.0003065 ***
+#> SOUTH_2       6.232e-06 ***
+#> rho_2         5.169e-13 ***
+#> lambda_2      0.2419269    
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4223 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1044,7 +1244,7 @@ if (require(gridExtra)) {
 }
 ```
 
-![plot of chunk unnamed-chunk-7](unnamed-chunk-7-1.png)
+![plot of chunk unnamed-chunk-7](unnamed-chunk-7-1-vignette1.png)
 
 
 ## SUR-GNM model {#model-surgnm}
@@ -1067,9 +1267,9 @@ sur.gnm <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  3  log_lik:  -18682.97  rhos:  -1 0.676  lambdas:  0.802 -0.494 
 #> Iteration:  4  log_lik:  -18682.96  rhos:  -1 0.678  lambdas:  0.802 -0.498 
 #> Iteration:  5  log_lik:  -18682.96  rhos:  -1 0.678  lambdas:  0.802 -0.499 
-#> Time to fit the model:  230.11  seconds
+#> Time to fit the model:  222.72  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  18.18  seconds
+#> Time to compute covariances:  16.14  seconds
 ```
 
 ```r
@@ -1085,44 +1285,78 @@ summary(sur.gnm)
 #> Spatial SUR model type:  gnm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error  t value  Pr(>|t|)    
-#> (Intercept)_1 17.651901   0.762369  23.1540 < 2.2e-16 ***
-#> RD60_1         1.560001   0.178054   8.7614 < 2.2e-16 ***
-#> PS60_1         0.378141   0.124111   3.0468  0.002323 ** 
-#> MA60_1        -0.180583   0.026829  -6.7309 1.840e-11 ***
-#> DV60_1         0.746515   0.114364   6.5275 7.222e-11 ***
-#> UE60_1         0.046688   0.041109   1.1357  0.256128    
-#> SOUTH_1        0.524672   0.760930   0.6895  0.490525    
-#> lag.RD60_1     2.396369   0.231176  10.3660 < 2.2e-16 ***
-#> lag.PS60_1     0.153415   0.168387   0.9111  0.362286    
-#> lag.MA60_1    -0.325003   0.035621  -9.1240 < 2.2e-16 ***
-#> lag.DV60_1     2.125208   0.166425  12.7698 < 2.2e-16 ***
-#> lag.UE60_1    -0.285175   0.063275  -4.5069 6.699e-06 ***
-#> lag.SOUTH_1    3.655005   0.813904   4.4907 7.229e-06 ***
-#> rho_1         -1.000000   0.064415 -15.5244 < 2.2e-16 ***
-#> lambda_1       0.801995   0.020256  39.5936 < 2.2e-16 ***
+#>                Estimate Std. Error  t value
+#> (Intercept)_1 17.651901   0.762369  23.1540
+#> RD60_1         1.560001   0.178054   8.7614
+#> PS60_1         0.378141   0.124111   3.0468
+#> MA60_1        -0.180583   0.026829  -6.7309
+#> DV60_1         0.746515   0.114364   6.5275
+#> UE60_1         0.046688   0.041109   1.1357
+#> SOUTH_1        0.524672   0.760930   0.6895
+#> lag.RD60_1     2.396369   0.231176  10.3660
+#> lag.PS60_1     0.153415   0.168387   0.9111
+#> lag.MA60_1    -0.325003   0.035621  -9.1240
+#> lag.DV60_1     2.125208   0.166425  12.7698
+#> lag.UE60_1    -0.285175   0.063275  -4.5069
+#> lag.SOUTH_1    3.655005   0.813904   4.4907
+#> rho_1         -1.000000   0.064415 -15.5244
+#> lambda_1       0.801995   0.020256  39.5936
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1         0.002323 ** 
+#> MA60_1        1.840e-11 ***
+#> DV60_1        7.222e-11 ***
+#> UE60_1         0.256128    
+#> SOUTH_1        0.490525    
+#> lag.RD60_1    < 2.2e-16 ***
+#> lag.PS60_1     0.362286    
+#> lag.MA60_1    < 2.2e-16 ***
+#> lag.DV60_1    < 2.2e-16 ***
+#> lag.UE60_1    6.699e-06 ***
+#> lag.SOUTH_1   7.229e-06 ***
+#> rho_1         < 2.2e-16 ***
+#> lambda_1      < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4652 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  4.392553   1.013903  4.3323 1.499e-05 ***
-#> RD70_2         2.567895   0.207117 12.3983 < 2.2e-16 ***
-#> PS70_2         0.653214   0.159748  4.0890 4.387e-05 ***
-#> MA70_2        -0.076940   0.028824 -2.6693 0.0076220 ** 
-#> DV70_2         1.063181   0.126048  8.4347 < 2.2e-16 ***
-#> UE70_2        -0.047130   0.063008 -0.7480 0.4544940    
-#> SOUTH_2        0.015769   0.986843  0.0160 0.9872511    
-#> lag.RD70_2    -1.721409   0.286070 -6.0174 1.874e-09 ***
-#> lag.PS70_2    -0.390412   0.218014 -1.7908 0.0733806 .  
-#> lag.MA70_2    -0.034047   0.042236 -0.8061 0.4202118    
-#> lag.DV70_2    -0.628574   0.186622 -3.3682 0.0007614 ***
-#> lag.UE70_2    -0.097881   0.091563 -1.0690 0.2851110    
-#> lag.SOUTH_2    1.228598   1.064581  1.1541 0.2485177    
-#> rho_2          0.678373   0.035005 19.3793 < 2.2e-16 ***
-#> lambda_2      -0.498914   0.083022 -6.0095 1.968e-09 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  4.392553   1.013903  4.3323
+#> RD70_2         2.567895   0.207117 12.3983
+#> PS70_2         0.653214   0.159748  4.0890
+#> MA70_2        -0.076940   0.028824 -2.6693
+#> DV70_2         1.063181   0.126048  8.4347
+#> UE70_2        -0.047130   0.063008 -0.7480
+#> SOUTH_2        0.015769   0.986843  0.0160
+#> lag.RD70_2    -1.721409   0.286070 -6.0174
+#> lag.PS70_2    -0.390412   0.218014 -1.7908
+#> lag.MA70_2    -0.034047   0.042236 -0.8061
+#> lag.DV70_2    -0.628574   0.186622 -3.3682
+#> lag.UE70_2    -0.097881   0.091563 -1.0690
+#> lag.SOUTH_2    1.228598   1.064581  1.1541
+#> rho_2          0.678373   0.035005 19.3793
+#> lambda_2      -0.498914   0.083022 -6.0095
+#>                Pr(>|t|)    
+#> (Intercept)_2 1.499e-05 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        4.387e-05 ***
+#> MA70_2        0.0076220 ** 
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.4544940    
+#> SOUTH_2       0.9872511    
+#> lag.RD70_2    1.874e-09 ***
+#> lag.PS70_2    0.0733806 .  
+#> lag.MA70_2    0.4202118    
+#> lag.DV70_2    0.0007614 ***
+#> lag.UE70_2    0.2851110    
+#> lag.SOUTH_2   0.2485177    
+#> rho_2         < 2.2e-16 ***
+#> lambda_2      1.968e-09 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4616 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1146,7 +1380,7 @@ if (require(gridExtra)) {
 }
 ```
 
-![plot of chunk unnamed-chunk-8](unnamed-chunk-8-1.png)
+![plot of chunk unnamed-chunk-8](unnamed-chunk-8-1-vignette1.png)
 
 
 ##  3SLS estimation of SUR-SLM and SUR-SDM models
@@ -1164,7 +1398,7 @@ sur.slm.3sls <- spsur3sls(formula = formula_sur,
 ```
 
 ```
-#> Time to fit the model:  0.22  seconds
+#> Time to fit the model:  0.23  seconds
 ```
 
 ```r
@@ -1180,30 +1414,50 @@ summary(sur.slm.3sls)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                 Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  3.7509397  0.7923766  4.7338 2.253e-06 ***
-#> RD60_1         1.0353772  0.1450745  7.1369 1.065e-12 ***
-#> PS60_1         0.2266163  0.0899011  2.5207   0.01174 *  
-#> MA60_1        -0.1211682  0.0223284 -5.4266 5.962e-08 ***
-#> DV60_1         0.6924647  0.1048947  6.6015 4.410e-11 ***
-#> UE60_1        -0.0024122  0.0343363 -0.0703   0.94400    
-#> SOUTH_1        0.6192046  0.3334205  1.8571   0.06334 .  
-#> rho_1          0.6018009  0.0709495  8.4821 < 2.2e-16 ***
+#>                 Estimate Std. Error t value
+#> (Intercept)_1  3.7509397  0.7923766  4.7338
+#> RD60_1         1.0353772  0.1450745  7.1369
+#> PS60_1         0.2266163  0.0899011  2.5207
+#> MA60_1        -0.1211682  0.0223284 -5.4266
+#> DV60_1         0.6924647  0.1048947  6.6015
+#> UE60_1        -0.0024122  0.0343363 -0.0703
+#> SOUTH_1        0.6192046  0.3334205  1.8571
+#> rho_1          0.6018009  0.0709495  8.4821
+#>                Pr(>|t|)    
+#> (Intercept)_1 2.253e-06 ***
+#> RD60_1        1.065e-12 ***
+#> PS60_1          0.01174 *  
+#> MA60_1        5.962e-08 ***
+#> DV60_1        4.410e-11 ***
+#> UE60_1          0.94400    
+#> SOUTH_1         0.06334 .  
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3442 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  4.671722   0.896162  5.2130 1.918e-07 ***
-#> RD70_2         2.109677   0.172504 12.2297 < 2.2e-16 ***
-#> PS70_2         0.629421   0.113401  5.5504 2.970e-08 ***
-#> MA70_2        -0.112285   0.023908 -4.6966 2.703e-06 ***
-#> DV70_2         0.955288   0.104578  9.1347 < 2.2e-16 ***
-#> UE70_2        -0.156897   0.048489 -3.2357  0.001220 ** 
-#> SOUTH_2        1.328137   0.421252  3.1528  0.001625 ** 
-#> rho_2          0.448768   0.061016  7.3550 2.159e-13 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  4.671722   0.896162  5.2130
+#> RD70_2         2.109677   0.172504 12.2297
+#> PS70_2         0.629421   0.113401  5.5504
+#> MA70_2        -0.112285   0.023908 -4.6966
+#> DV70_2         0.955288   0.104578  9.1347
+#> UE70_2        -0.156897   0.048489 -3.2357
+#> SOUTH_2        1.328137   0.421252  3.1528
+#> rho_2          0.448768   0.061016  7.3550
+#>                Pr(>|t|)    
+#> (Intercept)_2 1.918e-07 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        2.970e-08 ***
+#> MA70_2        2.703e-06 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2         0.001220 ** 
+#> SOUTH_2        0.001625 ** 
+#> rho_2         2.159e-13 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4183 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1228,7 +1482,7 @@ sur.sdm.3sls <- spsur3sls(formula = formula_sur,
 ```
 
 ```
-#> Time to fit the model:  0.31  seconds
+#> Time to fit the model:  0.32  seconds
 ```
 
 ```r
@@ -1244,33 +1498,56 @@ summary(sur.sdm.3sls)
 #> Spatial SUR model type:  sdm 
 #> 
 #> Equation  1 
-#>                  Estimate  Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  3.43518257  0.81264279  4.2272 2.401e-05 ***
-#> RD60_1         1.30821880  0.18713336  6.9908 3.022e-12 ***
-#> PS60_1         0.24819076  0.09037888  2.7461  0.006048 ** 
-#> MA60_1        -0.11687195  0.02251460 -5.1909 2.159e-07 ***
-#> DV60_1         0.63711402  0.10833245  5.8811 4.290e-09 ***
-#> UE60_1        -0.00048322  0.03443032 -0.0140  0.988803    
-#> SOUTH_1        0.62526514  0.33369287  1.8738  0.061009 .  
-#> lag.RD60_1    -0.53955617  0.24830201 -2.1730  0.029820 *  
-#> rho_1          0.66514801  0.07793879  8.5342 < 2.2e-16 ***
+#>                  Estimate  Std. Error t value
+#> (Intercept)_1  3.43518257  0.81264279  4.2272
+#> RD60_1         1.30821880  0.18713336  6.9908
+#> PS60_1         0.24819076  0.09037888  2.7461
+#> MA60_1        -0.11687195  0.02251460 -5.1909
+#> DV60_1         0.63711402  0.10833245  5.8811
+#> UE60_1        -0.00048322  0.03443032 -0.0140
+#> SOUTH_1        0.62526514  0.33369287  1.8738
+#> lag.RD60_1    -0.53955617  0.24830201 -2.1730
+#> rho_1          0.66514801  0.07793879  8.5342
+#>                Pr(>|t|)    
+#> (Intercept)_1 2.401e-05 ***
+#> RD60_1        3.022e-12 ***
+#> PS60_1         0.006048 ** 
+#> MA60_1        2.159e-07 ***
+#> DV60_1        4.290e-09 ***
+#> UE60_1         0.988803    
+#> SOUTH_1        0.061009 .  
+#> lag.RD60_1     0.029820 *  
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3444 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  4.886841   0.902717  5.4135 6.415e-08 ***
-#> RD70_2         1.956217   0.187412 10.4381 < 2.2e-16 ***
-#> PS70_2         0.432566   0.159071  2.7193  0.006560 ** 
-#> MA70_2        -0.107211   0.024385 -4.3966 1.118e-05 ***
-#> DV70_2         1.182200   0.128762  9.1813 < 2.2e-16 ***
-#> UE70_2        -0.132019   0.050236 -2.6280  0.008610 ** 
-#> SOUTH_2        1.090001   0.429844  2.5358  0.011243 *  
-#> lag.PS70_2     0.214060   0.208198  1.0282  0.303917    
-#> lag.DV70_2    -0.530377   0.195716 -2.7099  0.006748 ** 
-#> rho_2          0.504481   0.065870  7.6588 2.168e-14 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  4.886841   0.902717  5.4135
+#> RD70_2         1.956217   0.187412 10.4381
+#> PS70_2         0.432566   0.159071  2.7193
+#> MA70_2        -0.107211   0.024385 -4.3966
+#> DV70_2         1.182200   0.128762  9.1813
+#> UE70_2        -0.132019   0.050236 -2.6280
+#> SOUTH_2        1.090001   0.429844  2.5358
+#> lag.PS70_2     0.214060   0.208198  1.0282
+#> lag.DV70_2    -0.530377   0.195716 -2.7099
+#> rho_2          0.504481   0.065870  7.6588
+#>                Pr(>|t|)    
+#> (Intercept)_2 6.415e-08 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2         0.006560 ** 
+#> MA70_2        1.118e-05 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2         0.008610 ** 
+#> SOUTH_2        0.011243 *  
+#> lag.PS70_2     0.303917    
+#> lag.DV70_2     0.006748 ** 
+#> rho_2         2.168e-14 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.422 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1339,8 +1616,8 @@ sur.slm1 <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1   log_lik:  -18761.92  rhos:  0.346 0.392 
 #> Iteration:  2   log_lik:  -18761.91  rhos:  0.347 0.392 
 #> Iteration:  3   log_lik:  -18761.91  rhos:  0.347 0.392 
-#> Time to fit the model:  9.66  seconds
-#> Time to compute covariances:  14.78  seconds
+#> Time to fit the model:  9.2  seconds
+#> Time to compute covariances:  14.87  seconds
 ```
 
 ```r
@@ -1356,30 +1633,50 @@ summary(sur.slm1)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.607039   0.645054  8.6924 < 2.2e-16 ***
-#> RD60_1         1.334302   0.124774 10.6937 < 2.2e-16 ***
-#> PS60_1         0.274533   0.089298  3.0743  0.002119 ** 
-#> MA60_1        -0.166818   0.019299 -8.6439 < 2.2e-16 ***
-#> DV60_1         0.879740   0.093117  9.4476 < 2.2e-16 ***
-#> UE60_1        -0.030516   0.033560 -0.9093  0.363218    
-#> SOUTH_1        1.505887   0.245808  6.1263 9.553e-10 ***
-#> rho_1          0.346704   0.030623 11.3218 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.607039   0.645054  8.6924
+#> RD60_1         1.334302   0.124774 10.6937
+#> PS60_1         0.274533   0.089298  3.0743
+#> MA60_1        -0.166818   0.019299 -8.6439
+#> DV60_1         0.879740   0.093117  9.4476
+#> UE60_1        -0.030516   0.033560 -0.9093
+#> SOUTH_1        1.505887   0.245808  6.1263
+#> rho_1          0.346704   0.030623 11.3218
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1         0.002119 ** 
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1         0.363218    
+#> SOUTH_1       9.553e-10 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3396 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.163757   0.753889  6.8495 8.132e-12 ***
-#> RD70_2         2.202376   0.151783 14.5100 < 2.2e-16 ***
-#> PS70_2         0.648888   0.112132  5.7868 7.526e-09 ***
-#> MA70_2        -0.121944   0.021879 -5.5735 2.603e-08 ***
-#> DV70_2         0.987289   0.100403  9.8332 < 2.2e-16 ***
-#> UE70_2        -0.169083   0.047105 -3.5895 0.0003339 ***
-#> SOUTH_2        1.622783   0.304557  5.3283 1.026e-07 ***
-#> rho_2          0.392398   0.028424 13.8050 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.163757   0.753889  6.8495
+#> RD70_2         2.202376   0.151783 14.5100
+#> PS70_2         0.648888   0.112132  5.7868
+#> MA70_2        -0.121944   0.021879 -5.5735
+#> DV70_2         0.987289   0.100403  9.8332
+#> UE70_2        -0.169083   0.047105 -3.5895
+#> SOUTH_2        1.622783   0.304557  5.3283
+#> rho_2          0.392398   0.028424 13.8050
+#>                Pr(>|t|)    
+#> (Intercept)_2 8.132e-12 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        7.526e-09 ***
+#> MA70_2        2.603e-08 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.0003339 ***
+#> SOUTH_2       1.026e-07 ***
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4151 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1456,8 +1753,8 @@ sur.slm.r <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1   log_lik:  -18761.97  rhos:  0.344 0.395 
 #> Iteration:  2   log_lik:  -18761.96  rhos:  0.345 0.396 
 #> Iteration:  3   log_lik:  -18761.96  rhos:  0.345 0.396 
-#> Time to fit the model:  3.5  seconds
-#> Time to compute covariances:  14.36  seconds
+#> Time to fit the model:  3.25  seconds
+#> Time to compute covariances:  15.17  seconds
 ```
 
 ```r
@@ -1473,30 +1770,50 @@ summary(sur.slm.r)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.589553   0.643020  8.6927 < 2.2e-16 ***
-#> RD60_1         1.324746   0.121679 10.8872 < 2.2e-16 ***
-#> PS60_1         0.271784   0.088911  3.0568  0.002247 ** 
-#> MA60_1        -0.166608   0.019291 -8.6366 < 2.2e-16 ***
-#> DV60_1         0.879674   0.093130  9.4456 < 2.2e-16 ***
-#> UE60_1        -0.030220   0.033526 -0.9014  0.367413    
-#> SOUTH_1        1.548588   0.206526  7.4983  7.38e-14 ***
-#> rho_1          0.344561   0.029626 11.6302 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.589553   0.643020  8.6927
+#> RD60_1         1.324746   0.121679 10.8872
+#> PS60_1         0.271784   0.088911  3.0568
+#> MA60_1        -0.166608   0.019291 -8.6366
+#> DV60_1         0.879674   0.093130  9.4456
+#> UE60_1        -0.030220   0.033526 -0.9014
+#> SOUTH_1        1.548588   0.206526  7.4983
+#> rho_1          0.344561   0.029626 11.6302
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1         0.002247 ** 
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1         0.367413    
+#> SOUTH_1        7.38e-14 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3395 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.174009   0.752255  6.8780 6.670e-12 ***
-#> RD70_2         2.216878   0.146051 15.1788 < 2.2e-16 ***
-#> PS70_2         0.653159   0.111392  5.8636 4.764e-09 ***
-#> MA70_2        -0.121619   0.021870 -5.5611 2.794e-08 ***
-#> DV70_2         0.987992   0.100358  9.8447 < 2.2e-16 ***
-#> UE70_2        -0.171007   0.046542 -3.6743 0.0002406 ***
-#> SOUTH_2        1.548588   0.206526  7.4983 7.380e-14 ***
-#> rho_2          0.395678   0.026460 14.9540 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.174009   0.752255  6.8780
+#> RD70_2         2.216878   0.146051 15.1788
+#> PS70_2         0.653159   0.111392  5.8636
+#> MA70_2        -0.121619   0.021870 -5.5611
+#> DV70_2         0.987992   0.100358  9.8447
+#> UE70_2        -0.171007   0.046542 -3.6743
+#> SOUTH_2        1.548588   0.206526  7.4983
+#> rho_2          0.395678   0.026460 14.9540
+#>                Pr(>|t|)    
+#> (Intercept)_2 6.670e-12 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        4.764e-09 ***
+#> MA70_2        2.794e-08 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        0.0002406 ***
+#> SOUTH_2       7.380e-14 ***
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4154 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1558,8 +1875,8 @@ sur.slm.r2 <- spsurml(formula = formula_sur, listw = lwncovr,
 #> Iteration:  1   log_lik:  -18762.08  rhos:  0.347 0.392 
 #> Iteration:  2   log_lik:  -18762.07  rhos:  0.347 0.392 
 #> Iteration:  3   log_lik:  -18762.07  rhos:  0.347 0.392 
-#> Time to fit the model:  3.41  seconds
-#> Time to compute covariances:  14.33  seconds
+#> Time to fit the model:  3.29  seconds
+#> Time to compute covariances:  13.72  seconds
 ```
 
 ```r
@@ -1575,30 +1892,50 @@ summary(sur.slm.r2)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.425115   0.528432 10.2664 < 2.2e-16 ***
-#> RD60_1         1.319721   0.121020 10.9050 < 2.2e-16 ***
-#> PS60_1         0.271542   0.088903  3.0543  0.002265 ** 
-#> MA60_1        -0.162075   0.016439 -9.8594 < 2.2e-16 ***
-#> DV60_1         0.878181   0.093072  9.4355 < 2.2e-16 ***
-#> UE60_1        -0.026715   0.032773 -0.8152  0.415014    
-#> SOUTH_1        1.552410   0.206507  7.5175 6.382e-14 ***
-#> rho_1          0.347421   0.028645 12.1286 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.425115   0.528432 10.2664
+#> RD60_1         1.319721   0.121020 10.9050
+#> PS60_1         0.271542   0.088903  3.0543
+#> MA60_1        -0.162075   0.016439 -9.8594
+#> DV60_1         0.878181   0.093072  9.4355
+#> UE60_1        -0.026715   0.032773 -0.8152
+#> SOUTH_1        1.552410   0.206507  7.5175
+#> rho_1          0.347421   0.028645 12.1286
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD60_1        < 2.2e-16 ***
+#> PS60_1         0.002265 ** 
+#> MA60_1        < 2.2e-16 ***
+#> DV60_1        < 2.2e-16 ***
+#> UE60_1         0.415014    
+#> SOUTH_1       6.382e-14 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3396 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.425115   0.528432 10.2664 < 2.2e-16 ***
-#> RD70_2         2.225164   0.145013 15.3446 < 2.2e-16 ***
-#> PS70_2         0.646736   0.110440  5.8560 4.987e-09 ***
-#> MA70_2        -0.128144   0.016817 -7.6198 2.925e-14 ***
-#> DV70_2         0.986829   0.100311  9.8377 < 2.2e-16 ***
-#> UE70_2        -0.177428   0.044712 -3.9682 7.324e-05 ***
-#> SOUTH_2        1.552410   0.206507  7.5175 6.382e-14 ***
-#> rho_2          0.392281   0.025582 15.3340 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.425115   0.528432 10.2664
+#> RD70_2         2.225164   0.145013 15.3446
+#> PS70_2         0.646736   0.110440  5.8560
+#> MA70_2        -0.128144   0.016817 -7.6198
+#> DV70_2         0.986829   0.100311  9.8377
+#> UE70_2        -0.177428   0.044712 -3.9682
+#> SOUTH_2        1.552410   0.206507  7.5175
+#> rho_2          0.392281   0.025582 15.3340
+#>                Pr(>|t|)    
+#> (Intercept)_2 < 2.2e-16 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        4.987e-09 ***
+#> MA70_2        2.925e-14 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2        7.324e-05 ***
+#> SOUTH_2       6.382e-14 ***
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4152 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1636,7 +1973,8 @@ print(waldbeta3)
 #> 	Wald test on beta parameters
 #> 
 #> data:  NCOVR.sf
-#> Wald test = 0.70158, df = 1, p-value = 0.4023
+#> Wald test = 0.70158, df = 1, p-value =
+#> 0.4023
 ```
 
 The estimation of the restricted model, by 3SLS produces exactly the same results as with the ML algorithm.
@@ -1649,7 +1987,7 @@ sur.slm.3sls.r <- spsur3sls(formula = formula_sur,
 ```
 
 ```
-#> Time to fit the model:  0.17  seconds
+#> Time to fit the model:  0.18  seconds
 ```
 
 ```r
@@ -1665,30 +2003,50 @@ summary(sur.slm.3sls.r)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  4.318293   0.647598  6.6682 2.816e-11 ***
-#> RD60_1         1.015291   0.144213  7.0402 2.128e-12 ***
-#> PS60_1         0.221038   0.090093  2.4534   0.01418 *  
-#> MA60_1        -0.137523   0.018812 -7.3103 3.005e-13 ***
-#> DV60_1         0.667190   0.106166  6.2844 3.516e-10 ***
-#> UE60_1        -0.015769   0.033247 -0.4743   0.63530    
-#> SOUTH_1        0.427454   0.355307  1.2031   0.22900    
-#> rho_1          0.630286   0.072913  8.6444 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  4.318293   0.647598  6.6682
+#> RD60_1         1.015291   0.144213  7.0402
+#> PS60_1         0.221038   0.090093  2.4534
+#> MA60_1        -0.137523   0.018812 -7.3103
+#> DV60_1         0.667190   0.106166  6.2844
+#> UE60_1        -0.015769   0.033247 -0.4743
+#> SOUTH_1        0.427454   0.355307  1.2031
+#> rho_1          0.630286   0.072913  8.6444
+#>                Pr(>|t|)    
+#> (Intercept)_1 2.816e-11 ***
+#> RD60_1        2.128e-12 ***
+#> PS60_1          0.01418 *  
+#> MA60_1        3.005e-13 ***
+#> DV60_1        3.516e-10 ***
+#> UE60_1          0.63530    
+#> SOUTH_1         0.22900    
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3433 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  4.318293   0.647598  6.6682 2.816e-11 ***
-#> RD70_2         2.214796   0.170169 13.0153 < 2.2e-16 ***
-#> PS70_2         0.690615   0.114710  6.0206 1.838e-09 ***
-#> MA70_2        -0.098531   0.018614 -5.2934 1.242e-07 ***
-#> DV70_2         1.013232   0.105955  9.5628 < 2.2e-16 ***
-#> UE70_2        -0.143605   0.045981 -3.1231  0.001798 ** 
-#> SOUTH_2        1.856350   0.440395  4.2152 2.531e-05 ***
-#> rho_2          0.367580   0.061824  5.9456 2.905e-09 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  4.318293   0.647598  6.6682
+#> RD70_2         2.214796   0.170169 13.0153
+#> PS70_2         0.690615   0.114710  6.0206
+#> MA70_2        -0.098531   0.018614 -5.2934
+#> DV70_2         1.013232   0.105955  9.5628
+#> UE70_2        -0.143605   0.045981 -3.1231
+#> SOUTH_2        1.856350   0.440395  4.2152
+#> rho_2          0.367580   0.061824  5.9456
+#>                Pr(>|t|)    
+#> (Intercept)_2 2.816e-11 ***
+#> RD70_2        < 2.2e-16 ***
+#> PS70_2        1.838e-09 ***
+#> MA70_2        1.242e-07 ***
+#> DV70_2        < 2.2e-16 ***
+#> UE70_2         0.001798 ** 
+#> SOUTH_2       2.531e-05 ***
+#> rho_2         2.905e-09 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4129 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -1774,7 +2132,8 @@ wald_deltas(sur.sarar, R = R3, b = b3)
 #> 	Wald test on spatial delta parameters
 #> 
 #> data:  NCOVR.sf
-#> Wald test = 39.897, df = 2, p-value = 2.171e-09
+#> Wald test = 39.897, df = 2, p-value =
+#> 2.171e-09
 ```
 
 The same as before, `wald_deltas()` operates with ML or with 3SLS estimates.
@@ -1798,9 +2157,12 @@ anova(sur.sim, sur.slx, lrtest = TRUE)
 ```
 
 ```
-#>              logLik df   AIC   BIC LRtest      p.val
-#> model 1: sim -18909 17 37851 37829                  
-#> model 2: slx -18855 29 37768 37730 107.23 2.1064e-17
+#>              logLik df   AIC   BIC LRtest
+#> model 1: sim -18909 17 37851 37829       
+#> model 2: slx -18855 29 37768 37730 107.23
+#>                   p.val
+#> model 1: sim           
+#> model 2: slx 2.1064e-17
 ```
 
 ```r
@@ -1808,9 +2170,12 @@ anova(sur.slm, sur.sarar, lrtest = TRUE)
 ```
 
 ```
-#>                logLik df   AIC   BIC LRtest      p.val
-#> model 1: slm   -18762 19 37562 37537                  
-#> model 2: sarar -18723 21 37487 37460 78.493 9.0262e-18
+#>                logLik df   AIC   BIC LRtest
+#> model 1: slm   -18762 19 37562 37537       
+#> model 2: sarar -18723 21 37487 37460 78.493
+#>                     p.val
+#> model 1: slm             
+#> model 2: sarar 9.0262e-18
 ```
 
 ```r
@@ -1865,41 +2230,41 @@ summary(sur.sdm.impacts[[1]], zstats = TRUE, short = TRUE)
 ```
 #> Impact measures (lag, trace):
 #>              Direct    Indirect       Total
-#> RD60_1   1.35207888  0.69033713  2.04241601
-#> PS60_1   0.27819032  0.14203691  0.42022723
-#> MA60_1  -0.16904078 -0.08630793 -0.25534871
-#> DV60_1   0.89146058  0.45515713  1.34661772
-#> UE60_1  -0.03092282 -0.01578841 -0.04671123
-#> SOUTH_1  1.52595047  0.77911155  2.30506202
+#> RD60_1   1.35207969  0.69033633  2.04241601
+#> PS60_1   0.27819049  0.14203675  0.42022723
+#> MA60_1  -0.16904088 -0.08630783 -0.25534871
+#> DV60_1   0.89146112  0.45515660  1.34661772
+#> UE60_1  -0.03092284 -0.01578839 -0.04671123
+#> SOUTH_1  1.52595138  0.77911064  2.30506202
 #> ========================================================
 #> Simulation results ( variance matrix):
 #> ========================================================
 #> Simulated standard errors
 #>             Direct   Indirect      Total
-#> RD60_1  0.11993359 0.10369665 0.19911654
-#> PS60_1  0.08639579 0.04693531 0.13101286
-#> MA60_1  0.01892534 0.01424850 0.03044470
-#> DV60_1  0.09143785 0.07286590 0.14919410
-#> UE60_1  0.03429068 0.01767222 0.05182088
-#> SOUTH_1 0.23264840 0.15732652 0.36942814
+#> RD60_1  0.11835555 0.10680295 0.20120795
+#> PS60_1  0.08750080 0.04935105 0.13448848
+#> MA60_1  0.01847469 0.01451959 0.03023095
+#> DV60_1  0.09536878 0.07573161 0.15599951
+#> UE60_1  0.03307141 0.01728618 0.05019047
+#> SOUTH_1 0.23296057 0.15127664 0.36244345
 #> 
 #> Simulated z-values:
 #>             Direct   Indirect      Total
-#> RD60_1  11.2096834  6.6232364 10.2011869
-#> PS60_1   3.1917506  2.9973935  3.1785994
-#> MA60_1  -8.8935118 -6.0354364 -8.3531346
-#> DV60_1   9.6756984  6.2028092  8.9594585
-#> UE60_1  -0.8927345 -0.8840676 -0.8922254
-#> SOUTH_1  6.6034311  4.9938946  6.2852544
+#> RD60_1  11.4399597  6.4803068 10.1690742
+#> PS60_1   3.2183915  2.9202541  3.1655459
+#> MA60_1  -9.1527168 -5.9528929 -8.4525035
+#> DV60_1   9.4154184  6.0596915  8.6977657
+#> UE60_1  -0.9336105 -0.9165209 -0.9308333
+#> SOUTH_1  6.5497744  5.1510979  6.3598333
 #> 
 #> Simulated p-values:
 #>         Direct     Indirect   Total     
-#> RD60_1  < 2.22e-16 3.5142e-11 < 2.22e-16
-#> PS60_1  0.0014141  0.002723   0.0014799 
-#> MA60_1  < 2.22e-16 1.5853e-09 < 2.22e-16
-#> DV60_1  < 2.22e-16 5.5464e-10 < 2.22e-16
-#> UE60_1  0.3719994  0.376660   0.3722721 
-#> SOUTH_1 4.0175e-11 5.9174e-07 3.2732e-10
+#> RD60_1  < 2.22e-16 9.1536e-11 < 2.22e-16
+#> PS60_1  0.0012891  0.0034975  0.0015479 
+#> MA60_1  < 2.22e-16 2.6344e-09 < 2.22e-16
+#> DV60_1  < 2.22e-16 1.3638e-09 < 2.22e-16
+#> UE60_1  0.3505048  0.3593937  0.3519398 
+#> SOUTH_1 5.7624e-11 2.5897e-07 2.0197e-10
 ```
 
 ```r
@@ -1909,41 +2274,41 @@ summary(sur.sdm.impacts[[2]], zstats = TRUE, short = TRUE)
 ```
 #> Impact measures (lag, trace):
 #>             Direct    Indirect      Total
-#> RD70_2   2.2414688  1.38323117  3.6246999
-#> PS70_2   0.6604061  0.40754271  1.0679488
-#> MA70_2  -0.1241088 -0.07658871 -0.2006975
-#> DV70_2   1.0048137  0.62007987  1.6248936
-#> UE70_2  -0.1720848 -0.10619513 -0.2782799
-#> SOUTH_2  1.6515886  1.01921065  2.6707992
+#> RD70_2   2.2414764  1.38322353  3.6246999
+#> PS70_2   0.6604083  0.40754046  1.0679488
+#> MA70_2  -0.1241093 -0.07658829 -0.2006975
+#> DV70_2   1.0048171  0.62007645  1.6248936
+#> UE70_2  -0.1720854 -0.10619454 -0.2782799
+#> SOUTH_2  1.6515942  1.01920502  2.6707992
 #> ========================================================
 #> Simulation results ( variance matrix):
 #> ========================================================
 #> Simulated standard errors
 #>             Direct   Indirect      Total
-#> RD70_2  0.15126609 0.18042291 0.29144435
-#> PS70_2  0.11019849 0.08334000 0.18603249
-#> MA70_2  0.02148939 0.01568844 0.03575162
-#> DV70_2  0.10205268 0.09189973 0.17734711
-#> UE70_2  0.04852168 0.03217803 0.07934376
-#> SOUTH_2 0.28873625 0.21594609 0.48609961
+#> RD70_2  0.14341876 0.17252726 0.27614632
+#> PS70_2  0.11289605 0.08445185 0.19023722
+#> MA70_2  0.02213834 0.01608484 0.03686133
+#> DV70_2  0.09766281 0.09113465 0.17353322
+#> UE70_2  0.04725381 0.03178360 0.07767534
+#> SOUTH_2 0.27798591 0.20800588 0.46768398
 #> 
 #> Simulated z-values:
 #>            Direct  Indirect     Total
-#> RD70_2  14.851179  7.743094 12.501568
-#> PS70_2   5.946197  4.892031  5.713861
-#> MA70_2  -5.710626 -4.862678 -5.566341
-#> DV70_2   9.867170  6.811291  9.207519
-#> UE70_2  -3.531998 -3.309988 -3.502322
-#> SOUTH_2  5.713536  4.753873  5.505631
+#> RD70_2  15.654247  8.062311 13.167226
+#> PS70_2   5.878803  4.873416  5.652220
+#> MA70_2  -5.611437 -4.785609 -5.458395
+#> DV70_2  10.284550  6.830100  9.375017
+#> UE70_2  -3.666405 -3.379888 -3.613459
+#> SOUTH_2  5.935015  4.916433  5.714323
 #> 
 #> Simulated p-values:
 #>         Direct     Indirect   Total     
-#> RD70_2  < 2.22e-16 9.7700e-15 < 2.22e-16
-#> PS70_2  2.7444e-09 9.9801e-07 1.1044e-08
-#> MA70_2  1.1256e-08 1.1581e-06 2.6014e-08
-#> DV70_2  < 2.22e-16 9.6727e-12 < 2.22e-16
-#> UE70_2  0.00041243 0.000933   0.00046122
-#> SOUTH_2 1.1065e-08 1.9956e-06 3.6785e-08
+#> RD70_2  < 2.22e-16 6.6613e-16 < 2.22e-16
+#> PS70_2  4.1324e-09 1.0968e-06 1.5839e-08
+#> MA70_2  2.0065e-08 1.7047e-06 4.8046e-08
+#> DV70_2  < 2.22e-16 8.4854e-12 < 2.22e-16
+#> UE70_2  0.00024598 0.00072515 0.00030214
+#> SOUTH_2 2.9382e-09 8.8135e-07 1.1014e-08
 ```
 
 Finally, an example of the impacts estimated for the case of the SUR-SLX model of Section \@ref(model-surslx) is given below (remark: in this case it is necessary to use `print` instead of `summary` method to check the output),
@@ -2023,8 +2388,8 @@ sur.slm.time <- spsurtime(formula = formula_sur_time,
 #> Iteration:  1   log_lik:  -18761.92  rhos:  0.346 0.392 
 #> Iteration:  2   log_lik:  -18761.91  rhos:  0.347 0.392 
 #> Iteration:  3   log_lik:  -18761.91  rhos:  0.347 0.392 
-#> Time to fit the model:  3.16  seconds
-#> Time to compute covariances:  14.18  seconds
+#> Time to fit the model:  3.19  seconds
+#> Time to compute covariances:  12.89  seconds
 ```
 
 ```r
@@ -2040,30 +2405,50 @@ summary(sur.slm.time)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  5.607039   0.645054  8.6924 < 2.2e-16 ***
-#> RD_1           1.334302   0.124774 10.6937 < 2.2e-16 ***
-#> PS_1           0.274533   0.089298  3.0743  0.002119 ** 
-#> MA_1          -0.166818   0.019299 -8.6439 < 2.2e-16 ***
-#> DV_1           0.879740   0.093117  9.4476 < 2.2e-16 ***
-#> UE_1          -0.030516   0.033560 -0.9093  0.363218    
-#> SOUTH_1        1.505887   0.245808  6.1263 9.553e-10 ***
-#> rho_1          0.346704   0.030623 11.3218 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  5.607039   0.645054  8.6924
+#> RD_1           1.334302   0.124774 10.6937
+#> PS_1           0.274533   0.089298  3.0743
+#> MA_1          -0.166818   0.019299 -8.6439
+#> DV_1           0.879740   0.093117  9.4476
+#> UE_1          -0.030516   0.033560 -0.9093
+#> SOUTH_1        1.505887   0.245808  6.1263
+#> rho_1          0.346704   0.030623 11.3218
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> RD_1          < 2.2e-16 ***
+#> PS_1           0.002119 ** 
+#> MA_1          < 2.2e-16 ***
+#> DV_1          < 2.2e-16 ***
+#> UE_1           0.363218    
+#> SOUTH_1       9.553e-10 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3396 
 #>   Equation  2 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_2  5.163757   0.753889  6.8495 8.132e-12 ***
-#> RD_2           2.202375   0.151783 14.5100 < 2.2e-16 ***
-#> PS_2           0.648888   0.112132  5.7868 7.526e-09 ***
-#> MA_2          -0.121944   0.021879 -5.5735 2.603e-08 ***
-#> DV_2           0.987289   0.100403  9.8332 < 2.2e-16 ***
-#> UE_2          -0.169083   0.047105 -3.5895 0.0003339 ***
-#> SOUTH_2        1.622783   0.304557  5.3283 1.026e-07 ***
-#> rho_2          0.392398   0.028424 13.8050 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_2  5.163757   0.753889  6.8495
+#> RD_2           2.202375   0.151783 14.5100
+#> PS_2           0.648888   0.112132  5.7868
+#> MA_2          -0.121944   0.021879 -5.5735
+#> DV_2           0.987289   0.100403  9.8332
+#> UE_2          -0.169083   0.047105 -3.5895
+#> SOUTH_2        1.622783   0.304557  5.3283
+#> rho_2          0.392398   0.028424 13.8050
+#>                Pr(>|t|)    
+#> (Intercept)_2 8.132e-12 ***
+#> RD_2          < 2.2e-16 ***
+#> PS_2          7.526e-09 ***
+#> MA_2          2.603e-08 ***
+#> DV_2          < 2.2e-16 ***
+#> UE_2          0.0003339 ***
+#> SOUTH_2       1.026e-07 ***
+#> rho_2         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.4151 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                    
@@ -2097,9 +2482,9 @@ sur.slm.panel.demean <- spsurml(formula = formula.panel,
 #> Iteration:  2   log_lik:  -23815.33  rhos:  0.543 0.894 
 #> Iteration:  3   log_lik:  -23815.29  rhos:  0.543 0.894 
 #> Iteration:  4   log_lik:  -23815.29  rhos:  0.543 0.894 
-#> Time to fit the model:  15.95  seconds
+#> Time to fit the model:  14.5  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  2.47  seconds
+#> Time to compute covariances:  2.33  seconds
 ```
 
 ```r
@@ -2115,23 +2500,36 @@ summary(sur.slm.panel.demean)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  4.697896   0.434889 10.8025 < 2.2e-16 ***
-#> PS_1           0.316404   0.067327  4.6995 2.636e-06 ***
-#> MA_1          -0.111270   0.014049 -7.9204 2.571e-15 ***
-#> SOUTH_1        2.359814   0.134956 17.4858 < 2.2e-16 ***
-#> rho_1          0.542940   0.016651 32.6073 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  4.697896   0.434889 10.8025
+#> PS_1           0.316404   0.067327  4.6995
+#> MA_1          -0.111270   0.014049 -7.9204
+#> SOUTH_1        2.359814   0.134956 17.4858
+#> rho_1          0.542940   0.016651 32.6073
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> PS_1          2.636e-06 ***
+#> MA_1          2.571e-15 ***
+#> SOUTH_1       < 2.2e-16 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3582 
 #>   Equation  2 
-#>                 Estimate Std. Error  t value Pr(>|t|)    
-#> (Intercept)_2 -0.0292439  0.0174865  -1.6724  0.09448 .  
-#> UE_2           0.0328084  0.0025228  13.0049  < 2e-16 ***
-#> DV_2          -0.0594666  0.0058046 -10.2448  < 2e-16 ***
-#> rho_2          0.8939061  0.0060674 147.3297  < 2e-16 ***
+#>                 Estimate Std. Error  t value
+#> (Intercept)_2 -0.0292439  0.0174865  -1.6724
+#> UE_2           0.0328084  0.0025228  13.0049
+#> DV_2          -0.0594666  0.0058046 -10.2448
+#> rho_2          0.8939061  0.0060674 147.3297
+#>               Pr(>|t|)    
+#> (Intercept)_2  0.09448 .  
+#> UE_2           < 2e-16 ***
+#> DV_2           < 2e-16 ***
+#> rho_2          < 2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.7624 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                     
@@ -2176,9 +2574,9 @@ sur.slm.panel <- spsurml(formula = formula.panel,
 #> Iteration:  2   log_lik:  -23815.33  rhos:  0.543 0.894 
 #> Iteration:  3   log_lik:  -23815.29  rhos:  0.543 0.894 
 #> Iteration:  4   log_lik:  -23815.29  rhos:  0.543 0.894 
-#> Time to fit the model:  15.89  seconds
+#> Time to fit the model:  15.35  seconds
 #> Computing numerical covariances... 
-#> Time to compute covariances:  2.47  seconds
+#> Time to compute covariances:  2.42  seconds
 ```
 
 ```r
@@ -2194,23 +2592,36 @@ summary(sur.slm.panel)
 #> Spatial SUR model type:  slm 
 #> 
 #> Equation  1 
-#>                Estimate Std. Error t value  Pr(>|t|)    
-#> (Intercept)_1  4.697896   0.434889 10.8025 < 2.2e-16 ***
-#> PS_1           0.316404   0.067327  4.6995 2.636e-06 ***
-#> MA_1          -0.111270   0.014049 -7.9204 2.571e-15 ***
-#> SOUTH_1        2.359814   0.134956 17.4858 < 2.2e-16 ***
-#> rho_1          0.542940   0.016651 32.6073 < 2.2e-16 ***
+#>                Estimate Std. Error t value
+#> (Intercept)_1  4.697896   0.434889 10.8025
+#> PS_1           0.316404   0.067327  4.6995
+#> MA_1          -0.111270   0.014049 -7.9204
+#> SOUTH_1        2.359814   0.134956 17.4858
+#> rho_1          0.542940   0.016651 32.6073
+#>                Pr(>|t|)    
+#> (Intercept)_1 < 2.2e-16 ***
+#> PS_1          2.636e-06 ***
+#> MA_1          2.571e-15 ***
+#> SOUTH_1       < 2.2e-16 ***
+#> rho_1         < 2.2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.3582 
 #>   Equation  2 
-#>                 Estimate Std. Error  t value Pr(>|t|)    
-#> (Intercept)_2 -0.0292439  0.0174865  -1.6724  0.09448 .  
-#> UE_2           0.0328084  0.0025228  13.0049  < 2e-16 ***
-#> DV_2          -0.0594666  0.0058046 -10.2448  < 2e-16 ***
-#> rho_2          0.8939061  0.0060674 147.3297  < 2e-16 ***
+#>                 Estimate Std. Error  t value
+#> (Intercept)_2 -0.0292439  0.0174865  -1.6724
+#> UE_2           0.0328084  0.0025228  13.0049
+#> DV_2          -0.0594666  0.0058046 -10.2448
+#> rho_2          0.8939061  0.0060674 147.3297
+#>               Pr(>|t|)    
+#> (Intercept)_2  0.09448 .  
+#> UE_2           < 2e-16 ***
+#> DV_2           < 2e-16 ***
+#> rho_2          < 2e-16 ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> R-squared: 0.7624 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                     
@@ -2289,45 +2700,63 @@ summary(sdm_dgp)
 #> Spatial SUR model type:  sdm 
 #> 
 #> Equation  1 
-#>            Estimate Std. Error t value  Pr(>|t|)    
-#> Intercep_1 0.987275   0.057325  17.223 < 2.2e-16 ***
-#> X1_1       2.042573   0.043649  46.795 < 2.2e-16 ***
-#> X1_2       2.936667   0.043288  67.841 < 2.2e-16 ***
-#> rho_1      0.510392   0.016837  30.313 < 2.2e-16 ***
+#>            Estimate Std. Error t value  Pr(>|t|)
+#> Intercep_1 1.022182   0.061048  16.744 < 2.2e-16
+#> X1_1       1.997070   0.043277  46.146 < 2.2e-16
+#> X1_2       3.002275   0.042215  71.119 < 2.2e-16
+#> rho_1      0.490466   0.016772  29.244 < 2.2e-16
+#>               
+#> Intercep_1 ***
+#> X1_1       ***
+#> X1_2       ***
+#> rho_1      ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> R-squared: 0.933 
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> R-squared: 0.9335 
 #>   Equation  2 
-#>             Estimate Std. Error t value  Pr(>|t|)    
-#> Intercep_2  0.958528   0.079847  12.005 < 2.2e-16 ***
-#> X2_1       -1.050792   0.040535 -25.923 < 2.2e-16 ***
-#> X2_2        0.525723   0.041792  12.579 < 2.2e-16 ***
-#> rho_2       0.558574   0.033378  16.735 < 2.2e-16 ***
+#>             Estimate Std. Error t value  Pr(>|t|)
+#> Intercep_2  0.987405   0.087783  11.248 < 2.2e-16
+#> X2_1       -0.962763   0.041888 -22.984 < 2.2e-16
+#> X2_2        0.485205   0.042072  11.533 < 2.2e-16
+#> rho_2       0.519432   0.035413  14.668 < 2.2e-16
+#>               
+#> Intercep_2 ***
+#> X2_1       ***
+#> X2_2       ***
+#> rho_2      ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> R-squared: 0.6927 
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> R-squared: 0.6369 
 #>   Equation  3 
-#>             Estimate Std. Error t value  Pr(>|t|)    
-#> Intercep_3  1.090254   0.075363  14.467 < 2.2e-16 ***
-#> X3_1       -0.447494   0.041231 -10.853 < 2.2e-16 ***
-#> X3_2        2.098741   0.042673  49.182 < 2.2e-16 ***
-#> rho_3       0.474879   0.027177  17.474 < 2.2e-16 ***
+#>             Estimate Std. Error t value  Pr(>|t|)
+#> Intercep_3  0.913141   0.063229  14.442 < 2.2e-16
+#> X3_1       -0.566322   0.043023 -13.163 < 2.2e-16
+#> X3_2        1.994217   0.041621  47.914 < 2.2e-16
+#> rho_3       0.556448   0.021725  25.613 < 2.2e-16
+#>               
+#> Intercep_3 ***
+#> X3_1       ***
+#> X3_2       ***
+#> rho_3      ***
 #> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> R-squared: 0.8451 
+#> Signif. codes:  
+#> 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> R-squared: 0.8768 
 #>   
 #> Variance-Covariance Matrix of inter-equation residuals:                              
-#>  1.0543707 0.3422801 0.3404584
-#>  0.3422801 1.0147480 0.3291052
-#>  0.3404584 0.3291052 1.0336566
-#> Correlation Matrix of inter-equation residuals:                             
-#>  1.0000000 0.330907 0.3261213
-#>  0.3309070 1.000000 0.3213420
-#>  0.3261213 0.321342 1.0000000
+#>  1.1669562 0.3567188 0.3665806
+#>  0.3567188 0.9282901 0.2655966
+#>  0.3665806 0.2655966 0.9910438
+#> Correlation Matrix of inter-equation residuals:                              
+#>  1.0000000 0.3427337 0.3408755
+#>  0.3427337 1.0000000 0.2769072
+#>  0.3408755 0.2769072 1.0000000
 #> 
-#>  R-sq. pooled: 0.8795 
-#>  Breusch-Pagan: 159.6  p-value: (2.28e-34) 
-#>  LMM: 7.8094  p-value: (0.0501)
+#>  R-sq. pooled: 0.8903 
+#>  Breusch-Pagan: 155.2  p-value: (2.02e-33) 
+#>  LMM: 3.8585  p-value: (0.277)
 ```
 
 Indeed, the ML estimates of the parameters are very close to the values specified in `dgp_spsur()`.

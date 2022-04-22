@@ -146,12 +146,10 @@
 #'       maximum-likelihood estimates. \cr
 #'     \code{R2} \tab Coefficient of determination for each equation, 
 #'       obtained as the squared of the correlation coefficient between the 
-#'       corresponding explained variable and fitted values. \cr
-#'     \code{R2 pooled} \tab \emph{Global} coefficient of determination 
-#'       obtained for the set of the \emph{G} equations. 
-#'       It is computed in the same way than uniequational \code{R2} but 
-#'       joining the dependent variable and fitted values in single vectors 
-#'       instead of one vector for each equation. \cr
+#'       corresponding explained variable and its estimate. 
+#'       \code{spsurml} also shows a \emph{global} coefficient of
+#'        determination obtained, in the same manner, for the set of 
+#'          the \emph{G} equations. \cr
 #'     \code{Sigma} \tab Estimated covariance matrix for the residuals of 
 #'       the \emph{G} equations. \cr
 #'     \code{fdHess} \tab Logical value of \code{fdHess} argument when 
@@ -646,7 +644,7 @@ spsurml <- function(formula = NULL, data = NULL, na.action,
   assign("Tm", Tm, envir = env)
   assign("p", p, envir = env)
   assign("dvars", dvars, envir = env)
-  # CoDIGO EJEMPLO PARA DETERMINANTE JACOBIANO
+  # CÓDIGO EJEMPLO PARA DETERMINANTE JACOBIANO
   if (!(is.null(listw))) {
     assign("listw", listw, envir = env)
     assign("n", length(listw$neighbours), envir = env)
