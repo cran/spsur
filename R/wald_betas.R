@@ -1,9 +1,7 @@
 #' @name wald_betas
 #' @rdname wald_betas
 #'
-#' @title Wald tests on the \emph{beta} coefficients of the equation of 
-#'  the SUR model
-#'
+#' @title Wald tests on the \emph{beta} coefficients 
 #'
 #' @description
 #' The function \code{\link{wald_betas}} can be seen as a complement 

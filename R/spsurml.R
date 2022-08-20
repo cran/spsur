@@ -96,7 +96,7 @@
 #' @param b A column vector of order \emph{(rx1)} with the values of 
 #'   the linear restrictions on the \emph{beta} parameters. 
 #'   Default = \code{NULL}.
-#' @param control List of additional control arguments.
+#' @param control list of additional arguments.
 #' @details
 #'  The list of (spatial) models that can be estimated with the \emph{spsurml} function are:
 #'  \itemize{
@@ -146,10 +146,12 @@
 #'       maximum-likelihood estimates. \cr
 #'     \code{R2} \tab Coefficient of determination for each equation, 
 #'       obtained as the squared of the correlation coefficient between the 
-#'       corresponding explained variable and its estimate. 
-#'       \code{spsurml} also shows a \emph{global} coefficient of
-#'        determination obtained, in the same manner, for the set of 
-#'          the \emph{G} equations. \cr
+#'       corresponding explained variable and fitted values. \cr
+#'     \code{R2 pooled} \tab \emph{Global} coefficient of determination 
+#'       obtained for the set of the \emph{G} equations. 
+#'       It is computed in the same way than uniequational \code{R2} but 
+#'       joining the dependent variable and fitted values in single vectors 
+#'       instead of one vector for each equation. \cr
 #'     \code{Sigma} \tab Estimated covariance matrix for the residuals of 
 #'       the \emph{G} equations. \cr
 #'     \code{fdHess} \tab Logical value of \code{fdHess} argument when 
@@ -267,7 +269,7 @@
 #' @seealso
 #' \code{\link{spsur3sls}}, \code{\link[spatialreg]{lagsarlm}}, 
 #' \code{\link{lmtestspsur}}, \code{\link{wald_betas}}, 
-#' \code{\link{lrtest}}
+#' \code{\link{lr_betas}}
 #'
 #' @examples
 #'
@@ -644,7 +646,7 @@ spsurml <- function(formula = NULL, data = NULL, na.action,
   assign("Tm", Tm, envir = env)
   assign("p", p, envir = env)
   assign("dvars", dvars, envir = env)
-  # CÓDIGO EJEMPLO PARA DETERMINANTE JACOBIANO
+  # CoDIGO EJEMPLO PARA DETERMINANTE JACOBIANO
   if (!(is.null(listw))) {
     assign("listw", listw, envir = env)
     assign("n", length(listw$neighbours), envir = env)

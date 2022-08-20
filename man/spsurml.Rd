@@ -112,7 +112,7 @@ and a data frame. Default = \code{NULL}.}
 specification of \emph{p} is only necessary if not available a 
 \code{\link[Formula]{Formula}} and a data frame.}
 
-\item{control}{List of additional control arguments.}
+\item{control}{list of additional arguments.}
 }
 \value{
 Object of \code{spsur} class with the output of the  
@@ -136,10 +136,12 @@ Object of \code{spsur} class with the output of the
       maximum-likelihood estimates. \cr
     \code{R2} \tab Coefficient of determination for each equation, 
       obtained as the squared of the correlation coefficient between the 
-      corresponding explained variable and its estimate. 
-      \code{spsurml} also shows a \emph{global} coefficient of
-       determination obtained, in the same manner, for the set of 
-         the \emph{G} equations. \cr
+      corresponding explained variable and fitted values. \cr
+    \code{R2 pooled} \tab \emph{Global} coefficient of determination 
+      obtained for the set of the \emph{G} equations. 
+      It is computed in the same way than uniequational \code{R2} but 
+      joining the dependent variable and fitted values in single vectors 
+      instead of one vector for each equation. \cr
     \code{Sigma} \tab Estimated covariance matrix for the residuals of 
       the \emph{G} equations. \cr
     \code{fdHess} \tab Logical value of \code{fdHess} argument when 
@@ -549,7 +551,7 @@ if (require(gridExtra)) {
 \seealso{
 \code{\link{spsur3sls}}, \code{\link[spatialreg]{lagsarlm}}, 
 \code{\link{lmtestspsur}}, \code{\link{wald_betas}}, 
-\code{\link{lrtest}}
+\code{\link{lr_betas}}
 }
 \author{
 \tabular{ll}{

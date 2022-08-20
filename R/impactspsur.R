@@ -301,7 +301,7 @@ impactspsur <- function(obj, ..., tr = NULL,
   dvars <- obj$dvars
   Sigma <- obj$Sigma
   if (type == "slx" || type == "sdem") {
-    ## SLX object for each equation
+    ## SlX object for each equation
     res <- list()
     idxcoef <- 1
     idxres <- 1

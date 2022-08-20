@@ -1,9 +1,8 @@
-#' @title Spatial Seemingly Unrelated Regression Models.
-#' 
 #' @docType package
-#' @name spsur
-#' @rdname spsur
+#' @name spsur-package
+#' @rdname spsur-package
 #'
+#' @title Spatial Seemingly Unrelated Regression Models.
 #'
 #' @description
 #'  \pkg{spsur} offers the user a collection of functions to estimate Spatial 
@@ -216,16 +215,16 @@
 #' @importFrom minqa bobyqa
 #' @importFrom numDeriv hessian
 #' @importFrom rlang .data
+#' @importFrom Rdpack reprompt
 #' @importFrom sparseMVN rmvn.sparse
 #' @importFrom spatialreg get.ZeroPolicyOption create_WX trW  
 #' @importFrom spatialreg can.be.simmed jacobianSetup do_ldet 
-#' @importFrom spatialreg impacts intImpacts lmSLX invIrW    
-#' @importFrom spdep knearneigh knn2nb nb2mat
-#' @importFrom spdep card mat2listw 
-#' @importFrom sphet spreg
+#' @importFrom spatialreg impacts intImpacts lmSLX invIrW 
+#' @importFrom spdep knearneigh knn2nb nb2mat 
+#' @importFrom spdep card mat2listw listw2mat
 #' @importFrom stats cor cov optim pchisq pnorm pt qnorm rnorm runif
 #' @importFrom stats coefficients fitted lm residuals printCoefmat
-#' @importFrom stats model.frame model.matrix terms
+#' @importFrom stats lm.fit model.frame model.matrix terms
 #' @importFrom stats anova coef formula logLik AIC BIC
-#' @importFrom stats lm.fit na.action napredict update
+#' @importFrom stats na.action napredict update
 NULL

@@ -96,7 +96,7 @@ Default = \code{NULL}.}
 \code{\link{spsurml}} subtracts the individual mean to each spatial 
 or cross-sectional unit. Default = \code{FALSE}.}
 
-\item{control}{List of additional control arguments.}
+\item{control}{list of additional arguments.}
 }
 \value{
 An \code{spsur} object with the output of the maximum-likelihood or 
@@ -253,7 +253,7 @@ wald_deltas(pHR_slm, R = R2, b = b2)
 \seealso{
 \code{\link{spsurml}}, \code{\link{spsur3sls}}, 
 \code{\link{wald_betas}},  \code{\link{wald_deltas}},
-\code{\link{lmtestspsur}}, \code{\link{lrtest}}
+\code{\link{lmtestspsur}}, \code{\link{lr_betas}}
 }
 \author{
 \tabular{ll}{

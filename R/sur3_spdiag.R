@@ -18,16 +18,13 @@ sur3_spdiag <- function(Tm, G, N, Y, X, W)
                           N = N, Y = Y, X = X, Sigma = Sigma)
   Sigma_inv <- try(chol2inv(chol(Sigma)))
   # The (if) solve a problem with matriz OME and OMEinv in case of Tm=G=1
-  if (Tm==1 & G==1){
-  OME <- as(as.matrix(kronecker(IT,kronecker(Sigma,IR))),"dgCMatrix")
-  OMEinv <- as(as.matrix(kronecker(IT,kronecker(Sigma_inv,IR))),"dgCMatrix")
+  if (Tm == 1 & G == 1) {
+    OME <- kronecker(IT, kronecker(Sigma, IR))
+    OMEinv <- kronecker(IT,kronecker(Sigma_inv,IR))
+  } else {
+    OME <- kronecker(IT, kronecker(Sigma, IR))
+    OMEinv <- kronecker(IT,kronecker(Sigma_inv, IR))
   }
-  else {
-  OME <- as(kronecker(IT,kronecker(Sigma,IR)),"dgCMatrix")
-  OMEinv <- as(kronecker(IT,kronecker(Sigma_inv,IR)),"dgCMatrix")
-  }
-  
-  
   beta <- Matrix::solve(Matrix::crossprod(X,OMEinv %*% X),
                         Matrix::crossprod(X,OMEinv %*% Y))
   beta <- as.matrix(beta)
@@ -45,9 +42,8 @@ sur3_spdiag <- function(Tm, G, N, Y, X, W)
   g_slm <- rep(0,G)
   Res <- Y - X%*%beta # Residuos del SUR sin ee
   #Sigma_inv <- solve(Sigma)
-  #W<-as(W,"dgCMatrix")
   for (i in 1:G){
-      g_slm[i] <- Matrix::t(Res) %*%(IT %x% 
+      g_slm[i] <- Matrix::t(Res) %*% (IT %x% 
                                       (Sigma_inv %*% E[,,i,i])
                                        %x% W) %*% Y
   }
@@ -132,7 +128,7 @@ sur3_spdiag <- function(Tm, G, N, Y, X, W)
     }
     Ird <- matrix(0, G, G)
     WW <- W %*% W
-    Sigma <- as(Sigma, "dgCMatrix")
+    Sigma <- Matrix::Matrix(Sigma)
     for (g in 1:G) {
         for (s in 1:G){
             P1s1 <- Sigma %*% E[,,s,s] %*% 
@@ -147,7 +143,7 @@ sur3_spdiag <- function(Tm, G, N, Y, X, W)
     }
     K23 <- Ird
     LMSURSARAR <- as.numeric( matrix(g_sarar, nrow = 1) %*%
-               solve(rbind(cbind(K22-K12 %*% solve(K11)
+               solve(rbind(cbind(K22 - K12 %*% solve(K11)
                                  %*% t(K12), K23),
                             cbind(t(K23), K33))) %*% 
                              matrix(g_sarar, ncol = 1) )

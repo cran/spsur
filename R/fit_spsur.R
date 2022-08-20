@@ -62,9 +62,9 @@ fit_spsursim <- function(env, con){
 
 fit_spsurslm <- function(env, con) {
   if (!is.null(env$W)) {
-    W <- env$W
-  }  else {
-    W <- as(env$listw, "CsparseMatrix")
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X
@@ -155,9 +155,9 @@ fit_spsurslm <- function(env, con) {
 
 fit_spsursem <- function(env, con) {
   if (!is.null(env$W)) {
-    W <- env$W
-  }  else {
-    W <- as(env$listw, "CsparseMatrix")
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X
@@ -250,7 +250,11 @@ fit_spsursem <- function(env, con) {
 ###############################################
 
 fit_spsursarar <- function(env, con) {
-  if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+  if (!is.null(env$W)) {
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+  }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X
   IT <- Matrix::Diagonal(Tm)

@@ -93,7 +93,7 @@
 #' @seealso
 #' \code{\link{spsurml}}, \code{\link{spsur3sls}}, 
 #' \code{\link{wald_betas}},  \code{\link{wald_deltas}},
-#' \code{\link{lmtestspsur}}, \code{\link{lrtest}}
+#' \code{\link{lmtestspsur}}, \code{\link{lr_betas}}
 #'
 #' @examples
 #'

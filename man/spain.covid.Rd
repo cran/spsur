@@ -67,18 +67,14 @@ In particular,
   \cr 
   \cr 
   \eqn{
-  Exits = \frac{ 
-    \begin{tabular}{c}
-      \textnormal{Number of travels with origin in the 
-                  province 'indiv' and arrival to another} \\
-      \textnormal{province in the week 'time'} 
-    \end{tabular} } 
-  { \begin{tabular}{c}
-      \textnormal{Number of travels with origin in the province 
-                  'indiv' and arrival to another} \\
-       \textnormal{province in the reference week (week0)} 
-    \end{tabular} } 
-   }
+  Exits = \frac{ \textnormal{Number of travels 
+             with origin in the province 'indiv' 
+             and arrival to another 
+             province in the week 'time'} } 
+         { \textnormal{Number of travels with origin 
+              in the province 'indiv' and arrival to 
+              another province in the reference 
+              week (week0)} } }
   \cr 
   \cr
   A ‘travel’ is a displacement from an origin to a destination of at least 500m. A travel can have several stages.
@@ -99,12 +95,12 @@ In particular,
   \eqn{
   Incidence = \log \left( 
     \frac{ 
-      \begin{tabular}{c}
-         \textnormal{total diagnostic cases of 
-                     COVID-19, PCR test in the week 'time'} \\
-         \textnormal{at the province 'indiv'} 
-      \end{tabular} }  
-  {\textnormal{total population in the province 'indiv'}}
+      \textnormal{total diagnostic cases of 
+                  COVID-19, PCR test in the 
+                  week 'time' at the province 
+                  'indiv'} } 
+    {\textnormal{total population in the 
+    province 'indiv'}}
   \right) }
   \cr
   \cr

@@ -21,9 +21,9 @@ f_sur_sim <- function(env) {
 f_sur_lag <- function(deltag, env){
   # Log-lik SUR-SLM Spatio-Temporal Model
   if (!is.null(env$W)) {
-    W <- env$W
-  }  else {
-    W <- as(env$listw, "CsparseMatrix")
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X; Sigma <- env$Sigma
@@ -56,9 +56,9 @@ f_sur_lag <- function(deltag, env){
 f_sur_sem <- function(deltag, env){
   # Log-lik SUR-SEM Spatio-Temporal Model
   if (!is.null(env$W)) {
-    W <- env$W
-  }  else {
-    W <- as(env$listw, "CsparseMatrix")
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X; Sigma <- env$Sigma
@@ -96,9 +96,9 @@ f_sur_sem <- function(deltag, env){
 f_sur_sarar <- function(DELTA, env){
   # Log-lik SUR-SARAR Spatio-Temporal Model
   if (!is.null(env$W)) {
-    W <- env$W
-  }  else {
-    W <- as(env$listw, "CsparseMatrix")
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X; Sigma <- env$Sigma

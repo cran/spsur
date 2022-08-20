@@ -2,8 +2,7 @@
 % Please edit documentation in R/wald_betas.R
 \name{wald_betas}
 \alias{wald_betas}
-\title{Wald tests on the \emph{beta} coefficients of the equation of 
- the SUR model}
+\title{Wald tests on the \emph{beta} coefficients}
 \usage{
 wald_betas (obj , R , b)
 }

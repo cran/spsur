@@ -17,6 +17,7 @@
 #'   \item{UN80}{Inverse unemployment rate in 1980.}
 #'   \item{NMR80}{Net migration rate 1983.}
 #'   \item{WAGE80}{changes in wage rates.}
+#'   \item{geometry}{geometry of sf object.}
 #' }
 #'
 #' @source Anselin (1988, p. 203-211)
@@ -138,18 +139,14 @@
 #'   \cr 
 #'   \cr 
 #'   \eqn{
-#'   Exits = \frac{ 
-#'     \begin{tabular}{c}
-#'       \textnormal{Number of travels with origin in the 
-#'                   province 'indiv' and arrival to another} \\
-#'       \textnormal{province in the week 'time'} 
-#'     \end{tabular} } 
-#'   { \begin{tabular}{c}
-#'       \textnormal{Number of travels with origin in the province 
-#'                   'indiv' and arrival to another} \\
-#'        \textnormal{province in the reference week (week0)} 
-#'     \end{tabular} } 
-#'    }
+#'   Exits = \frac{ \textnormal{Number of travels 
+#'              with origin in the province 'indiv' 
+#'              and arrival to another 
+#'              province in the week 'time'} } 
+#'          { \textnormal{Number of travels with origin 
+#'               in the province 'indiv' and arrival to 
+#'               another province in the reference 
+#'               week (week0)} } }
 #'   \cr 
 #'   \cr
 #'   A ‘travel’ is a displacement from an origin to a destination of at least 500m. A travel can have several stages.
@@ -170,12 +167,12 @@
 #'   \eqn{
 #'   Incidence = \log \left( 
 #'     \frac{ 
-#'       \begin{tabular}{c}
-#'          \textnormal{total diagnostic cases of 
-#'                      COVID-19, PCR test in the week 'time'} \\
-#'          \textnormal{at the province 'indiv'} 
-#'       \end{tabular} }  
-#'   {\textnormal{total population in the province 'indiv'}}
+#'       \textnormal{total diagnostic cases of 
+#'                   COVID-19, PCR test in the 
+#'                   week 'time' at the province 
+#'                   'indiv'} } 
+#'     {\textnormal{total population in the 
+#'     province 'indiv'}}
 #'   \right) }
 #'   \cr
 #'   \cr

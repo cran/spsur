@@ -30,8 +30,12 @@ cov_spsursim_f <- function(env){
 }
 
 ###############################################
-cov_spsurslm_f <- function(env){
-    if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+cov_spsurslm_f <- function(env) {
+    if (!is.null(env$W)) {
+      W <- Matrix::Matrix(env$W) 
+    } else {
+      W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+    }  
     G <- env$G; N <- env$N; Tm <- env$Tm
     Y <- env$Y; X <- env$X; Sigma <- env$Sigma
     deltas <- env$deltas
@@ -41,10 +45,9 @@ cov_spsurslm_f <- function(env){
     IR <- Matrix::Diagonal(N)
     IG <- Matrix::Diagonal(G)
     IGR <- Matrix::Diagonal(G*N)
-    WtW <- as(Matrix::crossprod(W),"dgCMatrix")
-    W <- as(W,"dgCMatrix")
-    WW <- as(W%*%W,"dgCMatrix")
-    Wt <- as(Matrix::t(W),"dgCMatrix")
+    WtW <- Matrix::crossprod(W)
+    WW <- W %*% W
+    Wt <- Matrix::t(W)
     E <- get_array_E(G)
     Sigmainv <- try( Matrix::solve(Sigma) )
     #Sigmainv <- try(chol2inv(chol(Sigma)))
@@ -53,7 +56,6 @@ cov_spsurslm_f <- function(env){
     #### Auxiliar Matrices
     Aux <- IGR - kronecker(deltas, W)
     Auxt <- Matrix::t(Aux)
-    
     # Cálculo inversa utilizando function spdep::invIrW e 
     #invirtiendo bloque por bloque y luego blockdiagonal
     lAuxi <- vector("list", G)
@@ -228,7 +230,11 @@ cov_spsurslm_f <- function(env){
 #####################################################
 cov_spsursem_f <- function(env){
     #### LOAD INPUTS FROM ENVIRONMENT
-    if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+    if (!is.null(env$W)) {
+      W <- Matrix::Matrix(env$W) 
+    } else {
+      W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+    }    
     G <- env$G; N <- env$N; Tm <- env$Tm
     Y <- env$Y; X <- env$X; Sigma <- env$Sigma
     deltas <- env$deltas
@@ -237,9 +243,8 @@ cov_spsursem_f <- function(env){
     IR <- Matrix::Diagonal(N)
     IG <- Matrix::Diagonal(G)
     IGR <- Matrix::Diagonal(G*N)
-    W <- as(W,"dgCMatrix")
-    WW <- as(W%*%W,"dgCMatrix")
-    WtW <- as(Matrix::crossprod(W),"dgCMatrix")
+    WW <- W %*% W
+    WtW <- Matrix::crossprod(W)
     Wt <- Matrix::t(W)
     E <- get_array_E(G=G)
     ff_cf <- get_ff_cf(G=G)
@@ -265,11 +270,13 @@ cov_spsursem_f <- function(env){
     Binv <- kronecker(IT,Auxi)
     OME <- kronecker(IT,kronecker(Sigma,IR))
     OMEinv <- kronecker(IT,kronecker(Sigmainv,IR))
-    BX <- as(B %*% X,"dgCMatrix")
-    BY <- as(B %*% Y,"dgCMatrix")
-    Bsem <-Matrix::solve(Matrix::crossprod(BX,OMEinv %*% BX),
-                         Matrix::crossprod(BX,OMEinv %*% BY))
-    Res <- matrix(BY - (BX %*% Bsem),nrow=nrow(Y))
+    BX <- Matrix::Matrix(B %*% X)
+    BY <- Matrix::Matrix(B %*% Y)
+    Bsem <- Matrix::solve(Matrix::crossprod(BX, 
+                                            OMEinv %*% BX),
+                         Matrix::crossprod(BX, 
+                                           OMEinv %*% BY))
+    Res <- matrix(BY - (BX %*% Bsem),nrow = nrow(Y))
 
     ################################
     #### Information Matrix SUR-SEM
@@ -440,19 +447,23 @@ cov_spsursem_f <- function(env){
 #####################################################
 cov_spsursarar_f <- function(env){
   #### LOAD INPUTS FROM ENVIRONMENT
-  if(!is.null(env$W)) W <- env$W else W <- as(env$listw, "CsparseMatrix")
+  if (!is.null(env$W)) {
+    W <- Matrix::Matrix(env$W) 
+  } else {
+    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+  }
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X; Sigma <- env$Sigma
   deltas <- env$deltas
-  W <- as(W,"dgCMatrix")
+
   IT <- Matrix::Diagonal(Tm)
   IR <- Matrix::Diagonal(N)
   IG <- Matrix::Diagonal(G)
   IGR <- Matrix::Diagonal(G*N)
-  WW <- as(W %*% W,"dgCMatrix")
-  WtW <- as(Matrix::crossprod(W),"dgCMatrix")
-  E <- get_array_E(G=G)
-  ff_cf <- get_ff_cf(G=G)
+  WW <- W %*% W
+  WtW <- Matrix::crossprod(W)
+  E <- get_array_E(G = G)
+  ff_cf <- get_ff_cf(G = G)
   ff <- ff_cf$ff; cf <- ff_cf$cf; rm(ff_cf)
   Sigmainv <- try(chol2inv(chol(Sigma)))
   if (inherits(Sigmainv, "try-error"))
