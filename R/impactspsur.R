@@ -215,37 +215,6 @@
 #'  impacts_slx2 <- impactspsur(spcsur_slx2, listw = lwspc)
 #'  summary(impacts_slx2[[1]], zstats = TRUE, short = TRUE)
 #'  summary(impacts_slx2[[2]], zstats = TRUE, short = TRUE)
-#' ### A SUR-SDEM model
-#'  spcsur_sdem <-spsurml(formula = Tformula, data = spc, 
-#'                       type = "sdem", listw = lwspc)
-#'  impacts_sdem <- impactspsur(spcsur_sdem, listw = lwspc)
-#'  summary(impacts_sdem[[1]], zstats = TRUE, short = TRUE)
-#'  summary(impacts_sdem[[2]], zstats = TRUE, short = TRUE)
-#' 
-#' ### A SUR-SARAR model
-#'  spcsur_sarar <-spsurml(formula = Tformula, data = spc, 
-#'                       type = "sarar", listw = lwspc,
-#'                       control = list(tol = 0.01))
-#'  impacts_sarar <- impactspsur(spcsur_sarar, listw = lwspc, R = 1000)
-#'  summary(impacts_sarar[[1]], zstats = TRUE, short = TRUE)
-#'  summary(impacts_sarar[[2]], zstats = TRUE, short = TRUE)
-#'  
-#' ## A SUR-GNM model
-#'  spcsur_gnm <-spsurml(formula = Tformula, data = spc, 
-#'                       type = "gnm", listw = lwspc,
-#'                       control = list(tol = 0.1))
-#'  impacts_gnm <- impactspsur(spcsur_gnm, listw = lwspc, R = 1000)
-#'  summary(impacts_gnm[[1]], zstats = TRUE, short = TRUE)
-#'  summary(impacts_gnm[[2]], zstats = TRUE, short = TRUE)
-#' ## A SUR-GNM model with different spatial lags in each equation
-#'  TformulaD <- ~ UN83 + NMR83 + SMSA | UN80
-#'  spcsur_gnm2 <-spsurml(formula = Tformula, data = spc, type = "gnm", 
-#'                        listw = lwspc, Durbin = TformulaD,
-#'                        control = list(tol = 0.1))
-#'  summary(spcsur_gnm2)                       
-#'  impacts_gnm2 <- impactspsur(spcsur_gnm2, listw = lwspc, R = 1000)
-#'  summary(impacts_gnm2[[1]], zstats = TRUE, short = TRUE)
-#'  summary(impacts_gnm2[[2]], zstats = TRUE, short = TRUE)
 #'  
 #' # ####################################
 #' # ######## G=1; Tm>1               ###
@@ -264,21 +233,12 @@
 #'                         control = list(fdHess = TRUE))
 #'  summary(NCOVRSUR_slm)
 #' ### Use of trW to compute.
-#'  Wncovr <- as(spdep::listw2mat(lwncovr), "CsparseMatrix")
+#'  Wncovr <- Matrix::Matrix(spdep::listw2mat(lwncovr))
 #'  trwncovr <- spatialreg::trW(Wncovr, type = "MC")
 #'  impacts_NCOVRSUR_slm <- impactspsur(NCOVRSUR_slm, tr = trwncovr,
 #'                                  R = 1000)
 #'  summary(impacts_NCOVRSUR_slm[[1]], zstats = TRUE, short = TRUE)
 #'  summary(impacts_NCOVRSUR_slm[[2]], zstats = TRUE, short = TRUE)
-#' ### A SUR-SDM model
-#'  NCOVRSUR_sdm <-spsurml(formula = Tformula, data = NCOVR.sf, 
-#'                         type = "sdm", listw = lwncovr, 
-#'                         method = "Matrix", zero.policy = TRUE, 
-#'                         control = list(fdHess = TRUE))
-#'  impacts_NCOVRSUR_sdm <- impactspsur(NCOVRSUR_sdm, tr = trwncovr,
-#'                                  R = 1000)
-#'  summary(impacts_NCOVRSUR_sdm[[1]], zstats = TRUE, short = TRUE)
-#'  summary(impacts_NCOVRSUR_sdm[[2]], zstats = TRUE, short = TRUE)
 #' }
 #' 
 #' @export

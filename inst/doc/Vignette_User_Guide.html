@@ -13,7 +13,7 @@
 <meta name="author" content="Fernando A. López, Technical University of Cartagena (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2021-04-07" />
+<meta name="date" content="2022-08-29" />
 
 <title>spsur user guide</title>
 
@@ -1550,7 +1550,7 @@ div.tocify {
 <h4 class="author">Román Mínguez, University of Castilla-La Mancha (Spain)</h4>
 <h4 class="author">Fernando A. López, Technical University of Cartagena (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br></h4>
-<h4 class="date">2021-04-07 <br> <br> <br></h4>
+<h4 class="date">2022-08-29 <br> <br> <br></h4>
 
 </div>
 
@@ -2960,7 +2960,7 @@ Indirect Effects.</p></li>
 <p>It is possible to obtain the three multipliers together with indirect measures of statistical significance, according to the randomization approach described in <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009" role="doc-biblioref">2009</a>)</span>. Briefly, they suggest to obtain a sequence of <em>R</em> random matrices of order <em>(NTmxG)</em> from a multivariate normal distribution <span class="math inline">\(N(0; \Sigma)\)</span>, being <span class="math inline">\(\Sigma\)</span> the estimated covariance matrix of the <em>G</em> equations of the SUR model. These random matrices, combined with the observed values of the regressors and the estimated values of the parameters, are used to obtain simulated values of the explained variables. Then, for each one of the <em>R</em> experiments, the SUR model is estimated, and the effects are evaluated. Therefore, it is possible to obtain the standard deviations of the <em>R</em> estimated effects in the randomization procedure, which are used to test the significance of the estimated effects for the original data.</p>
 <p>The <strong>spsur</strong> package implements the function <code>impactspsur()</code> to compute direct, indirect and total impacts either to models with an autoregressive structure (“slm”, “sdm” or “sarar”) or models with spatial lags of the regressors (“slx” or “sdem”). The function <code>impactspsur()</code> is a wrapper to method <code>impacts</code> available in <strong>spatialreg</strong> package (see <span class="citation">Bivand and Piras (<a href="#ref-BivandPiras2015" role="doc-biblioref">2015</a>)</span>) and both functions share the same arguments (see the help of any of them for details). The output of <code>impactspsur()</code> is a list of objects (one for each equation of the SUR model) either of class <code>lagImpact</code>(for “slm”, “sdm” or “sarar”) or class <code>WXImpact</code> (for “slx” or “sdem”). It is important to highlight than the previous simulation method (described in <span class="citation">LeSage and Pace (<a href="#ref-LeSage2009" role="doc-biblioref">2009</a>)</span>) it is used only to compute the variances of the impacts for models with spatial lags of the dependent variable (“slm”, “sdm” or “sarar”); for models with only spatial lags of exogeneous variables (“slx” or “sdem”) the dispersion measures can be obtained directly from the estimates without any need to simulate.</p>
 <p>As a way of example, below appear the impacts estimated for the case of the SUR-SDM model of Section <a href="#model-sursdm">4.5</a>. To speed the computations, we previosly compute a vector of traces of <strong>W</strong> matrix (see <code>help(spatialreg::trW)</code> for details) which is provided as an argument to the function.</p>
-<pre class="r"><code>Wncovr &lt;- as(lwncovr, &quot;CsparseMatrix&quot;)
+<pre class="r"><code>Wncovr &lt;- Matrix::Matrix(spdep::list2mat(lwncovr))
 trWncovr &lt;- spatialreg::trW(Wncovr, type = &quot;MC&quot;)
 sur.sdm.impacts &lt;- impactspsur(sur.slm, tr = trWncovr, R = 1000)
 class(sur.sdm.impacts[[1]])</code></pre>
@@ -3384,7 +3384,7 @@ Breusch, Trevor Stanley, and Adrian Rodney Pagan. 1980. <span>“The Lagrange Mu
 LeSage, James, and Robert Kelley Pace. 2009. <em>Introduction to Spatial Econometrics</em>. Chapman; Hall/CRC.
 </div>
 <div id="ref-Lopez2020" class="csl-entry">
-López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020. <span>“ML Versus IV Estimates of Spatial SUR Models: Evidence from the Case of Airbnb in Madrid Urban Area.”</span> <em>The Annals of Regional Science</em> 64 (2): 313–47. <a href="https://doi.org/10.1007/s00168-019-00914-1">https://doi.org/10.1007/s00168-019-00914-1</a>.
+López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020. <span>“<span>ML</span> Versus <span>IV</span> Estimates of Spatial SUR Models: Evidence from the Case of Airbnb in Madrid Urban Area.”</span> <em>The Annals of Regional Science</em> 64 (2): 313–47. <a href="https://doi.org/10.1007/s00168-019-00914-1">https://doi.org/10.1007/s00168-019-00914-1</a>.
 </div>
 <div id="ref-Lopez2014" class="csl-entry">
 López, Fernando A, Jesús Mur, and Ana Angulo. 2014. <span>“Spatial Model Selection Strategies in a SUR Framework. The Case of Regional Productivity in <span>EU</span>.”</span> <em>The Annals of Regional Science</em> 53 (1): 197–220. <a href="https://doi.org/10.1007/s00168-014-0624-2">https://doi.org/10.1007/s00168-014-0624-2</a>.

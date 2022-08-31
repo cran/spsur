@@ -31,12 +31,14 @@ cov_spsursim_f <- function(env){
 
 ###############################################
 cov_spsurslm_f <- function(env) {
-    if (!is.null(env$W)) {
-      W <- Matrix::Matrix(env$W) 
-    } else {
-      W <- Matrix::Matrix(spdep::listw2mat(env$listw))
-    }  
-    G <- env$G; N <- env$N; Tm <- env$Tm
+  if (!is.null(env$W)) {
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
+  } else {
+    W <- as(listw2mat(env$listw), "dgCMatrix")
+  }  
+  G <- env$G; N <- env$N; Tm <- env$Tm
     Y <- env$Y; X <- env$X; Sigma <- env$Sigma
     deltas <- env$deltas
     #deltas <- as.vector(Matrix::diag(env$deltas))
@@ -230,12 +232,14 @@ cov_spsurslm_f <- function(env) {
 #####################################################
 cov_spsursem_f <- function(env){
     #### LOAD INPUTS FROM ENVIRONMENT
-    if (!is.null(env$W)) {
-      W <- Matrix::Matrix(env$W) 
-    } else {
-      W <- Matrix::Matrix(spdep::listw2mat(env$listw))
-    }    
-    G <- env$G; N <- env$N; Tm <- env$Tm
+  if (!is.null(env$W)) {
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
+  } else {
+    W <- as(listw2mat(env$listw), "dgCMatrix")
+  }  
+  G <- env$G; N <- env$N; Tm <- env$Tm
     Y <- env$Y; X <- env$X; Sigma <- env$Sigma
     deltas <- env$deltas
     ####
@@ -448,10 +452,12 @@ cov_spsursem_f <- function(env){
 cov_spsursarar_f <- function(env){
   #### LOAD INPUTS FROM ENVIRONMENT
   if (!is.null(env$W)) {
-    W <- Matrix::Matrix(env$W) 
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
   } else {
-    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
-  }
+    W <- as(listw2mat(env$listw), "dgCMatrix")
+  }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X; Sigma <- env$Sigma
   deltas <- env$deltas

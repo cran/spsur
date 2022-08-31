@@ -62,10 +62,12 @@ fit_spsursim <- function(env, con){
 
 fit_spsurslm <- function(env, con) {
   if (!is.null(env$W)) {
-    W <- Matrix::Matrix(env$W) 
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
   } else {
-    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
-  }  
+    W <- as(listw2mat(env$listw), "dgCMatrix")
+  }
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X
   IT <- Matrix::Diagonal(Tm)
@@ -155,9 +157,11 @@ fit_spsurslm <- function(env, con) {
 
 fit_spsursem <- function(env, con) {
   if (!is.null(env$W)) {
-    W <- Matrix::Matrix(env$W) 
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
   } else {
-    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+    W <- as(listw2mat(env$listw), "dgCMatrix")
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X
@@ -251,9 +255,11 @@ fit_spsursem <- function(env, con) {
 
 fit_spsursarar <- function(env, con) {
   if (!is.null(env$W)) {
-    W <- Matrix::Matrix(env$W) 
+    if (!inherits(env$W, "Matrix")) {
+      W <- as(env$W, "dgCMatrix")
+    } else W <- env$W
   } else {
-    W <- Matrix::Matrix(spdep::listw2mat(env$listw))
+    W <- as(listw2mat(env$listw), "dgCMatrix")
   }  
   G <- env$G; N <- env$N; Tm <- env$Tm
   Y <- env$Y; X <- env$X

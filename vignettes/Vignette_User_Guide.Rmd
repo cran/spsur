@@ -5,7 +5,7 @@ author:
 - Román Mínguez, University of Castilla-La Mancha (Spain)
 - Fernando A. López, Technical University of Cartagena (Spain)
 - Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: '2021-04-07 <br>  <br> <br>'
+date: '2022-08-29 <br>  <br> <br>'
 output:
   bookdown::html_document2:
     number_sections: yes
@@ -16,10 +16,11 @@ output:
       collapsed: no
       smooth_scroll: no
     toc_title: Article Outline
+
 linkcolor: red
 link-citations: yes
 bibliography: bibliosure.bib
-vignette: |
+vignette: >
   %\VignetteIndexEntry{spsur user guide}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown} 
@@ -1846,7 +1847,7 @@ As a way of example, below appear the impacts estimated for the case of the SUR-
 
 
 ```r
-Wncovr <- as(lwncovr, "CsparseMatrix")
+Wncovr <- Matrix::Matrix(spdep::list2mat(lwncovr))
 trWncovr <- spatialreg::trW(Wncovr, type = "MC")
 sur.sdm.impacts <- impactspsur(sur.slm, tr = trWncovr, R = 1000)
 class(sur.sdm.impacts[[1]])

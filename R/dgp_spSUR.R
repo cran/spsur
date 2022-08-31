@@ -246,65 +246,6 @@
 #' summary(SLM)
 #' 
 #' ################################################
-#' #### Example 2: DGP SEM model with Tm>1; G=1 and
-#' #### different p for each equation
-#' ################################################
-#' rm(list = ls()) # Clean memory
-#' Tm <- 3 # Number of time periods
-#' G <- 1 # Number of equations
-#' N <- 500 # Number of spatial elements
-#' p <- c(2,3,4) # Number of independent variables
-#' Sigma <- matrix(0.8, ncol = Tm, nrow = Tm)
-#' diag(Sigma) <- 1
-#' Betas <- c(1,2,1,2,3,1,2,3,4)
-#' rho <- 0 # level of spatial dependence = 0
-#' lambda <- c(0.2,0.5,0.8) 
-#' ## spatial autocorrelation error terms for each equation
-#' ## random coordinates
-#' co <- cbind(runif(N,0,1),runif(N,0,1))
-#' lw <- spdep::nb2listw(spdep::knn2nb(spdep::knearneigh(co, k = 5,
-#'                                                    longlat = FALSE)))
-#' DGP2 <- dgp_spsur(Sigma = Sigma, Betas = Betas, rho = rho, 
-#'                   lambda = lambda, Tm = Tm, G = G, N = N, p = p, 
-#'                   listw = lw)
-#' SLM2 <- spsurml(X = DGP2$X, Y = DGP2$Y, Tm = Tm, N = N, G = G,
-#'                p = c(2,3,4), listw = lw, type = "slm")
-#' summary(SLM2)
-#' SEM2 <- spsurml(X = DGP2$X, Y = DGP2$Y, Tm = Tm, N = N, G = G,
-#'                p = c(2,3,4), listw = lw, type = "sem")
-#' summary(SEM2)
-#' 
-#' ################################################
-#' #### Example 3: DGP SEM model with Tm>1; G=1 and
-#' #### different p for each equation. Output "df"
-#' ################################################
-#' rm(list = ls()) # Clean memory
-#' Tm <- 3 # Number of time periods
-#' G <- 1 # Number of equations
-#' N <- 500 # Number of spatial elements
-#' p <- c(2,3,4) # Number of independent variables
-#' Sigma <- matrix(0.8, ncol = Tm, nrow = Tm)
-#' diag(Sigma) <- 1
-#' Betas <- c(1,2,1,2,3,1,2,3,4)
-#' rho <- 0 # level of spatial dependence = 0
-#' lambda <- c(0.2,0.5,0.8) 
-#' ## spatial autocorrelation error terms for each equation
-#' ## random coordinates
-#' co <- cbind(runif(N,0,1),runif(N,0,1))
-#' lw <- spdep::nb2listw(spdep::knn2nb(spdep::knearneigh(co, k = 5,
-#'                                                    longlat = FALSE)))
-#' DGP3 <- dgp_spsur(Sigma = Sigma, Betas = Betas, rho = rho, 
-#'                   lambda = lambda, Tm = Tm, G = G, N = N, p = p, 
-#'                   listw = lw, type = "df")
-#' formula <- Y_1 | Y_2 | Y_3 ~ X_11 | X_21 + X_22 | X_31 + X_32 + X_33
-#' SLM3 <- spsurml(formula = formula, data = DGP3$df,
-#'                listw = lw, type = "slm")
-#' summary(SLM3)
-#' SEM3 <- spsurml(formula = formula, data = DGP3$df,
-#'                 listw = lw, type = "sem")
-#' summary(SEM3)
-#'
-#' ################################################
 #' ### MULTI-DIMENSIONAL PANEL DATA G>1 and Tm>1 ##
 #' ################################################
 #' 
@@ -343,10 +284,10 @@ dgp_spsur <- function(Sigma, Tm = 1, G, N, Betas,
   if (is.null(listw) || !inherits(listw, c("listw","Matrix","matrix")))
     stop("listw format unknown or NULL")
   if (inherits(listw, "listw")) {
-    W <- Matrix::Matrix(spdep::listw2mat(listw))
+    W <- as(spdep::listw2mat(listw), "dgCMatrix")
   } else if (inherits(listw, "matrix")) {
-    W <- Matrix::Matrix(listw)
-    listw <- spdep::mat2listw(W)
+    W <- as(listw, "dgCMatrix")
+    listw <- spdep::mat2listw(listw)
   } else  if (inherits(listw, "Matrix")) {
     W <- listw
     listw <- spdep::mat2listw(as.matrix(W))

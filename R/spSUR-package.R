@@ -222,6 +222,7 @@
 #' @importFrom spatialreg impacts intImpacts lmSLX invIrW 
 #' @importFrom spdep knearneigh knn2nb nb2mat 
 #' @importFrom spdep card mat2listw listw2mat
+#' @importFrom sphet spreg
 #' @importFrom stats cor cov optim pchisq pnorm pt qnorm rnorm runif
 #' @importFrom stats coefficients fitted lm residuals printCoefmat
 #' @importFrom stats lm.fit model.frame model.matrix terms

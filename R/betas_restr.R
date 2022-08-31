@@ -75,9 +75,8 @@ betas_restr <- function(results , R , r){
   r <- Matrix::Matrix(matrix(r,ncol=1))
   holg <- R %*% betas - r
   q <- nrow(R)
-
   X <- Matrix::Matrix(z$X)
-  W <- Matrix::Matrix(z$W)
+  W <- z$W
   Sigma <- Matrix::Matrix(z$Sigma)
   Sigma_inv <- Matrix::solve(Sigma)
   Tm <- z$Tm

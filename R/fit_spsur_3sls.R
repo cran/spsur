@@ -7,8 +7,7 @@ fit_spsurslm_3sls <- function(Tm, G, N, Y, X, W, p,
   IR <- Matrix::Diagonal(N)
   if (inherits(X, "matrix")) X <- Matrix::Matrix(X)
   if (inherits(Y, "matrix")) Y <- Matrix::Matrix(Y)
-  if (inherits(W, "matrix")) W <- Matrix::Matrix(W)
-
+  if (inherits(W, "matrix")) W <- as(W, "dgCMatrix")
   ########## FULL REGRESSOR MATRIX #######################
 
   #### Fill with 0 the columns of spatial lags Wy_i

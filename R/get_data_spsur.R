@@ -26,8 +26,8 @@ get_data_spsur <- function(formula, mf, Durbin = FALSE,
   } else {
     N <- nrow(mf) / Tm
   }  
-  if (!is.null(listw)) { 
-    W <- Matrix::Matrix(spdep::listw2mat(listw))
+  if (!is.null(listw)) {
+    W <- as(spdep::listw2mat(listw), "dgCMatrix")
   } 
   if (is.null(listw) && is.null(N))
     stop("Dimension of spatial sample is needed")

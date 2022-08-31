@@ -26,11 +26,7 @@ A data frame with 850 rows and 11 variables:
 }
 }
 \source{
-Ministerio de Transportes, Movilidad y Agenda Urbana. Spain Government.
-  \cr
-  \url{https://www.mitma.gob.es/ministerio/covid-19/evolucion-movilidad-big-data}
-  \cr
-  The National Statistics Institute 
+The National Statistics Institute 
   \cr
   \url{https://www.ine.es/en/index.htm}
   \cr
@@ -110,9 +106,6 @@ In particular,
   Essential activities. Economic activities whose activities are essential for the population. By example, essential activities are
   healthcare, food supply, State security, media and communication, refuse collection, management and public transport, etc.
   Non essential activities are by example, restaurants, hotels, hairdressers, etc. A full list in the Spanish official bulletin
-  \cr
-  \cr
-  \url{https://www.boe.es/boe/dias/2020/03/29/pdfs/BOE-A-2020-4166.pdf}
 }
 }
 

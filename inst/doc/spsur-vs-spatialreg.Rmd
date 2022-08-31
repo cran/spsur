@@ -5,8 +5,8 @@ author:
 - Román Mínguez, University of Castilla-La Mancha (Spain)
 - Fernando A. López, Technical University of Cartagena (Spain)
 - Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: "2021-04-07  <br>  <br> <br>"
-output: 
+date: "2022-08-29  <br>  <br> <br>"
+output:
   bookdown::html_document2:
     df_print: kable
     highlight: tango
@@ -19,6 +19,11 @@ output:
       smooth_scroll: yes
     toc_title: spsur vs spse
     # code_folding: hide
+
+# output: 
+#   rmarkdown::html_vignette:
+#     number_sections: TRUE
+
 bibliography: bibliosure.bib
 link-citations: yes
 linkcolor: red
@@ -41,7 +46,7 @@ library(sf)
 
 # Introduction
 
-The **spsur** R-package (@LopezMinguezMur2020) has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. On the oher hand, the **spatialreg** package ( @BivandPedesma2013; @BivandPiras2015), is the most adequate alternative for working with uniequational models, in a pure cross-sectional setting. The purpose of this vignette is to compare the results of **spsur** and **spatialreg** in case of *uniequational models*. As we will see, the differences between the two are negligible.
+The **spsur** R-package (@Lopez2020) has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. On the oher hand, the **spatialreg** package ( @BivandPedesma2013; @BivandPiras2015), is the most adequate alternative for working with uniequational models, in a pure cross-sectional setting. The purpose of this vignette is to compare the results of **spsur** and **spatialreg** in case of *uniequational models*. As we will see, the differences between the two are negligible.
 
 In sum, the purpose of this vignette is to compare the results of **spsur** and **spatialreg** in the following issues:
 

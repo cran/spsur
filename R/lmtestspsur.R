@@ -205,7 +205,7 @@ lmtestspsur.formula <- function(formula, data, listw, na.action,
       subset <- !(1:length(listw$neighbours) %in% na.act)
       listw <- subset(listw, subset, zero.policy = zero.policy)
     }
-    W <- Matrix::Matrix(spdep::listw2mat(listw))
+    W <- as(spdep::listw2mat(listw), "dgCMatrix")
     get_XY <- get_data_spsur(formula = formula, mf = mf, 
                              Durbin = FALSE,
                              listw = listw, 
@@ -264,11 +264,11 @@ lmtestspsur.default <- function(Y, X, G, N, Tm = 1, listw,
   if (!inherits(listw,c("listw","Matrix","matrix")))
     stop("listw format unknown")
   if (inherits(listw, "listw")) {
-    W <- Matrix::Matrix(spdep::listw2mat(listw))
+    W <- as(spdep::listw2mat(listw), "dgCMatrix")
   }
   if (inherits(listw, "matrix")) {
-    W <- Matrix::Matrix(listw)
-    listw <- spdep::mat2listw(W)
+    W <- as(listw, "dgCMatrix")
+    listw <- spdep::mat2listw(listw)
   }  
   if (inherits(listw, "Matrix")) {
     W <- listw

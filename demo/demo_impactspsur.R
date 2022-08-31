@@ -83,7 +83,7 @@ NCOVRSUR_slm <-spsurml(formula = Tformula, data = NCOVR.sf,
                        control = list(fdHess = TRUE))
 summary(NCOVRSUR_slm)
 ## Use of trW to compute.
-Wncovr <- as(spdep::listw2mat(lwncovr), "CsparseMatrix")
+Wncovr <- Matrix::Matrix(spdep::listw2mat(lwncovr))
 trwncovr <- spatialreg::trW(Wncovr, type = "MC")
 impacts_NCOVRSUR_slm <- impactspsur(NCOVRSUR_slm, tr = trwncovr,
                                 R = 1000)

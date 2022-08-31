@@ -273,12 +273,12 @@ spsur3sls <- function(formula = NULL, data = NULL, na.action,
     stop("listw format unknown or NULL")
   if (inherits(listw, "listw")) {
     if (is.null(formula) || is.null(data)) {
-      W <- Matrix::Matrix(spdep::listw2mat(listw))
+      W <- as(spdep::listw2mat(listw), "dgCMatrix")
     }  
   }
   if (inherits(listw, "matrix")) {
-    W <- Matrix::Matrix(listw)
-    listw <- spdep::mat2listw(W)
+    W <- as(listw, "dgCMatrix")
+    listw <- spdep::mat2listw(listw)
   }  
   if (inherits(listw, "Matrix")) {
     W <- listw
@@ -306,7 +306,7 @@ spsur3sls <- function(formula = NULL, data = NULL, na.action,
       subset <- !(1:length(listw$neighbours) %in% na.act)
       listw <- subset(listw, subset, zero.policy = zero.policy)
     }
-    W <- Matrix::Matrix(spdep::listw2mat(listw))
+    W <- as(spdep::listw2mat(listw), "dgCMatrix")
     if (type == "sdm") {
       if(!inherits(Durbin, "formula")) Durbin <- TRUE
     } else { Durbin <- FALSE }
