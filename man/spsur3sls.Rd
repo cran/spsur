@@ -292,10 +292,6 @@ rm(NCOVRSUR_slm_3sls)
 }
 \references{
 \itemize{
-      \item Lopez, F. A., Minguez, R., Mur, J. (2020). ML versus IV estimates 
-      of spatial SUR models: evidence from the case of Airbnb in Madrid urban 
-      area. \emph{The Annals of Regional Science}, 64(2), 313-347.
-      <doi:10.1007/s00168-019-00914-1>
       \item Anselin, L. (2016) Estimation and Testing in the Spatial Seemingly 
       Unrelated Regression (SUR). \emph{Geoda Center for Geospatial Analysis 
       and Computation, Arizona State University}. Working Paper 2016-01.
@@ -305,6 +301,16 @@ rm(NCOVRSUR_slm_3sls)
       \item Anselin, L., Le Gallo, J., Hubert J. (2008) Spatial Panel Econometrics. 
       In \emph{The econometrics of panel data. 
       Fundamentals and recent developments in theory and practice}. (Chap 19, p. 653)
+     \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+      spsur: An R Package for Dealing with Spatial 
+      Seemingly Unrelated Regression Models. 
+      \emph{Journal of Statistical Software}, 
+      104(11), 1--43.
+      <doi:10.18637/jss.v104.i11>
+      \item Lopez, F. A., Minguez, R., Mur, J. (2020). ML versus IV estimates 
+      of spatial SUR models: evidence from the case of Airbnb in Madrid urban 
+      area. \emph{The Annals of Regional Science}, 64(2), 313-347.
+      <doi:10.1007/s00168-019-00914-1>
   }
 }
 \seealso{

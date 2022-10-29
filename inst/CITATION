@@ -1,20 +1,38 @@
-citHeader("To cite spsur in publications use:")
+bibentry(bibtype = "Article",
+  title        = "{spsur}: An {R} Package for Dealing with Spatial Seemingly Unrelated Regression Models",
+  author       = c(person(given = "Rom{\\'a}n",
+                          family = "M{\\'i}nguez",
+                          email = "roman.minguez@uclm.es"),
+                   person(given = c("Fernando", "A."),
+                          family = "L{\\'o}pez",
+                          email = "fernando.lopez@upct.es"),
+                   person(given = "Jes{\\'u}s",
+                          family = "Mur",
+                          email = "jmur@unizar.es")),
+  journal      = "Journal of Statistical Software",
+  year         = "2022",
+  volume       = "104",
+  number       = "11",
+  pages        = "1--43",
+  doi          = "10.18637/jss.v104.i11",
+  header       = "To cite spsur in publications use:"
+)
 
-citEntry(entry = "Article",
-  title        = "ML versus IV estimates of spatial SUR models: evidence from the case of Airbnb in Madrid urban area",
-  author       =  personList(as.person("Fernando Lopez"),
-                             as.person("Roman Minguez"), 
-                             as.person("Jesus Mur")),
-  journal      = "Annals of Regional Science",
+bibentry(bibtype = "Article",
+  title        = "{ML} versus {IV} estimates of spatial {SUR} models: evidence from the case of {A}irbnb in {M}adrid urban area",
+  author       = c( person(given = c("Fernando", "A."),
+                          family = "L{\\'o}pez",
+                          email = "fernando.lopez@upct.es"),
+                    person(given = "Rom{\\'a}n",
+                          family = "M{\\'i}nguez",
+                          email = "roman.minguez@uclm.es"),
+                    person(given = "Jes{\\'u}s",
+                          family = "Mur",
+                          email = "jmur@unizar.es")),
+  journal      = "The Annals of Regional Science",
   year         = "2020",
   volume       = "64",
   number       = "2",
   pages        = "313--347",
-  url          = "https://doi.org/10.1007/s00168-019-00914-1",
-
-  textVersion  =
-  paste("Lopez Fernando, Minguez Roman, Mur Jesus (2020).",
-        "ML versus IV estimates of spatial SUR models: evidence from the case of Airbnb in Madrid urban area.",
-        "Annals of Regional Science, 64(2), 313-346.",
-        "URL https://doi.org/10.1007/s00168-019-00914-1/.")
+  doi          = "10.1007/s00168-019-00914-1"
 )

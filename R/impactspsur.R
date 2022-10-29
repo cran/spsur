@@ -149,6 +149,13 @@
 #'        productivity in EU. \emph{Annals of Regional Science}, 53(1), 197-220.
 #'        <doi:10.1007/s00168-014-0624-2>
 #'        
+#'      \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+#'         spsur: An R Package for Dealing with Spatial 
+#'         Seemingly Unrelated Regression Models. 
+#'         \emph{Journal of Statistical Software}, 
+#'         104(11), 1--43. <doi:10.18637/jss.v104.i11>
+#'        
+#'        
 #'      \item Mur, J., Lopez, F., and Herrera, M. (2010). Testing for spatial
 #'        effects in seemingly unrelated regressions.
 #'        \emph{Spatial Economic Analysis}, 5(4), 399-440.
@@ -249,7 +256,6 @@ impactspsur <- function(obj, ..., tr = NULL,
                            Q = NULL) {
   if (obj$type == "sim" || obj$type == "sem") 
        stop("impact measures not for this model")
-  
   if (is.null(listw) && !is.null(obj$listw_style) && 
       obj$listw_style != "W") 
     stop("Only row-standardised weights supported")

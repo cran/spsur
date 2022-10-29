@@ -122,6 +122,12 @@ lmtestspsur <- function(...) {
 #'        197-220.
 #'        <doi:10.1007/s00168-014-0624-2>
 #'        
+#'      \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+#'         spsur: An R Package for Dealing with Spatial 
+#'         Seemingly Unrelated Regression Models. 
+#'         \emph{Journal of Statistical Software}, 
+#'         104(11), 1--43. <doi:10.18637/jss.v104.i11>#'        
+#'        
 #'        \item Anselin, L. (1988) A test for spatial autocorrelation in seemingly unrelated 
 #'        regressions \emph{Economics Letters} 28(4), 335-341.
 #'        <doi:10.1016/0165-1765(88)90009-2> 

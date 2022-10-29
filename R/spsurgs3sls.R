@@ -167,6 +167,12 @@
 #'       Disturbances. \emph{Journal of Real 
 #'       Estate Finance and Economics}, 17, 
 #'       pp. 99–121.
+#'     \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+#'        spsur: An R Package for Dealing with Spatial 
+#'        Seemingly Unrelated Regression Models. 
+#'        \emph{Journal of Statistical Software}, 
+#'        104(11), 1--43.
+#'        <doi:10.18637/jss.v104.i11>
 #'     \item Piras, G. (2010). sphet: Spatial
 #'       Models with Heteroskedastic Innovations 
 #'       in R. \emph{Journal of Statistical 

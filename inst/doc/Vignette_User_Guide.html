@@ -13,7 +13,7 @@
 <meta name="author" content="Fernando A. López, Technical University of Cartagena (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2022-08-29" />
+<meta name="date" content="2022-10-29" />
 
 <title>spsur user guide</title>
 
@@ -1403,8 +1403,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -1412,16 +1412,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -1550,7 +1543,7 @@ div.tocify {
 <h4 class="author">Román Mínguez, University of Castilla-La Mancha (Spain)</h4>
 <h4 class="author">Fernando A. López, Technical University of Cartagena (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br></h4>
-<h4 class="date">2022-08-29 <br> <br> <br></h4>
+<h4 class="date">2022-10-29 <br> <br> <br></h4>
 
 </div>
 
@@ -1561,7 +1554,7 @@ library(sf)
 library(dplyr)</code></pre>
 <div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>The purpose of this vignette is to show the functionalities of the new R-package <strong>spsur</strong>. In the vignette the reader will find information about the following aspects:</p>
+<p>The purpose of this vignette is to show the functionalities of the new R-package <strong>spsur</strong> <span class="citation">(<a href="#ref-MinguezJSS2022" role="doc-biblioref">Mínguez, López, and Mur 2022</a>; <a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez, and Mur 2020</a>)</span>. In the vignette the reader will find information about the following aspects:</p>
 <ul>
 <li>Description of the dataset NCOVR, employed to illustrate the use of the package.</li>
 <li>Estimation of SUR models without spatial effects (the so called SUR-SIM models).</li>
@@ -3388,6 +3381,9 @@ López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020. <span>“<span>ML</
 </div>
 <div id="ref-Lopez2014" class="csl-entry">
 López, Fernando A, Jesús Mur, and Ana Angulo. 2014. <span>“Spatial Model Selection Strategies in a SUR Framework. The Case of Regional Productivity in <span>EU</span>.”</span> <em>The Annals of Regional Science</em> 53 (1): 197–220. <a href="https://doi.org/10.1007/s00168-014-0624-2">https://doi.org/10.1007/s00168-014-0624-2</a>.
+</div>
+<div id="ref-MinguezJSS2022" class="csl-entry">
+Mínguez, Román, Fernando A. López, and Jesús Mur. 2022. <span>“<span class="nocase">spsur</span>: An <span>R</span> Package for Dealing with Spatial Seemingly Unrelated Regression Models.”</span> <em>Journal of Statistical Software</em> 104 (11): 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">https://doi.org/10.18637/jss.v104.i11</a>.
 </div>
 <div id="ref-Mur2010" class="csl-entry">
 Mur, Jesús, Fernando López, and Marcos Herrera. 2010. <span>“Testing for Spatial Effects in Seemingly Unrelated Regressions.”</span> <em>Spatial Economic Analysis</em> 5 (4): 399–440. <a href="https://doi.org/10.1080/17421772.2010.516443">https://doi.org/10.1080/17421772.2010.516443</a>.

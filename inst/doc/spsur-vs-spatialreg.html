@@ -13,7 +13,7 @@
 <meta name="author" content="Fernando A. López, Technical University of Cartagena (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2022-08-29" />
+<meta name="date" content="2022-10-29" />
 
 <title>spsur vs spatialreg</title>
 
@@ -1475,8 +1475,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -1484,16 +1484,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -1622,7 +1615,7 @@ div.tocify {
 <h4 class="author">Román Mínguez, University of Castilla-La Mancha (Spain)</h4>
 <h4 class="author">Fernando A. López, Technical University of Cartagena (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br></h4>
-<h4 class="date">2022-08-29 <br> <br> <br></h4>
+<h4 class="date">2022-10-29 <br> <br> <br></h4>
 
 </div>
 
@@ -1633,7 +1626,7 @@ div.tocify {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code></pre></div>
 <div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>The <strong>spsur</strong> R-package (<span class="citation">López, Mı́nguez, and Mur (<a href="#ref-Lopez2020" role="doc-biblioref">2020</a>)</span>) has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. On the oher hand, the <strong>spatialreg</strong> package ( <span class="citation">Bivand, Pebesma, and Gómez-Rubio (<a href="#ref-BivandPedesma2013" role="doc-biblioref">2013</a>)</span>; <span class="citation">Bivand and Piras (<a href="#ref-BivandPiras2015" role="doc-biblioref">2015</a>)</span>), is the most adequate alternative for working with uniequational models, in a pure cross-sectional setting. The purpose of this vignette is to compare the results of <strong>spsur</strong> and <strong>spatialreg</strong> in case of <em>uniequational models</em>. As we will see, the differences between the two are negligible.</p>
+<p>The <strong>spsur</strong> R-package <span class="citation">(<a href="#ref-MinguezJSS2022" role="doc-biblioref">Mínguez, López, and Mur 2022</a>; <a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez, and Mur 2020</a>)</span> has been designed for estimate spatial regression models in a multiequational framework. However, because of its flexibility, it is also possible to obtain useful results for uniequational models. On the oher hand, the <strong>spatialreg</strong> package (<span class="citation">Bivand, Pebesma, and Gómez-Rubio (<a href="#ref-BivandPedesma2013" role="doc-biblioref">2013</a>)</span>; <span class="citation">Bivand and Piras (<a href="#ref-BivandPiras2015" role="doc-biblioref">2015</a>)</span>), is the most adequate alternative for working with uniequational models, in a pure cross-sectional setting. The purpose of this vignette is to compare the results of <strong>spsur</strong> and <strong>spatialreg</strong> in case of <em>uniequational models</em>. As we will see, the differences between the two are negligible.</p>
 <p>In sum, the purpose of this vignette is to compare the results of <strong>spsur</strong> and <strong>spatialreg</strong> in the following issues:</p>
 <ul>
 <li>Estimation of spatially independent model, or SIM models.</li>
@@ -2236,6 +2229,9 @@ Bivand, Roger, and David W. S. Wong. 2018. <span>“Comparing Implementations of
 </div>
 <div id="ref-Lopez2020" class="csl-entry">
 López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020. <span>“<span>ML</span> Versus <span>IV</span> Estimates of Spatial SUR Models: Evidence from the Case of Airbnb in Madrid Urban Area.”</span> <em>The Annals of Regional Science</em> 64 (2): 313–47. <a href="https://doi.org/10.1007/s00168-019-00914-1">https://doi.org/10.1007/s00168-019-00914-1</a>.
+</div>
+<div id="ref-MinguezJSS2022" class="csl-entry">
+Mínguez, Román, Fernando A. López, and Jesús Mur. 2022. <span>“<span class="nocase">spsur</span>: An <span>R</span> Package for Dealing with Spatial Seemingly Unrelated Regression Models.”</span> <em>Journal of Statistical Software</em> 104 (11): 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">https://doi.org/10.18637/jss.v104.i11</a>.
 </div>
 <div id="ref-R2019" class="csl-entry">
 R Core Team. 2019. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.

@@ -14,7 +14,7 @@
 <meta name="author" content="Román Mínguez, University of Castilla-La Mancha (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2022-08-29" />
+<meta name="date" content="2022-10-29" />
 
 <title>Spatial seemingly unrelated regression models. A comparison of spsur, spse and PySAL</title>
 
@@ -371,7 +371,7 @@ models. A comparison of spsur, spse and PySAL</h1>
 (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br>
 <br></h4>
-<h4 class="date">2022-08-29 <br> <br> <br></h4>
+<h4 class="date">2022-10-29 <br> <br> <br></h4>
 
 
 <div id="TOC">
@@ -396,9 +396,9 @@ Estimation of SUR-SLM</a></li>
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>The main objective of this vignette is to present the results of the
 estimation of spatial SUR models using three alternative tools: Two
-<em>R</em>-packages, <strong>spsur</strong> <span class="citation">(<a href="#ref-Lopez2020" role="doc-biblioref">Fernando A. López, Mı́nguez,
-and Mur 2020</a>; <a href="#ref-spsur" role="doc-biblioref">Fernando A.
-López, Mínguez, and Mur 2022</a>)</span> and <strong>spse</strong> <span class="citation">(<a href="#ref-PirasGitHub" role="doc-biblioref">Piras
+<em>R</em>-packages, <strong>spsur</strong> <span class="citation">(<a href="#ref-MinguezJSS2022" role="doc-biblioref">Mínguez, López, and Mur
+2022</a>; <a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez,
+and Mur 2020</a>)</span> and <strong>spse</strong> <span class="citation">(<a href="#ref-PirasGitHub" role="doc-biblioref">Piras
 2018</a>)</span> together with the <em>Python</em> spatial analysis
 library <strong>PySAL</strong> available at <a href="https://pysal.org/">https://pysal.org/</a>. Three SUR models are
 estimated in this vignette. The first one, is the baseline SUR-SIM
@@ -408,9 +408,10 @@ is the SUR-SEM model; that is, a SUR model including a spatial lag in
 the errors. This model will be estimated by Maximum Likelihood <span class="citation">(<a href="#ref-Anselin1988a" role="doc-biblioref">Anselin 1988</a>)</span>, using the three
 alternative tools. The last one is the SUR-SLM model, including a
 spatial lag of the dependent variable, which will be estimated by the
-Three Stage Least Squares (3SLS) algorithm <span class="citation">(<a href="#ref-Lopez2020" role="doc-biblioref">Fernando A. López, Mı́nguez,
-and Mur 2020</a>; <a href="#ref-Anselin2016" role="doc-biblioref">Anselin 2016</a>)</span>. This model will be
-estimated with <strong>spsur</strong> and <strong>PySAL</strong>.</p>
+Three Stage Least Squares (3SLS) algorithm <span class="citation">(<a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez, and Mur
+2020</a>; <a href="#ref-Anselin2016" role="doc-biblioref">Anselin
+2016</a>)</span>. This model will be estimated with
+<strong>spsur</strong> and <strong>PySAL</strong>.</p>
 <p>The comparison is performed on the <span class="citation">Baller et
 al. (<a href="#ref-Baller2001" role="doc-biblioref">2001</a>)</span>
 data set<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. This is a well-known dataset downloaded
@@ -863,10 +864,9 @@ PySAL
 <div id="estimation-of-sur-slm" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Estimation of
 SUR-SLM</h1>
-<p>The option to estimate an SUR-SLM model with the 3SLS algorithm <span class="citation">(<a href="#ref-Anselin2016" role="doc-biblioref">Anselin 2016</a>; <a href="#ref-Lopez2020" role="doc-biblioref">Fernando A. López, Mı́nguez, and Mur
-2020</a>)</span> is available with <strong>spsur</strong> and
-<strong>PySAL</strong>. The specification of this model in our case
-is:</p>
+<p>The option to estimate an SUR-SLM model with the 3SLS algorithm <span class="citation">(<a href="#ref-Anselin2016" role="doc-biblioref">Anselin 2016</a>; <a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez, and Mur 2020</a>)</span> is
+available with <strong>spsur</strong> and <strong>PySAL</strong>. The
+specification of this model in our case is:</p>
 <span class="math display">\[\begin{equation}
 \begin{array}{ll}
 HR_{80} = \ W HR_{80} \rho_1 + \beta_{10} + PS_{80} \ \beta_{11} +
@@ -888,12 +888,12 @@ SUR-SLM (@ref(eq:sur-slm)) using the 3SLS algorithm is:</p>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                    name_bigX<span class="op">=</span>bigXvars,name_ds<span class="op">=</span><span class="st">&quot;NAT&quot;</span>,name_w<span class="op">=</span><span class="st">&quot;nat_queen&quot;</span>)</span></code></pre></div>
 <p>Note that the instruments used by default with the function
 <em>spsur3sls()</em> are the first two spatial lags of the independent
-variables (see <span class="citation">Fernando A. López, Mı́nguez, and
-Mur (<a href="#ref-Lopez2020" role="doc-biblioref">2020</a>)</span>)
-while the function <em>SURlagIV()</em> in <strong>PySAL</strong>
-considers only the first one by default (see <span class="citation">Anselin (<a href="#ref-Anselin2016" role="doc-biblioref">2016</a>)</span>). Therefore, to obtain equivalent
-results, it is necessary to include the option <span class="math inline">\(w\_lags = 2\)</span> in the <strong>PySAL</strong>
-code.</p>
+variables (see <span class="citation">López, Mı́nguez, and Mur (<a href="#ref-Lopez2020" role="doc-biblioref">2020</a>)</span>) while the
+function <em>SURlagIV()</em> in <strong>PySAL</strong> considers only
+the first one by default (see <span class="citation">Anselin (<a href="#ref-Anselin2016" role="doc-biblioref">2016</a>)</span>).
+Therefore, to obtain equivalent results, it is necessary to include the
+option <span class="math inline">\(w\_lags = 2\)</span> in the
+<strong>PySAL</strong> code.</p>
 <p>Table 4.1 shows the coefficients and standard error (in parentheses)
 of the estimation with <strong>spsur</strong> and
 <strong>PySAL</strong>. As in the case of the SUR-SEM estimation,
@@ -1431,16 +1431,16 @@ Bates, Douglas, Katharine M. Mullen, John C. Nash, and Ravi Varadhan.
 <span>D</span>erivative-Free Optimization Algorithms by Quadratic
 Approximation</em>. <a href="https://CRAN.R-project.org/package=minqa">https://CRAN.R-project.org/package=minqa</a>.
 </div>
-<div id="ref-spsur" class="csl-entry">
-López, Fernando A., Román Mínguez, and Jesús Mur. 2022. <em><span class="nocase">s</span>psur: <span>S</span>patial <span>S</span>eemingly
-<span>U</span>nrelated <span>R</span>egression <span>M</span>odels</em>.
-<a href="https://CRAN.R-project.org/package=spsur">https://CRAN.R-project.org/package=spsur</a>.
-</div>
 <div id="ref-Lopez2020" class="csl-entry">
 López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020.
 <span>“<span>ML</span> Versus <span>IV</span> Estimates of Spatial SUR
 Models: Evidence from the Case of Airbnb in Madrid Urban Area.”</span>
 <em>The Annals of Regional Science</em> 64 (2): 313–47. <a href="https://doi.org/10.1007/s00168-019-00914-1">https://doi.org/10.1007/s00168-019-00914-1</a>.
+</div>
+<div id="ref-MinguezJSS2022" class="csl-entry">
+Mínguez, Román, Fernando A. López, and Jesús Mur. 2022. <span>“<span class="nocase">spsur</span>: An <span>R</span> Package for Dealing with
+Spatial Seemingly Unrelated Regression Models.”</span> <em>Journal of
+Statistical Software</em> 104 (11): 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">https://doi.org/10.18637/jss.v104.i11</a>.
 </div>
 <div id="ref-PirasGitHub" class="csl-entry">
 Piras, Gianfranco. 2018. <span>“<span class="nocase">s</span>pse:

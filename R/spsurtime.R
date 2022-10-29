@@ -85,6 +85,12 @@
 #'        Spain. \emph{Annals of Regional Science}, 58(1), 39-65.
 #'        <doi:10.1007/s00168-016-0780-7>
 #'        
+#'     \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+#'        spsur: An R Package for Dealing with Spatial 
+#'        Seemingly Unrelated Regression Models. 
+#'        \emph{Journal of Statistical Software}, 
+#'        104(11), 1--43. <doi:10.18637/jss.v104.i11>
+#'        
 #'     \item Mur, J., Lopez, F., and Herrera, M. (2010). Testing for spatial
 #'       effects in seemingly unrelated regressions. \emph{Spatial Economic Analysis}, 
 #'       5(4), 399-440. <doi:10.1080/17421772.2010.516443>

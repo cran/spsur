@@ -207,6 +207,11 @@
 #'       of spatial SUR models: evidence from the case of Airbnb in Madrid urban 
 #'       area. \emph{The Annals of Regional Science}, 64(2), 313-347.
 #'       <doi:10.1007/s00168-019-00914-1>
+#'       \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+#'         spsur: An R Package for Dealing with Spatial 
+#'         Seemingly Unrelated Regression Models. 
+#'         \emph{Journal of Statistical Software}, 
+#'         104(11), 1--43. <doi:10.18637/jss.v104.i11>
 #'              
 #'       }
 #' @seealso

@@ -86,6 +86,13 @@ wald_betas(spcsur.slm, R = R1, b = b1)
       Unrelated Regression (SUR). \emph{Geoda Center for Geospatial Analysis 
       and Computation, Arizona State University}. Working Paper 2016-01.
       <doi:10.13140/RG.2.2.15925.40163>
+      
+     \item Minguez, R., Lopez, F.A. and Mur, J.  (2022).
+        spsur: An R Package for Dealing with Spatial 
+        Seemingly Unrelated Regression Models. 
+        \emph{Journal of Statistical Software}, 
+        104(11), 1--43. <doi:10.18637/jss.v104.i11>
+      
   }
 }
 \seealso{

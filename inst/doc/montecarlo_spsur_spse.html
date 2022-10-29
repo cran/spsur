@@ -14,7 +14,7 @@
 <meta name="author" content="Román Mínguez, University of Castilla-La Mancha (Spain)" />
 <meta name="author" content="Jesús Mur, University of Zaragoza, (Spain)      " />
 
-<meta name="date" content="2022-08-29" />
+<meta name="date" content="2022-10-29" />
 
 <title>Maximum Likelihood estimation of Spatial Seemingly Unrelated Regression models. A short Monte Carlo exercise with spsur and spse</title>
 
@@ -372,7 +372,7 @@ spsur and spse</h1>
 (Spain)</h4>
 <h4 class="author">Jesús Mur, University of Zaragoza, (Spain) <br> <br>
 <br></h4>
-<h4 class="date">2022-08-29 <br> <br> <br></h4>
+<h4 class="date">2022-10-29 <br> <br> <br></h4>
 
 
 <div id="TOC">
@@ -396,13 +396,15 @@ exercise: spsur vs spse.</h1>
 <p>The goal of this vignette is to present the results obtained in a
 Monte Carlo exercise to evaluate the performance of the Maximum
 Likelihood (ML) estimation of three spatial SUR models using the
-<em>R</em>-package <strong>spsur</strong> <span class="citation">Fernando A. López, Mínguez, and Mur (<a href="#ref-spsur" role="doc-biblioref">2022</a>)</span>. The results
-will be compared with the same estimation using the
-<strong>spse</strong> <em>R</em>-package <span class="citation">(<a href="#ref-Piras2010" role="doc-biblioref">Piras et al. 2010</a>)</span>
-when it is possible. We compare the two basic spatial SUR models, named
-SUR-SLM and SUR-SEM. In the case of SUR-SARAR, we only present the
-results obtained with <strong>spsur</strong> because the estimation of
-this model is not available with <strong>spse</strong>.</p>
+<em>R</em>-package <strong>spsur</strong> <span class="citation">(<a href="#ref-MinguezJSS2022" role="doc-biblioref">Mínguez, López, and Mur
+2022</a>; <a href="#ref-Lopez2020" role="doc-biblioref">López, Mı́nguez,
+and Mur 2020</a>)</span>. The results will be compared with the same
+estimation using the <strong>spse</strong> <em>R</em>-package <span class="citation">(<a href="#ref-Piras2010" role="doc-biblioref">Piras et
+al. 2010</a>)</span> when it is possible. We compare the two basic
+spatial SUR models, named SUR-SLM and SUR-SEM. In the case of SUR-SARAR,
+we only present the results obtained with <strong>spsur</strong> because
+the estimation of this model is not available with
+<strong>spse</strong>.</p>
 <p>The design of the Monte Carlo is as follows: We simulate a spatial
 SUR model with two equations (G = 2), where each equation includes an
 intercept and two explanatory variables plus the corresponding spatial
@@ -2011,16 +2013,16 @@ light on the performance of the ML algorithm implemented in both
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-spsur" class="csl-entry">
-López, Fernando A., Román Mínguez, and Jesús Mur. 2022. <em><span class="nocase">s</span>psur: <span>S</span>patial <span>S</span>eemingly
-<span>U</span>nrelated <span>R</span>egression <span>M</span>odels</em>.
-<a href="https://CRAN.R-project.org/package=spsur">https://CRAN.R-project.org/package=spsur</a>.
-</div>
 <div id="ref-Lopez2020" class="csl-entry">
 López, Fernando A, Román Mı́nguez, and Jesús Mur. 2020.
 <span>“<span>ML</span> Versus <span>IV</span> Estimates of Spatial SUR
 Models: Evidence from the Case of Airbnb in Madrid Urban Area.”</span>
 <em>The Annals of Regional Science</em> 64 (2): 313–47. <a href="https://doi.org/10.1007/s00168-019-00914-1">https://doi.org/10.1007/s00168-019-00914-1</a>.
+</div>
+<div id="ref-MinguezJSS2022" class="csl-entry">
+Mínguez, Román, Fernando A. López, and Jesús Mur. 2022. <span>“<span class="nocase">spsur</span>: An <span>R</span> Package for Dealing with
+Spatial Seemingly Unrelated Regression Models.”</span> <em>Journal of
+Statistical Software</em> 104 (11): 1–43. <a href="https://doi.org/10.18637/jss.v104.i11">https://doi.org/10.18637/jss.v104.i11</a>.
 </div>
 <div id="ref-Piras2010" class="csl-entry">
 Piras, Gianfranco et al. 2010. <span>“<span class="nocase">s</span>phet:
