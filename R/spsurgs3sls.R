@@ -58,7 +58,7 @@
 #'  will start from the estimated coefficient of a regression of 
 #'  the 2SLS residuals over their spatial lag (i.e. a spatial 
 #'  AR model)
-#' @param het default {FALSE}: if {TRUE} uses the methods 
+#' @param het default \code{FALSE}: if \code{TRUE} uses the methods 
 #'   developed for heteroskedasticity for each equation. 
 #'   Wrapper using \code{\link[sphet]{spreg}} function.
 #' @param trace A logical value to show intermediate results during 

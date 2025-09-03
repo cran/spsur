@@ -39,7 +39,7 @@ the object returned is a list with:
   \code{indirect} \tab numeric vector \cr
   \code{total} \tab numeric vector \cr
 } 
-and a matching \code{Qres} list attribute if {Q} was given.
+and a matching \code{Qres} list attribute if \code{Q} was given.
 
 On the other hand, for each of the G objects of the list, if 
 simulation is carried out the object returned is a list with:
@@ -116,7 +116,7 @@ LeSage and Pace (2009) adapt the classical notion of
  to other points in space, \eqn{[d y_{tgn}]/[d x_{ktgm}] for n ne m};
  this is the \emph{Indirect effect}.
 
- \code{\link{impacts}} obtains the three multipliers together with an 
+ \code{\link{impactspsur}} obtains the three multipliers together with an 
  indirect measure of statistical significance, according to the 
  randomization approach described in Lesage and Pace (2009). Briefly, they 
  suggest to obtain a sequence of \emph{nsim} random matrices of order 
@@ -127,7 +127,7 @@ LeSage and Pace (2009) adapt the classical notion of
  values of the parameters of the corresponding spatial SUR model, are used 
  to obtain simulated values of the explained variables. Then, for each one 
  of the \emph{nsim} experiments, the SUR model is estimated, and the effects
- are evaluated. The function \code{\link{impacts}} obtains the standard 
+ are evaluated. The function \code{\link{impactspsur}} obtains the standard 
  deviations of the \emph{nsim} estimated effects in the randomization 
  procedure, which are used to test the significance of the estimated 
  effects for the original data.
@@ -141,7 +141,7 @@ LeSage and Pace (2009) adapt the classical notion of
  spatial unit only if in the right hand side of the equation there are 
  spatial lags of the explained variables or of the regressors. In other 
  words, the \emph{Indirect effect} is zero for the "sim" and "sem" models. 
- \code{\link{impacts}} produces no output for these two models.
+ \code{\link{impactspsur}} produces no output for these two models.
  Lastly, it is clear that all the impacts are contemporaneous because the 
  equations in the SUR model have no time dynamics.
 }

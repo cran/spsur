@@ -155,7 +155,7 @@ The function estimates spatial SUR models using three stages
 
   where \eqn{y_{tg}} and \eqn{\epsilon_{tg}} are \emph{(Nx1)} vectors,
   corresponding to the g-th equation and time period t; \eqn{X_{tg}} is 
-  the matrix of regressors, of order \emph{(Nxp_{g})}. Moreover, 
+  the matrix of regressors, of order \eqn{N \times p_g}. Moreover, 
   \eqn{\rho_{g}} is a spatial coefficient and \emph{W} is a 
   \emph{(NxN)} spatial weighting matrix.
 

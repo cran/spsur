@@ -1,33 +1,23 @@
 ---
 title: "spsur vs spatialreg" 
-subtitle: "Uniequational model <br>  <br>  <br>"
+subtitle: "Uniequational model"
 author:
-- Román Mínguez, University of Castilla-La Mancha (Spain)
-- Fernando A. López, Technical University of Cartagena (Spain)
-- Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: "2022-10-29  <br>  <br> <br>"
+- "Román Mínguez, University of Castilla-La Mancha (Spain)"
+- "Fernando A. López, Technical University of Cartagena (Spain)"
+- "Jesús Mur, University of Zaragoza, (Spain)" 
+date: "2025-09-02"
 output:
   bookdown::html_document2:
-    df_print: kable
-    highlight: tango
     number_sections: yes
     theme: flatly
     toc: yes
     toc_depth: 2
     toc_float:
       collapsed: no
-      smooth_scroll: yes
-    toc_title: spsur vs spse
-    # code_folding: hide
-
-# output: 
-#   rmarkdown::html_vignette:
-#     number_sections: TRUE
-
+      smooth_scroll: no
+    toc_title: "Vignette Outline"
 bibliography: bibliosure.bib
-link-citations: yes
-linkcolor: red
-
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{spsur vs spatialreg}
   %\VignetteEncoding{UTF-8}

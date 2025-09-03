@@ -1,11 +1,11 @@
 ---
 title: "spsur user guide"
-subtitle: "The user guide <br>  <br>  <br>"
+subtitle: "The user guide"
 author:
-- Román Mínguez, University of Castilla-La Mancha (Spain)
-- Fernando A. López, Technical University of Cartagena (Spain)
-- Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: '2022-10-29 <br>  <br> <br>'
+- "Román Mínguez, University of Castilla-La Mancha (Spain)"
+- "Fernando A. López, Technical University of Cartagena (Spain)"
+- "Jesús Mur, University of Zaragoza, (Spain)" 
+date: "2025-09-02"
 output:
   bookdown::html_document2:
     number_sections: yes
@@ -15,11 +15,9 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-    toc_title: Article Outline
-
-linkcolor: red
-link-citations: yes
+    toc_title: "Vignette Outline"
 bibliography: bibliosure.bib
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{spsur user guide}
   %\VignetteEncoding{UTF-8}

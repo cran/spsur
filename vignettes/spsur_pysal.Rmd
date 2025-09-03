@@ -1,30 +1,22 @@
 ---
 title: "Spatial seemingly unrelated regression models. A comparison of spsur, spse and PySAL"
 author:
-- Fernando A. López, Technical University of Cartagena (Spain)
-- Román Mínguez, University of Castilla-La Mancha (Spain)
-- Jesús Mur, University of Zaragoza, (Spain) <br> <br> <br>
-date: '2022-10-29 <br>  <br> <br>'
-# output:
-#   bookdown::html_document2:
-#     number_sections: yes
-#     theme: flatly
-#     toc: yes
-#     toc_depth: 2
-#     toc_float:
-#       collapsed: no
-#       smooth_scroll: no
-#     toc_title: Article Outline
-
-output: 
-  rmarkdown::html_vignette:
-    number_sections: TRUE
-    toc: TRUE
+- "Román Mínguez, University of Castilla-La Mancha (Spain)"
+- "Fernando A. López, Technical University of Cartagena (Spain)"
+- "Jesús Mur, University of Zaragoza, (Spain)" 
+date: "2025-09-02"
+output:
+  bookdown::html_document2:
+    number_sections: yes
+    theme: flatly
+    toc: yes
     toc_depth: 2
-
-linkcolor: red
-link-citations: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    toc_title: "Vignette Outline"
 bibliography: bibliosure.bib
+link-citations: true
 vignette: |
   %\VignetteIndexEntry{Spatial seemingly unrelated regression models. A comparison of spsur, spse and PySAL}
   %\VignetteEncoding{UTF-8}

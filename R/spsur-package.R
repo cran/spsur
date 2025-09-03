@@ -1,10 +1,5 @@
-#' @docType package
-#' @name spsur-package
-#' @rdname spsur-package
+#' Spatial Seemingly Unrelated Regression Models.
 #'
-#' @title Spatial Seemingly Unrelated Regression Models.
-#'
-#' @description
 #'  \pkg{spsur} offers the user a collection of functions to estimate Spatial 
 #'   Seemingly Unrelated Regression (SUR) models by maximum likelihood or 
 #'   three-stage least squares, using spatial instrumental variables. 
@@ -127,8 +122,8 @@
 #'   it has become popular in
 #'   spatial econometrics to evaluate the multiplier effects that a change in 
 #'   the value of a regressor, in a point in the space, has on the explained 
-#'   variable. \pkg{spsur} includes a function, \code{\link{impacts}}, 
-#'   that computes these effects. Specifically, \code{\link{impacts}} obtains
+#'   variable. \pkg{spsur} includes a function, \code{\link{impactspsur}}, 
+#'   that computes these effects. Specifically, \code{\link{impactspsur}} obtains
 #'   the average, over the \emph{N} spatial units and \emph{Tm} time periods, 
 #'   of such a change on the contemporaneous value of the explained variable 
 #'   located in the same point as the modified variable. This is the 
@@ -167,8 +162,7 @@
 #'      \item The \emph{spain.covid} dataset comprises Within and Exit mobility index 
 #'      together with the weeklly incidence COVID-19 at Spain provinces from 
 #'      February 21 to May 21 2020. 
-#'      \url{https://www.mitma.gob.es/ministerio/covid-19/evolucion-movilidad-big-data}
-#'    }
+#'      }
 #'
 #' @references
 #'   \itemize{
@@ -235,4 +229,9 @@
 #' @importFrom stats lm.fit model.frame model.matrix terms
 #' @importFrom stats anova coef formula logLik AIC BIC
 #' @importFrom stats na.action napredict update
-NULL
+#' 
+#' @name spsur-package
+#' @aliases spsur
+#' @keywords internal
+"_PACKAGE" 
+
